@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+// Shared:
+import { Constants } from './shared/Constants';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'netWorth';
+  isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
+
+  title = 'Net Worth';
 }

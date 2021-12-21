@@ -1,0 +1,14 @@
+<p *ngIf="isInDebugMode"><b>login</b> works!</p>
+
+<h1>
+  Net Worth
+</h1>
+
+<div *ngIf="isLoading" class="loading-spinner">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+
+<div *ngIf="!isLoading">
+  <button (click)="login()">Sign in with Google</button>
+  <button (click)="login()">Sign in with Microsoft</button>
+</div>
