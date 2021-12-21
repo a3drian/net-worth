@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 // Shared:
-import { Constants } from './shared/Constants';
+import { Constants } from '../../shared/Constants';
 
 @Component({
   selector: 'app-root',
