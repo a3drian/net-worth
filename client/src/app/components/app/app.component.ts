@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 import { Constants } from '../../shared/Constants';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+	selector: 'app-root',
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
+	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
-  title = 'Net Worth';
+	title = 'Net Worth';
 }

@@ -1,11 +1,11 @@
 import { Constants } from './shared/Constants';
 
 export interface AppRoute {
-  path: string;
-  active?: boolean;
+	path: string;
+	active?: boolean;
 }
 
 export const appRoutes = Object.freeze({
-  login: <AppRoute>{ path: Constants.appEndpoints.LOGIN_URL },
-  dashboard: <AppRoute>{ path: Constants.appEndpoints.DASHBOARD_URL }
+	login: <AppRoute>{ path: Constants.appEndpoints.LOGIN_URL },
+	dashboard: <AppRoute>{ path: Constants.appEndpoints.DASHBOARD_URL }
 });

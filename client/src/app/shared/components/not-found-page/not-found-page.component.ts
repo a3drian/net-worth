@@ -4,22 +4,22 @@ import { Router } from '@angular/router';
 import { Constants } from '../../Constants';
 
 @Component({
-  selector: 'app-not-found-page',
-  templateUrl: './not-found-page.component.html',
-  styleUrls: ['./not-found-page.component.scss']
+	selector: 'app-not-found-page',
+	templateUrl: './not-found-page.component.html',
+	styleUrls: ['./not-found-page.component.scss']
 })
 export class NotFoundPageComponent implements OnInit {
 
-  isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
+	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
-  DASHBOARD_URL = '/' + Constants.appEndpoints.DASHBOARD_URL;
+	DASHBOARD_URL = '/' + Constants.appEndpoints.DASHBOARD_URL;
 
-  constructor(private router: Router) { }
+	constructor(private router: Router) { }
 
-  ngOnInit(): void { }
+	ngOnInit(): void { }
 
-  redirect(): void {
-    this.router.navigate([this.DASHBOARD_URL]);
-  }
+	redirect(): void {
+		this.router.navigate([this.DASHBOARD_URL]);
+	}
 
 }
