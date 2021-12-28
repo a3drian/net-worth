@@ -1,6 +1,7 @@
 import { Constants } from './Constants';
 
-export { log }
+export { log };
+
 const log = function (
 	className: string,
 	caller: string,

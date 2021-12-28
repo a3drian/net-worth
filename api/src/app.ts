@@ -67,7 +67,7 @@ async function makeApp(): Promise<Application> {
 		(err: IExpressError, _req: Request, res: Response, _next: NextFunction) => {
 			res
 				.status(err.status || STATUS_CODES.SERVER_ERROR)
-				.send(env.NODE_ENV === Constants.PRODUCTION_MODE ? {} : err);
+				.send(env.NODE_ENV === Constants.PRODUCTION_MODE ? {} : { 'status': err.status, 'message': err.message });
 		}
 	);
 

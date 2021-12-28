@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { log } from './shared/Logger';
 
 const config = dotenv.config();
-log('env.ts', 'global call', `require('dotenv').config():`, config);
+log('env.ts', 'global call', 'dotenv.config():', config);
 
 import { Constants } from './shared/Constants';
 
