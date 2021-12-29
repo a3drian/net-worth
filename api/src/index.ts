@@ -1,7 +1,7 @@
+import { Application } from 'express';
 import { env } from './env';
 import { makeApp } from './app';
-
-import { Application } from 'express';
+// Shared:
 import { log } from './shared/Logger';
 
 makeApp()

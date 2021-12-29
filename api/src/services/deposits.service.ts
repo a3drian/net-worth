@@ -1,29 +1,24 @@
-const ObjectId = require('mongoose').Types.ObjectId;
-import { STATUS_CODES } from 'foodspy-shared';
+// Helpers:
+import { validDeposit, validId, validSearchQuery } from '../helpers/validator.helper';
 // Interfaces:
 import { IDeposit } from '../interfaces/IDeposit';
 import { IExpressError } from '../interfaces/IExpressError';
+import { ISearchOption } from '../interfaces/ISearchOption';
 // Models:
 import { DepositModel } from '../schemas/deposit.schema';
 // Shared:
+import { STATUS_CODES } from 'foodspy-shared';
 import { log } from '../shared/Logger';
 
 const CLASS_NAME = 'deposits.service.ts';
 
 export {
-	getDeposits,
 	getDepositById,
+	getDepositsByOwner,
 	postDeposit,
 	// putDeposit,
 	// deleteDeposit
 };
-
-async function getDeposits(): Promise<Error | IDeposit[]> {
-	log(CLASS_NAME, getDeposits.name, '');
-
-	const deposits: IDeposit[] = await DepositModel.find({ amount: 69 });
-	return deposits;
-}
 
 async function getDepositById(
 	id: string
@@ -34,9 +29,9 @@ async function getDepositById(
 	if (!validId(id)) {
 		log(CLASS_NAME, `${getDepositById.name}^`, '');
 
-		const err = new Error(`'${id}' is not valid!`) as IExpressError;
-		err.status = STATUS_CODES.BAD_REQUEST;
-		return err;
+		const badRequestError = new Error(`'${id}' is not valid!`) as IExpressError;
+		badRequestError.status = STATUS_CODES.BAD_REQUEST;
+		return badRequestError;
 	}
 
 	log(CLASS_NAME, getDepositById.name, 'id:', id);
@@ -68,30 +63,65 @@ async function getDepositById(
 	}
 }
 
+async function getDepositsByOwner(
+	searchQuery: ISearchOption
+): Promise<Error | IDeposit[]> {
+
+	log(CLASS_NAME, getDepositsByOwner.name, '');
+
+	if (!validSearchQuery(searchQuery)) {
+		log(CLASS_NAME, `${getDepositsByOwner.name}^`, '');
+
+		const badRequestError = new Error('Invalid parameters!') as IExpressError;
+		badRequestError.status = STATUS_CODES.BAD_REQUEST;
+		return badRequestError;
+	}
+
+	try {
+
+		const deposits: IDeposit[] = await DepositModel.find({ owner: searchQuery.owner });
+
+		log(CLASS_NAME, getDepositsByOwner.name, 'deposits:', deposits);
+		log(CLASS_NAME, `${getDepositsByOwner.name}^`, '');
+
+		return deposits;
+
+	} catch (ex: any) {
+		log(CLASS_NAME, getDepositsByOwner.name, 'exception caught:', ex.message);
+		log(CLASS_NAME, `${getDepositsByOwner.name}^`, '');
+
+		return ex;
+	}
+}
+
 async function postDeposit(
 	deposit: Partial<IDeposit>
 ): Promise<Error | IDeposit> {
+
 	log(CLASS_NAME, postDeposit.name, '');
+
+	if (!validDeposit(deposit)) {
+		log(CLASS_NAME, `${postDeposit.name}^`, '');
+
+		const badRequestError = new Error('Invalid parameters!') as IExpressError;
+		badRequestError.status = STATUS_CODES.BAD_REQUEST;
+		return badRequestError;
+	}
 
 	try {
 
 		const newDeposit = new DepositModel(deposit);
-		console.log('newDeposit:', newDeposit);
+
+		log(CLASS_NAME, postDeposit.name, 'newDeposit:', newDeposit);
+		log(CLASS_NAME, `${postDeposit.name}^`, '');
 
 		await newDeposit.save();
 		return newDeposit;
 
 	} catch (ex: any) {
 		log(CLASS_NAME, postDeposit.name, 'exception caught:', ex.message);
+		log(CLASS_NAME, `${postDeposit.name}^`, '');
+
 		return ex;
 	}
-}
-
-function validId(id: string): boolean {
-	if (ObjectId.isValid(id)) {
-		if ((String)(new ObjectId(id)) === id) { return true; }
-	}
-
-	log(CLASS_NAME, validId.name, `id '${id}' is not valid!`);
-	return false;
 }

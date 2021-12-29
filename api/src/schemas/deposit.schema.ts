@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 const { model, Schema } = mongoose;
-
+// Interfaces:
 import { IDeposit } from '../interfaces/IDeposit';
 
 const depositSchema = new Schema<IDeposit>(
 	{
+		owner: { type: String, required: true },
 		amount: { type: Number, required: true },
 		currency: { type: String, required: true },
 		createdAt: { type: Date, required: true },

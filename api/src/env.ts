@@ -1,11 +1,10 @@
 import dotenv from 'dotenv';
-
+// Shared:
+import { Constants } from './shared/Constants';
 import { log } from './shared/Logger';
 
 const config = dotenv.config();
 log('env.ts', 'global call', 'dotenv.config():', config);
-
-import { Constants } from './shared/Constants';
 
 let NODE_ENVIRONMENT: string;
 if (Constants.IN_DEBUG_MODE === true) {
