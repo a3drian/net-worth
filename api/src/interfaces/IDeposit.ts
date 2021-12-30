@@ -1,5 +1,5 @@
 export interface IDeposit {
-	id: string;
+	_id: string;
 	owner: string;
 	amount: number;
 	currency: string;

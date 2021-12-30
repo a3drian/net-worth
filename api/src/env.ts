@@ -4,6 +4,7 @@ import { Constants } from './shared/Constants';
 import { log } from './shared/Logger';
 
 const config = dotenv.config();
+console.log('');
 log('env.ts', 'global call', 'dotenv.config():', config);
 
 let NODE_ENVIRONMENT: string;

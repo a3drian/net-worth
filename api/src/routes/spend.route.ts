@@ -17,7 +17,7 @@ function setSpendRoute(router: Router): Router {
 	router.get('/:id', getDepositById);
 	router.post('/owner/', getDepositsByOwner);
 	router.post('/', postDeposit);
-	// router.put('/', putDeposit);
+	router.put('/:id', putDeposit);
 	// router.delete('/', deleteDeposit);
 	return router;
 }
@@ -31,7 +31,7 @@ async function getDepositById(
 
 	const id = req.params.id;
 
-	let response: Error | IDeposit | null;
+	let response: Error | IDeposit;
 	try {
 		response = await depositService.getDepositById(id);
 	} catch (ex) {
@@ -104,6 +104,43 @@ async function postDeposit(
 
 	return res
 		.status(STATUS_CODES.CREATED)
+		.json(response)
+		.end();
+}
+
+async function putDeposit(
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<IDeposit | void> {
+	console.log('');
+
+	const id = req.params.id;
+	const body = req.body;
+
+	console.log(CLASS_NAME, putDeposit.name, 'body:', body);
+
+	const newDeposit = new Deposit(
+		{
+			owner: body.owner,
+			amount: body.amount,
+			currency: body.currency,
+			createdAt: body.createdAt,
+			exchangeRate: body.exchangeRate
+		}
+	);
+
+	let response: Error | IDeposit;
+	try {
+		response = await depositService.putDeposit(id, newDeposit);
+	} catch (ex) {
+		return next(ex);
+	}
+
+	if (response instanceof Error) { return next(response); }
+
+	return res
+		.status(STATUS_CODES.OK)
 		.json(response)
 		.end();
 }

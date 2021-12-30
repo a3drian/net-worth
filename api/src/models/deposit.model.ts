@@ -1,7 +1,7 @@
 import { IDeposit } from '../interfaces/IDeposit';
 
 export class Deposit implements IDeposit {
-	id!: string;
+	_id!: string;
 	owner!: string;
 	amount!: number;
 	currency!: string;

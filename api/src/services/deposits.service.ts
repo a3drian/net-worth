@@ -1,5 +1,5 @@
 // Helpers:
-import { validDeposit, validId, validSearchQuery } from '../helpers/validator.helper';
+import { validDeposit, validId, validSearchQuery, validOldDeposit } from '../helpers/validator.helper';
 // Interfaces:
 import { IDeposit } from '../interfaces/IDeposit';
 import { IExpressError } from '../interfaces/IExpressError';
@@ -16,51 +16,31 @@ export {
 	getDepositById,
 	getDepositsByOwner,
 	postDeposit,
-	// putDeposit,
+	putDeposit,
 	// deleteDeposit
 };
 
 async function getDepositById(
 	id: string
-): Promise<Error | IDeposit | null> {
+): Promise<Error | IDeposit> {
 
 	log(CLASS_NAME, getDepositById.name, '');
 
-	if (!validId(id)) {
-		log(CLASS_NAME, `${getDepositById.name}^`, '');
-
-		const badRequestError = new Error(`'${id}' is not valid!`) as IExpressError;
-		badRequestError.status = STATUS_CODES.BAD_REQUEST;
-		return badRequestError;
-	}
+	if (!validId(id)) { return throwError(getDepositById.name, `'${id}' is not valid!`, STATUS_CODES.BAD_REQUEST); }
 
 	log(CLASS_NAME, getDepositById.name, 'id:', id);
 
-	let deposit: IDeposit | null;
-
 	try {
-		deposit = await DepositModel.findById({ _id: id });
+		const deposit: IDeposit | null = await DepositModel.findById({ _id: id });
 
-		if (deposit === null) {
-			log(CLASS_NAME, getDepositById.name, `Deposit '${id}' was not found!`);
-			log(CLASS_NAME, `${getDepositById.name}^`, '');
-
-			const notFoundError = new Error(`Deposit '${id}' was not found!`) as IExpressError;
-			notFoundError.status = STATUS_CODES.NOT_FOUND;
-			return notFoundError;
-		}
+		if (deposit === null) { return throwError(getDepositById.name, `Deposit '${id}' was not found!`, STATUS_CODES.NOT_FOUND); }
 
 		log(CLASS_NAME, getDepositById.name, 'deposit:', deposit);
 		log(CLASS_NAME, `${getDepositById.name}^`, '');
 
 		return deposit;
 
-	} catch (ex: any) {
-		log(CLASS_NAME, getDepositById.name, 'exception caught:', ex.message);
-		log(CLASS_NAME, `${getDepositById.name}^`, '');
-
-		return ex;
-	}
+	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 async function getDepositsByOwner(
@@ -69,16 +49,9 @@ async function getDepositsByOwner(
 
 	log(CLASS_NAME, getDepositsByOwner.name, '');
 
-	if (!validSearchQuery(searchQuery)) {
-		log(CLASS_NAME, `${getDepositsByOwner.name}^`, '');
-
-		const badRequestError = new Error('Invalid parameters!') as IExpressError;
-		badRequestError.status = STATUS_CODES.BAD_REQUEST;
-		return badRequestError;
-	}
+	if (!validSearchQuery(searchQuery)) { return throwError(getDepositsByOwner.name, 'Invalid POST/:owner parameters!', STATUS_CODES.BAD_REQUEST); }
 
 	try {
-
 		const deposits: IDeposit[] = await DepositModel.find({ owner: searchQuery.owner });
 
 		log(CLASS_NAME, getDepositsByOwner.name, 'deposits:', deposits);
@@ -86,12 +59,7 @@ async function getDepositsByOwner(
 
 		return deposits;
 
-	} catch (ex: any) {
-		log(CLASS_NAME, getDepositsByOwner.name, 'exception caught:', ex.message);
-		log(CLASS_NAME, `${getDepositsByOwner.name}^`, '');
-
-		return ex;
-	}
+	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 async function postDeposit(
@@ -100,16 +68,9 @@ async function postDeposit(
 
 	log(CLASS_NAME, postDeposit.name, '');
 
-	if (!validDeposit(deposit)) {
-		log(CLASS_NAME, `${postDeposit.name}^`, '');
-
-		const badRequestError = new Error('Invalid parameters!') as IExpressError;
-		badRequestError.status = STATUS_CODES.BAD_REQUEST;
-		return badRequestError;
-	}
+	if (!validDeposit(deposit)) { return throwError(postDeposit.name, 'Invalid POST parameters!', STATUS_CODES.BAD_REQUEST); }
 
 	try {
-
 		const newDeposit = new DepositModel(deposit);
 
 		log(CLASS_NAME, postDeposit.name, 'newDeposit:', newDeposit);
@@ -118,10 +79,42 @@ async function postDeposit(
 		await newDeposit.save();
 		return newDeposit;
 
-	} catch (ex: any) {
-		log(CLASS_NAME, postDeposit.name, 'exception caught:', ex.message);
-		log(CLASS_NAME, `${postDeposit.name}^`, '');
+	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+}
 
-		return ex;
-	}
+async function putDeposit(
+	id: string,
+	deposit: Partial<IDeposit>
+): Promise<Error | IDeposit> {
+
+	log(CLASS_NAME, putDeposit.name, '');
+
+	try {
+
+		const updatedDeposit = await DepositModel
+			.findByIdAndUpdate(
+				id,
+				deposit,
+				{ new: true }
+			);
+
+		if (updatedDeposit === null) { return throwError(putDeposit.name, `Deposit '${id}' failed to update!`, STATUS_CODES.BAD_REQUEST); }
+
+		if (!validOldDeposit(id, updatedDeposit)) { return throwError(putDeposit.name, 'Invalid PUT parameters!', STATUS_CODES.BAD_REQUEST); }
+
+		log(CLASS_NAME, putDeposit.name, 'updatedDeposit:', updatedDeposit);
+		log(CLASS_NAME, `${putDeposit.name}^`, '');
+
+		return updatedDeposit;
+
+	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+}
+
+function throwError(origin: string, message: string, statusCode: STATUS_CODES) {
+	log(CLASS_NAME, origin, message);
+	log(CLASS_NAME, `${origin}^`, '');
+
+	const err = new Error(message) as IExpressError;
+	err.status = statusCode;
+	return err;
 }
