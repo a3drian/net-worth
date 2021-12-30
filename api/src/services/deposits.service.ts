@@ -7,8 +7,8 @@ import { ISearchOption } from '../interfaces/ISearchOption';
 // Models:
 import { DepositModel } from '../schemas/deposit.schema';
 // Shared:
-import { STATUS_CODES } from 'foodspy-shared';
 import { log } from '../shared/Logger';
+import { STATUS_CODES } from 'foodspy-shared';
 
 const CLASS_NAME = 'deposits.service.ts';
 
@@ -17,7 +17,7 @@ export {
 	getDepositsByOwner,
 	postDeposit,
 	putDeposit,
-	// deleteDeposit
+	deleteDeposit
 };
 
 async function getDepositById(
@@ -31,6 +31,7 @@ async function getDepositById(
 	log(CLASS_NAME, getDepositById.name, 'id:', id);
 
 	try {
+
 		const deposit: IDeposit | null = await DepositModel.findById({ _id: id });
 
 		if (deposit === null) { return throwError(getDepositById.name, `Deposit '${id}' was not found!`, STATUS_CODES.NOT_FOUND); }
@@ -52,6 +53,7 @@ async function getDepositsByOwner(
 	if (!validSearchQuery(searchQuery)) { return throwError(getDepositsByOwner.name, 'Invalid POST/:owner parameters!', STATUS_CODES.BAD_REQUEST); }
 
 	try {
+
 		const deposits: IDeposit[] = await DepositModel.find({ owner: searchQuery.owner });
 
 		log(CLASS_NAME, getDepositsByOwner.name, 'deposits:', deposits);
@@ -71,6 +73,7 @@ async function postDeposit(
 	if (!validDeposit(deposit)) { return throwError(postDeposit.name, 'Invalid POST parameters!', STATUS_CODES.BAD_REQUEST); }
 
 	try {
+
 		const newDeposit = new DepositModel(deposit);
 
 		log(CLASS_NAME, postDeposit.name, 'newDeposit:', newDeposit);
@@ -106,6 +109,30 @@ async function putDeposit(
 		log(CLASS_NAME, `${putDeposit.name}^`, '');
 
 		return updatedDeposit;
+
+	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+}
+
+async function deleteDeposit(
+	id: string
+): Promise<Error | IDeposit> {
+
+	log(CLASS_NAME, deleteDeposit.name, '');
+
+	if (!validId(id)) { return throwError(deleteDeposit.name, `'${id}' is not valid!`, STATUS_CODES.BAD_REQUEST); }
+
+	log(CLASS_NAME, deleteDeposit.name, 'id:', id);
+
+	try {
+
+		const deposit: IDeposit | null = await DepositModel.findByIdAndDelete({ _id: id });
+
+		if (deposit === null) { return throwError(deleteDeposit.name, `Deposit '${id}' was not found and could not be deleted!`, STATUS_CODES.NOT_FOUND); }
+
+		log(CLASS_NAME, deleteDeposit.name, 'deposit:', deposit);
+		log(CLASS_NAME, `${deleteDeposit.name}^`, '');
+
+		return deposit;
 
 	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }

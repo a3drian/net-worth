@@ -18,7 +18,7 @@ function setSpendRoute(router: Router): Router {
 	router.post('/owner/', getDepositsByOwner);
 	router.post('/', postDeposit);
 	router.put('/:id', putDeposit);
-	// router.delete('/', deleteDeposit);
+	router.delete('/:id', deleteDeposit);
 	return router;
 }
 
@@ -133,6 +133,30 @@ async function putDeposit(
 	let response: Error | IDeposit;
 	try {
 		response = await depositService.putDeposit(id, newDeposit);
+	} catch (ex) {
+		return next(ex);
+	}
+
+	if (response instanceof Error) { return next(response); }
+
+	return res
+		.status(STATUS_CODES.OK)
+		.json(response)
+		.end();
+}
+
+async function deleteDeposit(
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<void> {
+	console.log('');
+
+	const id = req.params.id;
+
+	let response: Error | IDeposit;
+	try {
+		response = await depositService.deleteDeposit(id);
 	} catch (ex) {
 		return next(ex);
 	}
