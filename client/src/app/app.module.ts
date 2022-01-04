@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { AppComponent } from './components/app/app.component';
 // Components:
+import { AppComponent } from './components/app/app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { LoginComponent } from './components/login/login.component';
@@ -28,6 +28,7 @@ import { appRoutes } from './app.routes';
 			{ path: appRoutes.login.path, component: LoginComponent },
 			{ path: '**', component: NotFoundPageComponent }
 		]),
+		HttpClientModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]

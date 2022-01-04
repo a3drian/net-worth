@@ -1,9 +1,9 @@
 // Helpers:
 import { validDeposit, validId, validSearchQuery, validOldDeposit } from '../helpers/validator.helper';
 // Interfaces:
-import { IDeposit } from '../interfaces/IDeposit';
-import { IExpressError } from '../interfaces/IExpressError';
-import { ISearchOption } from '../interfaces/ISearchOption';
+import { IDeposit } from 'net-worth-shared';
+import { IExpressError } from 'net-worth-shared';
+import { ISearchOption } from 'net-worth-shared';
 // Models:
 import { DepositModel } from '../schemas/deposit.schema';
 // Shared:

@@ -1,9 +1,18 @@
 <p *ngIf="isInDebugMode"><b>dashboard</b> works!</p>
 
 <div>
-  <p>Welcome!</p>
-  <h1>Net Worth</h1>
-  <p>Balances</p>
+	<p>Welcome!</p>
+	<h1>Net Worth</h1>
+	<p>Balances</p>
+
+	<p *ngFor="let deposit of deposits">
+		<b>{{ deposit.amount }}{{ deposit.currency }} or {{ deposit.amount * deposit.exchangeRate }} RON</b> (@ {{
+		deposit.exchangeRate
+		}}) in {{ deposit.createdAt | date }}
+		<button>ADD</button>
+	</p>
+
+	<button>Lei</button> <button>Euro</button> <button>Dollar</button> <button>Pound sterling</button>
 </div>
 
 <router-outlet></router-outlet>

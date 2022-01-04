@@ -8,7 +8,7 @@ import { Application, Router, Request, Response, NextFunction } from 'express';
 // Environment:
 import { env } from './env';
 // Interfaces:
-import { IExpressError } from './interfaces/IExpressError';
+import { IExpressError } from 'net-worth-shared';
 // Routes:
 import { setSpendRoute } from './routes/spend.route';
 // Shared:

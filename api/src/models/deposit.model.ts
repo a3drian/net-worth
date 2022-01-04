@@ -1,4 +1,4 @@
-import { IDeposit } from '../interfaces/IDeposit';
+import { IDeposit } from 'net-worth-shared';
 
 export class Deposit implements IDeposit {
 	_id!: string;

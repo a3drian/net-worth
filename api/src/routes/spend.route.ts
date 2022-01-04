@@ -1,6 +1,6 @@
 import { Router, Response, Request, NextFunction } from 'express';
 // Models:
-import { IDeposit } from '../interfaces/IDeposit';
+import { IDeposit } from 'net-worth-shared';
 import { Deposit } from '../models/deposit.model';
 import { SearchOption } from '../models/search.model';
 // Services:
