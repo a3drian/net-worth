@@ -1,0 +1,18 @@
+{
+    "name": "net-worth-shared",
+    "version": "1.0.0",
+    "description": "Database management API for NetWorth",
+    "repository": {},
+    "author": "a3drian",
+    "license": "ISC",
+    "scripts": {
+        "build": "node build",
+        "compile": "node node_modules/typescript/bin/tsc --project tsconfig.app.json --outDir bin",
+        "start": "npm run compile -- --watch"
+    },
+    "devDependencies": {
+        "@types/node": "^17.0.5",
+        "ts-node-dev": "^1.1.8",
+        "typescript": "^4.5.4"
+    }
+}
