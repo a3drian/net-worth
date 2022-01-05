@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 // Services:
 import { DepositsService } from 'src/app/services/deposits.service';
 // Shared:
@@ -22,6 +23,7 @@ export class DashboardComponent implements OnInit {
 	deposits: any;
 
 	constructor(
+		private router: Router,
 		private depositsService: DepositsService
 	) { }
 
@@ -35,6 +37,13 @@ export class DashboardComponent implements OnInit {
 					this.isLoading = false;
 				}
 			);
+	}
+
+	navigateToSpendPage(): void {
+		const spendUrl = Constants.appEndpoints.SPEND_URL;
+		this.router
+			.navigateByUrl(spendUrl)
+			.catch((error) => { log('dashboard.ts', this.navigateToSpendPage.name, `Could not navigate to: ${spendUrl}`, error); });
 	}
 
 }

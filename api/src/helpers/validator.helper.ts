@@ -23,8 +23,7 @@ export function validDeposit(deposit: Partial<IDeposit>): boolean {
 		!deposit.owner ||
 		!deposit.amount ||
 		!deposit.currency ||
-		!deposit.createdAt ||
-		!deposit.exchangeRate
+		!deposit.createdAt
 	) {
 		log(CLASS_NAME, validId.name, `partial deposit is not valid!`);
 		return false;

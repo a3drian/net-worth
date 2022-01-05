@@ -5,6 +5,7 @@
     "repository": {},
     "author": "a3drian",
     "license": "ISC",
+	"private": true,
     "scripts": {
         "build": "node build",
         "compile": "node node_modules/typescript/bin/tsc --project tsconfig.app.json --outDir bin",

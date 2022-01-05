@@ -21,10 +21,9 @@ export class LoginComponent implements OnInit {
 		this.isLoading = true;
 		setTimeout(
 			() => {
-				this.router.navigate([Constants.appEndpoints.DASHBOARD_URL])
+				this.router.navigate([Constants.appEndpoints.DASHBOARD_URL]);
 				this.isLoading = false;
-			}, 500
-		);
+			}, 500);
 	}
 
 }

@@ -5,11 +5,15 @@
 	<h1>Net Worth</h1>
 	<p>Balances</p>
 
+	<button routerLink="/spend">SAVE</button>
+	<button (click)="navigateToSpendPage()">SPEND</button>
+
+	<p>Spending</p>
 	<p *ngFor="let deposit of deposits">
-		<b>{{ deposit.amount }}{{ deposit.currency }} or {{ deposit.amount * deposit.exchangeRate }} RON</b> (@ {{
-		deposit.exchangeRate
-		}}) in {{ deposit.createdAt | date }}
+		<b>{{ deposit.amount }} RON</b> in {{ deposit.createdAt | date }}
 		<button>ADD</button>
+		<button>EDIT</button>
+		<button>DELETE</button>
 	</p>
 
 	<button>Lei</button> <button>Euro</button> <button>Dollar</button> <button>Pound sterling</button>

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
 // Models:
+import { Deposit } from '../models/Deposit';
 import { SearchOption } from '../models/SearchOption';
 // rxjs:
 import { Observable, tap } from 'rxjs';
@@ -32,11 +33,23 @@ export class DepositsService {
 				this.SEARCH_URL,
 				new SearchOption({ owner: email })
 			)
-			.pipe(
-				tap(
-					() => { }
-				)
-			);
+			.pipe(tap(() => { }));
+
+		return request;
+	}
+
+	postDeposit(
+		deposit: Partial<Deposit>
+	) {
+		log('deposits.service.ts', this.postDeposit.name, 'this.BASE_URL:', this.BASE_URL);
+		log('deposits.service.ts', this.postDeposit.name, 'deposit:', deposit);
+
+		const request = this.http
+			.post<IDeposit>(
+				this.BASE_URL,
+				deposit
+			)
+			.pipe(tap(() => { }));
 
 		return request;
 	}

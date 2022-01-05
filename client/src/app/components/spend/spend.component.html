@@ -1,0 +1,58 @@
+<p *ngIf="isInDebugMode"><b>spend</b> works!</p>
+
+<form [formGroup]="depositForm">
+	<mat-label for="amount">Amount:</mat-label>
+	<input type="number" name="amount" value="{{ defaultAmount }}" formControlName="amount" required>
+	<br><br>
+
+	<mat-label for="currency">Currency:</mat-label>
+	<mat-select id="currency-select" name="currency" formControlName="currency" required>
+		<mat-option *ngFor="let c of currencies" [value]="c">
+			{{ c.name }} ({{c.symbol}})
+		</mat-option>
+	</mat-select>
+	<br><br>
+
+	<mat-label for="createdAt">Created at:</mat-label>
+	<input type="date" name="createdAt" formControlName="createdAt" required>
+	<br><br>
+
+	<mat-label for="exchangeRate">Exchange rate:</mat-label>
+	<input type="number" name="exchangeRate" formControlName="exchangeRate" required>
+	<br><br>
+
+	<mat-label for="category">Category:</mat-label>
+	<mat-select name="category" id="category-select" formControlName="category">
+		<mat-option *ngFor="let c of categories" [value]="c">
+			{{ c }}
+		</mat-option>
+	</mat-select>
+	<br><br>
+
+	<mat-label for="recurrent">Recurrent?</mat-label>
+	<input type="checkbox" name="recurrent" formControlName="recurrent">
+	<br><br>
+
+	<mat-label for="location">Location:</mat-label>
+	<input type="text" name="location" value="{{ defaultLocation }}" formControlName="location">
+	<br><br>
+
+	<mat-label for="city">City:</mat-label>
+	<mat-select name="city" id="city-select" formControlName="city">
+		<mat-option *ngFor="let c of cities" [value]="c">
+			{{ c }}
+		</mat-option>
+	</mat-select>
+	<br><br>
+
+	<button type="button" (click)="spendDeposit()">SPEND</button>
+</form>
+
+<button (click)="redirect()">
+	Go home
+</button>
+
+<div *ngIf="isInDebugMode">
+	<p>Form value:<br>{{ depositForm.value | json }}</p>
+	<p>Form status:<br>{{ depositForm.status }}</p>
+</div>

@@ -5,6 +5,7 @@
   "repository": {},
   "author": "a3drian",
   "license": "ISC",
+	"private": true,
   "main": "index.js",
   "scripts": {
     "prebuild": "npm run type:check && npm run lint",
