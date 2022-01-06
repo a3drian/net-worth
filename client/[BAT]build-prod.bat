@@ -1,1 +1,1 @@
-start cmd.exe /k "npm run build:prod"
+start cmd.exe /k "_build-prod"

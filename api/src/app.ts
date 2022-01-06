@@ -13,7 +13,7 @@ import { IExpressError } from 'net-worth-shared';
 import { setSpendRoute } from './routes/spend.route';
 // Shared:
 import { Constants } from './shared/Constants';
-import { ERROR_MESSAGES, STATUS_CODES } from 'foodspy-shared';
+import { ERROR_MESSAGES, STATUS_CODES } from 'net-worth-shared';
 import { log } from './shared/Logger';
 
 let app: Application;

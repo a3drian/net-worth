@@ -1,1 +1,1 @@
-start cmd.exe /k "npm run start:debug"
+start cmd.exe /k "_start-debug"

@@ -7,7 +7,7 @@ import { SearchOption } from '../models/search.model';
 import * as depositService from '../services/deposits.service';
 // Shared:
 import { log } from '../shared/Logger';
-import { STATUS_CODES } from 'foodspy-shared';
+import { STATUS_CODES } from 'net-worth-shared';
 
 const CLASS_NAME = 'spend.route.ts';
 

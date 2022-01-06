@@ -1,5 +1,5 @@
 // Models:
-import { Currency } from '../../models/Currency';
+import { Currency } from '../models/Currency';
 
 export class CURRENCIES {
 	static readonly LEI = new Currency({ name: 'Lei', symbol: 'L', code: 'RON' });

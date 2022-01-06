@@ -1,1 +1,1 @@
-start cmd.exe /k "npm run start:tsc"
+start cmd.exe /k "_start"

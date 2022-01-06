@@ -8,7 +8,7 @@ import { ISearchOption } from 'net-worth-shared';
 import { DepositModel } from '../schemas/deposit.schema';
 // Shared:
 import { log } from '../shared/Logger';
-import { STATUS_CODES } from 'foodspy-shared';
+import { STATUS_CODES } from 'net-worth-shared';
 
 const CLASS_NAME = 'deposits.service.ts';
 

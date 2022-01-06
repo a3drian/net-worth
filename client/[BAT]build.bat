@@ -1,1 +1,1 @@
-start cmd.exe /k "npm run build"
+start cmd.exe /k "_build"

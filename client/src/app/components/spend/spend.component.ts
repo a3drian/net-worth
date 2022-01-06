@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 // Interfaces:
-import { Currency } from 'src/app/models/Currency';
 import { IDeposit } from 'net-worth-shared';
 // Models:
+import { Currency } from 'net-worth-shared';
 import { Deposit } from 'src/app/models/Deposit';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
@@ -16,7 +16,7 @@ import { LocationsService } from 'src/app/services/locations.service';
 import { Constants } from 'src/app/shared/Constants';
 import { CATEGORIES } from 'src/app/shared/constants/Categories';
 import { CITIES } from 'src/app/shared/constants/Cities';
-import { CURRENCIES } from 'src/app/shared/constants/Currencies';
+import { CURRENCIES } from 'net-worth-shared';
 import { LOCATIONS } from 'src/app/shared/constants/Locations';
 
 @Component({

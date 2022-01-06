@@ -1,6 +1,6 @@
 {
     "name": "net-worth-shared",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "description": "Shared resources for NetWorth",
     "repository": {},
     "author": "a3drian",
@@ -8,9 +8,9 @@
 	"private": true,
     "scripts": {
         "build": "node build",
-        "compile": "node node_modules/typescript/bin/tsc --project tsconfig.app.json --outDir bin",
-        "compile:rd": "rd bin /s /q && node node_modules/typescript/bin/tsc --project tsconfig.app.json --outDir bin",
-        "compile:rm": "rm -rf bin/* && node node_modules/typescript/bin/tsc --project tsconfig.app.json --outDir bin",
+        "compile": "node node_modules/typescript/bin/tsc --project tsconfig.json --outDir bin",
+        "compile:rd": "rd bin /s /q && node node_modules/typescript/bin/tsc --project tsconfig.json --outDir bin",
+        "compile:rm": "rm -rf bin/* && node node_modules/typescript/bin/tsc --project tsconfig.json --outDir bin",
         "start": "npm run compile -- --watch"
     },
     "devDependencies": {
