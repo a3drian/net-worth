@@ -26,7 +26,7 @@ async function getDepositById(
 	req: Request,
 	res: Response,
 	next: NextFunction
-): Promise<IDeposit | void> {
+): Promise<IDeposit | void | any> {
 	console.log('');
 
 	const id = req.params.id;
@@ -50,7 +50,7 @@ async function getDepositsByOwner(
 	req: Request,
 	res: Response,
 	next: NextFunction
-): Promise<IDeposit[] | void> {
+): Promise<IDeposit[] | void | any> {
 	console.log('');
 
 	const body = req.body;
@@ -77,7 +77,7 @@ async function postDeposit(
 	req: Request,
 	res: Response,
 	next: NextFunction
-): Promise<IDeposit | void> {
+): Promise<IDeposit | void | any> {
 	console.log('');
 
 	const body = req.body;
@@ -89,7 +89,10 @@ async function postDeposit(
 			amount: body.amount,
 			currency: body.currency,
 			createdAt: body.createdAt,
-			exchangeRate: body.exchangeRate
+			details: body.details,
+			category: body.category,
+			location: body.location,
+			city: body.city
 		}
 	);
 
@@ -112,7 +115,7 @@ async function putDeposit(
 	req: Request,
 	res: Response,
 	next: NextFunction
-): Promise<IDeposit | void> {
+): Promise<IDeposit | void | any> {
 	console.log('');
 
 	const id = req.params.id;
@@ -126,7 +129,7 @@ async function putDeposit(
 			amount: body.amount,
 			currency: body.currency,
 			createdAt: body.createdAt,
-			exchangeRate: body.exchangeRate
+			details: body.details
 		}
 	);
 
@@ -149,7 +152,7 @@ async function deleteDeposit(
 	req: Request,
 	res: Response,
 	next: NextFunction
-): Promise<void> {
+): Promise<void | any> {
 	console.log('');
 
 	const id = req.params.id;

@@ -4,6 +4,7 @@ export class Deposit implements IDeposit {
 	_id!: string;
 	owner!: string;
 	amount!: number;
+	details!: string;
 	currency!: string;
 	createdAt!: Date;
 	modifiedAt?: Date | undefined;

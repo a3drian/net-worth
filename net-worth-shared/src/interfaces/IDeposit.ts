@@ -2,8 +2,15 @@ export interface IDeposit {
 	_id: string;
 	owner: string;
 	amount: number;
-	currency: string;
+	details: string;
 	createdAt: Date;
+
+	currency?: string;
 	modifiedAt?: Date;
-	exchangeRate: number;
+	exchangeRate?: number;
+
+	recurrent?: boolean;
+	category?: string;
+	location?: string;
+	city?: string;
 }

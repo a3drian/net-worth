@@ -8,15 +8,16 @@
 	<button routerLink="/spend">SAVE</button>
 	<button (click)="navigateToSpendPage()">SPEND</button>
 
-	<p>Spending</p>
+	<p>Spending report for {{ today | date: 'MMMM' }} - {{ totalAmount }} RON </p>
 	<p *ngFor="let deposit of deposits">
-		<b>{{ deposit.amount }} RON</b> in {{ deposit.createdAt | date }}
-		<button>ADD</button>
-		<button>EDIT</button>
-		<button>DELETE</button>
+		<b>{{ deposit.amount }} RON</b> in {{ deposit.createdAt | date: 'd.M' }} for '{{ deposit.details }}' at {{
+		deposit.location }} ({{deposit.category}})
+		<button disabled>View</button>
+		<button disabled>Edit</button>
+		<button disabled>Delete</button>
 	</p>
 
-	<button>Lei</button> <button>Euro</button> <button>Dollar</button> <button>Pound sterling</button>
+	<button>Last month</button> <button>This year</button>
 </div>
 
 <router-outlet></router-outlet>

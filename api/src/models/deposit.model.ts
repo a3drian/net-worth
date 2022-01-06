@@ -4,12 +4,18 @@ export class Deposit implements IDeposit {
 	_id!: string;
 	owner!: string;
 	amount!: number;
+	details!: string;
 	currency!: string;
 	createdAt!: Date;
-	exchangeRate!: number;
 	modifiedAt?: Date | undefined;
+	exchangeRate!: number;
 
-	public constructor(partial?: Partial<IDeposit>) {
+	recurrent?: boolean;
+	category?: string;
+	location?: string;
+	city?: string;
+
+	public constructor(partial?: Partial<Deposit>) {
 		Object.assign(this, partial);
 	}
 }

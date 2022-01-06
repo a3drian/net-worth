@@ -7,12 +7,7 @@ import { CITIES } from '../shared/constants/Cities';
 })
 export class CitiesService {
 
-	cities = [
-		CITIES.BRASOV,
-		CITIES.BUCURESTI,
-		CITIES.CLUJ,
-		CITIES.TIMISOARA
-	];
+	cities: CITIES[] = Object.values(CITIES);
 
 	constructor() { }
 

@@ -1,0 +1,11 @@
+div {
+	max-width: 600px;
+	padding: 5vw;
+}
+form {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+mat-label {
+	grid-column: 1 / 2;
+}

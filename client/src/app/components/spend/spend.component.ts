@@ -30,7 +30,7 @@ export class SpendComponent implements OnInit {
 
 	DASHBOARD_URL = '/' + Constants.appEndpoints.DASHBOARD_URL;
 
-	depositForm: FormGroup;
+	depositForm: FormGroup = new FormGroup({});
 
 	currencies: Currency[] = [];
 	categories: CATEGORIES[] = [];
@@ -38,6 +38,7 @@ export class SpendComponent implements OnInit {
 	locations: LOCATIONS[] = [];
 
 	defaultAmount = 10;
+	defaultDetailsPlaceholder = 'Eg. weekly groceries';
 	defaultCurrency = CURRENCIES.LEI;
 	defaultCreatedAt = new Date().toISOString().split('T')[0];
 	defaultExchangeRate = 1;
@@ -55,16 +56,20 @@ export class SpendComponent implements OnInit {
 		private router: Router
 	) {
 
-		console.log(this.defaultCurrency);
-		console.log(this.defaultCategory);
 		this.currencies = this.currenciesService.getCurrencies();
 		this.categories = this.categoriesService.getCategories();
 		this.cities = this.citiesService.getCities();
 		this.locations = this.locationsService.getLocations();
+
+		this.initializeForm();
+	}
+
+	private initializeForm(): void {
 		this.depositForm = this.formBuilder
 			.group(
 				{
 					amount: [this.defaultAmount, Validators.required],
+					details: [''],
 					currency: [this.defaultCurrency, Validators.required],
 					createdAt: [this.defaultCreatedAt, Validators.required],
 					exchangeRate: [this.defaultExchangeRate],
@@ -78,14 +83,22 @@ export class SpendComponent implements OnInit {
 
 	ngOnInit(): void { }
 
+	validDepositFromForm(deposit: IDeposit): boolean {
+		if (deposit.details.length === 0) { deposit.details = '...'; }
+		return true;
+	}
+
 	spendDeposit(): void {
 		const depositFromForm = this.depositForm.value;
+		if (!this.validDepositFromForm(depositFromForm)) { return; };
+
 		const deposit: IDeposit = new Deposit({
 			owner: 'adi@foodspy.com',
 			amount: depositFromForm.amount,
-			currency: depositFromForm.currency.symbol,
+			currency: CURRENCIES.LEI.name,
 			createdAt: depositFromForm.createdAt,
 			exchangeRate: depositFromForm.exchangeRate,
+			details: depositFromForm.details,
 			category: depositFromForm.category,
 			recurrent: depositFromForm.recurrent,
 			location: depositFromForm.location,

@@ -19,8 +19,10 @@ export class DashboardComponent implements OnInit {
 	depositsLoaded: boolean = false;
 
 	errorResponse: HttpErrorResponse | null = null;
+	today: Date = new Date();
 
 	deposits: any;
+	totalAmount!: number;
 
 	constructor(
 		private router: Router,
@@ -33,6 +35,7 @@ export class DashboardComponent implements OnInit {
 			.subscribe(
 				(deposits) => {
 					this.deposits = deposits;
+					this.totalAmount = this.depositsService.getTotalAmount(this.deposits);
 					this.depositsLoaded = true;
 					this.isLoading = false;
 				}

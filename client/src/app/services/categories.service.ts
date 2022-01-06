@@ -7,18 +7,7 @@ import { CATEGORIES } from '../shared/constants/Categories';
 })
 export class CategoriesService {
 
-	categories = [
-		CATEGORIES.DINING,
-		CATEGORIES.FINANCES,
-		CATEGORIES.GROCERIES,
-		CATEGORIES.HOUSEHOLD,
-		CATEGORIES.SERVICES,
-		CATEGORIES.SHOPPING,
-		CATEGORIES.TRANSPORTATION,
-		CATEGORIES.TRAVEL,
-		CATEGORIES.UTILITIES,
-		CATEGORIES.OTHER,
-	];
+	categories: CATEGORIES[] = Object.values(CATEGORIES);
 
 	constructor() { }
 

@@ -7,12 +7,7 @@ import { LOCATIONS } from '../shared/constants/Locations';
 })
 export class LocationsService {
 
-	locations = [
-		LOCATIONS.CARREFOUR,
-		LOCATIONS.LIDL,
-		LOCATIONS.PROFI,
-		LOCATIONS.SELGROS
-	];
+	locations: LOCATIONS[] = Object.values(LOCATIONS);
 
 	constructor() { }
 
