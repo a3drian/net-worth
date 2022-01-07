@@ -1,4 +1,4 @@
-<p *ngIf="isInDebugMode"><b>dashboard</b> works!</p>
+<p class="debug" *ngIf="isInDebugMode"><b>dashboard</b> works!</p>
 
 <div *ngIf="isLoading" class="loading-spinner">
 	<app-loading-spinner></app-loading-spinner>
@@ -15,6 +15,8 @@
 	<p>Spending report for {{ today | date: 'MMMM' }} - <b>{{ totalAmount }} RON</b>
 		<button (click)="navigateToSpendPage()">Spend</button>
 	</p>
+
+	<!--
 	<p *ngFor="let deposit of deposits">
 		<b>{{ deposit.amount }} RON</b> in {{ deposit.createdAt | date: 'd.M' }} for '{{ deposit.details }}' at loc. '{{
 		deposit.location }}' in cat. '{{deposit.category}}'
@@ -27,11 +29,15 @@
 			Edit
 		</button>
 
-		<button (click)="deleteDeposit(deposit)">
+		<button (click)="openConfirmationDialog(deposit)">
 			Delete
 		</button>
 
 	</p>
+	-->
+
+	<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
+	</app-deposit-card>
 
 	<!-- <button>Last month</button> <button>This year</button> -->
 </div>

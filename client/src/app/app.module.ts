@@ -18,6 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Components:
 import { AppComponent } from './components/app/app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DepositCardComponent } from './components/deposits/deposit-card/deposit-card.component';
 import { DepositFormComponent } from './components/forms/deposit-form/deposit-form.component';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { LoginComponent } from './components/login/login.component';
@@ -25,6 +26,9 @@ import { NotFoundPageComponent } from './shared/components/not-found-page/not-fo
 import { SpendComponent } from './components/spend/spend.component';
 import { SpendFormComponent } from './components/forms/spend-form/spend-form.component';
 import { ViewComponent } from './components/view/view.component';
+// Dialogs:
+import { DeleteDepositDialogComponent } from './components/dialogs/delete-deposit-dialog/delete-deposit-dialog.component';
+import { ShowDepositDialogComponent } from './components/dialogs/show-deposit-dialog/show-deposit-dialog.component';
 // Shared:
 import { appRoutes } from './app.routes';
 import { Constants } from './shared/Constants';
@@ -38,8 +42,11 @@ import { Constants } from './shared/Constants';
 		LoadingSpinnerComponent,
 		SpendComponent,
 		SpendFormComponent,
-  ViewComponent,
-  DepositFormComponent
+		ViewComponent,
+		DepositFormComponent,
+		DepositCardComponent,
+		ShowDepositDialogComponent,
+		DeleteDepositDialogComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -55,18 +62,18 @@ import { Constants } from './shared/Constants';
 			{ path: '**', component: NotFoundPageComponent }
 		]),
 		HttpClientModule,
-    FormsModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatDialogModule,
+		FormsModule,
+		MatCardModule,
+		MatButtonModule,
+		MatIconModule,
+		MatInputModule,
+		MatFormFieldModule,
+		MatSelectModule,
+		MatTableModule,
+		MatCheckboxModule,
+		MatDialogModule,
 		NoopAnimationsModule,
-    ReactiveFormsModule
+		ReactiveFormsModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]
