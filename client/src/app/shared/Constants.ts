@@ -4,7 +4,8 @@ export const Constants = Object.freeze({
 	appEndpoints: Object.freeze({
 		LOGIN_URL: 'login',
 		DASHBOARD_URL: 'dashboard',
-		SPEND_URL: 'spend'
+		SPEND_URL: 'spend',
+		VIEW_URL: 'view'
 	}),
 
 	apiEndpoints: Object.freeze({

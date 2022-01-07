@@ -23,4 +23,4 @@ const log = function (
 			console.log(`${className}.${caller}: ${message}`, '');
 		}
 	}
-};
+}

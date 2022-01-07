@@ -1,23 +1,39 @@
 <p *ngIf="isInDebugMode"><b>dashboard</b> works!</p>
 
-<div>
+<div *ngIf="isLoading" class="loading-spinner">
+	<app-loading-spinner></app-loading-spinner>
+</div>
+
+<div *ngIf="!isLoading">
 	<p>Welcome!</p>
 	<h1>Net Worth</h1>
-	<p>Balances</p>
 
-	<button routerLink="/spend">SAVE</button>
-	<button (click)="navigateToSpendPage()">SPEND</button>
-
-	<p>Spending report for {{ today | date: 'MMMM' }} - {{ totalAmount }} RON </p>
-	<p *ngFor="let deposit of deposits">
-		<b>{{ deposit.amount }} RON</b> in {{ deposit.createdAt | date: 'd.M' }} for '{{ deposit.details }}' at {{
-		deposit.location }} ({{deposit.category}})
-		<button disabled>View</button>
-		<button disabled>Edit</button>
-		<button disabled>Delete</button>
+	<p>Balances report for {{ today | date: 'MMMM' }}
+		<button routerLink="/spend">Save</button>
 	</p>
 
-	<button>Last month</button> <button>This year</button>
+	<p>Spending report for {{ today | date: 'MMMM' }} - <b>{{ totalAmount }} RON</b>
+		<button (click)="navigateToSpendPage()">Spend</button>
+	</p>
+	<p *ngFor="let deposit of deposits">
+		<b>{{ deposit.amount }} RON</b> in {{ deposit.createdAt | date: 'd.M' }} for '{{ deposit.details }}' at loc. '{{
+		deposit.location }}' in cat. '{{deposit.category}}'
+
+		<button (click)="viewDeposit(deposit)">
+			View
+		</button>
+
+		<button (click)="viewDeposit(deposit)">
+			Edit
+		</button>
+
+		<button (click)="deleteDeposit(deposit)">
+			Delete
+		</button>
+
+	</p>
+
+	<!-- <button>Last month</button> <button>This year</button> -->
 </div>
 
 <router-outlet></router-outlet>

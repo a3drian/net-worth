@@ -19,14 +19,33 @@ export class DepositsService {
 	private readonly BASE_URL: string = Constants.apiEndpoints.SPEND_BASE_URL;
 	private readonly SEARCH_URL: string = this.BASE_URL + Constants.apiEndpoints.SPEND_SEARCH_URL;
 
+	private readonly CLASS_NAME = 'deposits.service.ts';
+
 	constructor(
 		private http: HttpClient
 	) { }
 
+	validId(id: string): boolean {
+		log(this.CLASS_NAME, this.validId.name, 'id:', id);
+		return true;
+	}
+
+	getDepositsById(id: string): Observable<IDeposit> {
+		const url = `${this.BASE_URL}/${id}`;
+
+		log(this.CLASS_NAME, this.getDepositsById.name, 'url:', url);
+
+		const request = this.http
+			.get<IDeposit>(url)
+			.pipe(tap(() => { }));
+
+		return request;
+	}
+
 	getDepositsByOwner(
 		email: string
 	): Observable<IDeposit[]> {
-		log('deposits.service.ts', this.getDepositsByOwner.name, 'this.SEARCH_URL:', this.SEARCH_URL);
+		log(this.CLASS_NAME, this.getDepositsByOwner.name, 'owner:', email);
 
 		const request = this.http
 			.post<IDeposit[]>(
@@ -41,14 +60,25 @@ export class DepositsService {
 	postDeposit(
 		deposit: Partial<Deposit>
 	) {
-		log('deposits.service.ts', this.postDeposit.name, 'this.BASE_URL:', this.BASE_URL);
-		log('deposits.service.ts', this.postDeposit.name, 'deposit:', deposit);
+		log(this.CLASS_NAME, this.postDeposit.name, 'deposit:', deposit);
 
 		const request = this.http
 			.post<IDeposit>(
 				this.BASE_URL,
 				deposit
 			)
+			.pipe(tap(() => { }));
+
+		return request;
+	}
+
+	deleteDeposit(id: string) {
+		const url = `${this.BASE_URL}/${id}`;
+
+		log(this.CLASS_NAME, this.deleteDeposit.name, 'url:', url);
+
+		const request = this.http
+			.delete<IDeposit>(url)
 			.pipe(tap(() => { }));
 
 		return request;

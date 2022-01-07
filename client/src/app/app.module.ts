@@ -18,11 +18,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Components:
 import { AppComponent } from './components/app/app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DepositFormComponent } from './components/forms/deposit-form/deposit-form.component';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
 import { SpendComponent } from './components/spend/spend.component';
 import { SpendFormComponent } from './components/forms/spend-form/spend-form.component';
+import { ViewComponent } from './components/view/view.component';
 // Shared:
 import { appRoutes } from './app.routes';
 import { Constants } from './shared/Constants';
@@ -35,7 +37,9 @@ import { Constants } from './shared/Constants';
 		DashboardComponent,
 		LoadingSpinnerComponent,
 		SpendComponent,
-		SpendFormComponent
+		SpendFormComponent,
+  ViewComponent,
+  DepositFormComponent
 	],
 	imports: [
 		BrowserModule,
@@ -47,6 +51,7 @@ import { Constants } from './shared/Constants';
 			},
 			{ path: appRoutes.login.path, component: LoginComponent },
 			{ path: appRoutes.spend.path, component: SpendComponent },
+			{ path: `${appRoutes.view.path}/:id`, component: ViewComponent },
 			{ path: '**', component: NotFoundPageComponent }
 		]),
 		HttpClientModule,

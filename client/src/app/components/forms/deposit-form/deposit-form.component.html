@@ -1,22 +1,12 @@
-<p *ngIf="isInDebugMode"><b>spend</b> works!</p>
+<p *ngIf="isInDebugMode"><b>deposit-form</b> works!</p>
 
 <div>
-	<form [formGroup]="depositForm">
+	<form [formGroup]="depositForm" *ngIf="ready">
 		<mat-label for="amount">Amount:</mat-label>
-		<input type="number" name="amount" value="{{ defaultAmount }}" formControlName="amount" required>
+		<input type="number" name="amount" value="{{ deposit.amount }}" formControlName="amount" required [disabled]="!canEdit">
 
 		<mat-label for="details">Details:</mat-label>
-		<input type="text" name="details" placeholder="{{ defaultDetailsPlaceholder }}" formControlName="details">
-
-		<!-- <mat-label for="currency">Currency:</mat-label>
-		<mat-select id="currency-select" name="currency" formControlName="currency" required>
-			<mat-option *ngFor="let c of currencies" [value]="c">
-				{{ c.name }} ({{c.symbol}})
-			</mat-option>
-		</mat-select> -->
-
-		<!-- <mat-label for="exchangeRate">Exchange rate:</mat-label>
-		<input type="number" name="exchangeRate" formControlName="exchangeRate" required> -->
+		<input type="text" name="details" value="{{ deposit.details }}" formControlName="details">
 
 		<mat-label for="createdAt">Created at:</mat-label>
 		<input type="date" name="createdAt" formControlName="createdAt" required>
@@ -27,9 +17,6 @@
 				{{ c }}
 			</mat-option>
 		</mat-select>
-
-		<!-- <mat-label for="recurrent">Recurrent?</mat-label>
-		<input type="checkbox" name="recurrent" formControlName="recurrent"> -->
 
 		<mat-label for="location">Location:</mat-label>
 		<mat-select name="location" id="location-select" formControlName="location">
@@ -48,11 +35,9 @@
 
 	</form>
 
-	<button type="button" (click)="spendDeposit()">Spend</button>
+	<button type="button" [disabled]="canEdit" (click)="enableEditing()">Edit</button>
+	<button type="button" [disabled]="!canEdit" (click)="save()">Save</button>
 
-	<button (click)="redirect()">
-		Go home
-	</button>
 </div>
 
 <div *ngIf="isInDebugMode">

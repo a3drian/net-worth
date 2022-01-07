@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+// Interfaces:
+import { IDeposit } from 'net-worth-shared';
 // Services:
 import { DepositsService } from 'src/app/services/deposits.service';
 // Shared:
@@ -16,7 +18,6 @@ export class DashboardComponent implements OnInit {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 	isLoading: boolean = true;
-	depositsLoaded: boolean = false;
 
 	errorResponse: HttpErrorResponse | null = null;
 	today: Date = new Date();
@@ -33,10 +34,9 @@ export class DashboardComponent implements OnInit {
 		this.depositsService
 			.getDepositsByOwner('adi@foodspy.com')
 			.subscribe(
-				(deposits) => {
+				(deposits: IDeposit[]) => {
 					this.deposits = deposits;
 					this.totalAmount = this.depositsService.getTotalAmount(this.deposits);
-					this.depositsLoaded = true;
 					this.isLoading = false;
 				}
 			);
@@ -49,4 +49,22 @@ export class DashboardComponent implements OnInit {
 			.catch((error) => { log('dashboard.ts', this.navigateToSpendPage.name, `Could not navigate to: ${spendUrl}`, error); });
 	}
 
+	viewDeposit(deposit: IDeposit): void {
+		log('dashboard.ts', this.viewDeposit.name, 'deposit:', deposit._id);
+
+		const viewUrl = `${Constants.appEndpoints.VIEW_URL}/${deposit._id}`;
+		this.router
+			.navigateByUrl(viewUrl)
+			.catch((error) => { log('dashboard.ts', this.navigateToSpendPage.name, `Could not navigate to: ${viewUrl}`, error); });
+	}
+
+	deleteDeposit(deposit: IDeposit): void {
+		log('dashboard.ts', this.deleteDeposit.name, 'deposit:', deposit._id);
+
+		// ask for user confirmation before deleting
+
+		this.depositsService
+			.deleteDeposit(deposit._id)
+			.subscribe();
+	}
 }
