@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
 // Models:
-import { Deposit } from '../models/Deposit';
 import { SearchOption } from '../models/SearchOption';
 // rxjs:
 import { Observable, tap } from 'rxjs';
@@ -58,7 +57,7 @@ export class DepositsService {
 	}
 
 	postDeposit(
-		deposit: Partial<Deposit>
+		deposit: Partial<IDeposit>
 	) {
 		log(this.CLASS_NAME, this.postDeposit.name, 'deposit:', deposit);
 

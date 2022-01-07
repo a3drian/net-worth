@@ -5,11 +5,11 @@
 		<mat-label for="amount">Amount:</mat-label>
 		<input type="number" name="amount" value="{{ deposit.amount }}" formControlName="amount" required [disabled]="!canEdit">
 
-		<mat-label for="details">Details:</mat-label>
-		<input type="text" name="details" value="{{ deposit.details }}" formControlName="details">
+		<mat-label id="details-label" for="details">Details:</mat-label>
+		<input id="details-input" type="text" name="details" value="{{ deposit.details }}" formControlName="details">
 
-		<mat-label for="createdAt">Created at:</mat-label>
-		<input type="date" name="createdAt" formControlName="createdAt" required>
+		<mat-label id="createdAt-label" for="createdAt">Created at:</mat-label>
+		<input id="createdAt-input" type="date" name="createdAt" formControlName="createdAt" required>
 
 		<mat-label for="category">Category:</mat-label>
 		<mat-select name="category" id="category-select" formControlName="category">

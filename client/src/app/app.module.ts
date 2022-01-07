@@ -24,8 +24,6 @@ import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loa
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
 import { SpendComponent } from './components/spend/spend.component';
-import { SpendFormComponent } from './components/forms/spend-form/spend-form.component';
-import { ViewComponent } from './components/view/view.component';
 // Dialogs:
 import { DeleteDepositDialogComponent } from './components/dialogs/delete-deposit-dialog/delete-deposit-dialog.component';
 import { ShowDepositDialogComponent } from './components/dialogs/show-deposit-dialog/show-deposit-dialog.component';
@@ -41,8 +39,6 @@ import { Constants } from './shared/Constants';
 		DashboardComponent,
 		LoadingSpinnerComponent,
 		SpendComponent,
-		SpendFormComponent,
-		ViewComponent,
 		DepositFormComponent,
 		DepositCardComponent,
 		ShowDepositDialogComponent,
@@ -58,7 +54,6 @@ import { Constants } from './shared/Constants';
 			},
 			{ path: appRoutes.login.path, component: LoginComponent },
 			{ path: appRoutes.spend.path, component: SpendComponent },
-			{ path: `${appRoutes.view.path}/:id`, component: ViewComponent },
 			{ path: '**', component: NotFoundPageComponent }
 		]),
 		HttpClientModule,

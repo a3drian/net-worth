@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 // Components
 import { DeleteDepositDialogComponent } from '../../dialogs/delete-deposit-dialog/delete-deposit-dialog.component';
@@ -31,7 +30,6 @@ export class DepositCardComponent implements OnInit {
 	showDepositDialogSub: Subscription = new Subscription();
 
 	constructor(
-		private router: Router,
 		private depositsService: DepositsService,
 		public deleteDepositDialog: MatDialog,
 		public showDepositDialog: MatDialog,
@@ -47,30 +45,13 @@ export class DepositCardComponent implements OnInit {
 	deleteDeposit(deposit: IDeposit): void {
 		log('deposit-card.ts', this.deleteDeposit.name, 'deposit:', deposit._id);
 
-		this.deleted = !this.deleted;
-
 		this.depositsService
 			.deleteDeposit(deposit._id)
 			.subscribe();
 	}
 
-	navigateToSpendPage(): void {
-		const spendUrl = Constants.appEndpoints.SPEND_URL;
-		this.router
-			.navigateByUrl(spendUrl)
-			.catch((error) => { log('deposit-card.ts', this.navigateToSpendPage.name, `Could not navigate to: ${spendUrl}`, error); });
-	}
-
-	viewDeposit(deposit: IDeposit): void {
-		log('deposit-card.ts', this.viewDeposit.name, 'deposit:', deposit._id);
-
-		const viewUrl = `${Constants.appEndpoints.VIEW_URL}/${deposit._id}`;
-		this.router
-			.navigateByUrl(viewUrl)
-			.catch((error) => { log('deposit-card.ts', this.navigateToSpendPage.name, `Could not navigate to: ${viewUrl}`, error); });
-	}
-
 	saveDeposit(deposit: IDeposit): void {
+		log('deposit-card.ts', this.saveDeposit.name, 'deposit:', deposit._id);
 
 	}
 
@@ -118,6 +99,7 @@ export class DepositCardComponent implements OnInit {
 				(canDelete: boolean) => {
 					log('deposit-card.ts', this.openDeleteDepositDialog.name, 'canDelete:', canDelete);
 					if (canDelete) {
+						setTimeout(() => { this.deleted = true; }, 500);
 						this.deleteDeposit(deposit);
 					}
 				}

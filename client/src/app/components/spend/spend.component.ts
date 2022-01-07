@@ -31,6 +31,8 @@ export class SpendComponent implements OnInit {
 	DASHBOARD_URL = '/' + Constants.appEndpoints.DASHBOARD_URL;
 
 	depositForm: FormGroup = new FormGroup({});
+	canEdit: boolean = false;
+	ready: boolean = false;
 
 	currencies: Currency[] = [];
 	categories: CATEGORIES[] = [];
@@ -79,6 +81,14 @@ export class SpendComponent implements OnInit {
 					city: [this.defaultCity]
 				}
 			);
+	}
+
+	enableEditing(): void {
+		this.canEdit = !this.canEdit;
+	}
+
+	save(): void {
+		this.canEdit = !this.canEdit;
 	}
 
 	ngOnInit(): void { }

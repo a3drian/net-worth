@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
 // Shared:
@@ -15,11 +15,14 @@ export class ShowDepositDialogComponent implements OnInit {
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public deposit: IDeposit
+		@Inject(MAT_DIALOG_DATA) public deposit: IDeposit,
+		public dialogReference: MatDialogRef<ShowDepositDialogComponent>
 	) { }
 
 	ngOnInit(): void { }
 
-	close(): void { }
+	getConfirmation(confirmation: boolean): void {
+		this.dialogReference.close(confirmation);
+	}
 
 }
