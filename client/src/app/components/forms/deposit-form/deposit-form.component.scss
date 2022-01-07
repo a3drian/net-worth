@@ -4,7 +4,29 @@ div {
 form {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
+	gap: 0.5rem;
 }
 mat-label {
 	grid-column: 1 / 2;
 }
+
+/*
+#details-label {
+}
+
+#details-input {
+	grid-row-start: 2;
+	grid-row-end: 4;
+	grid-column: 2;
+}
+
+#createdAt-label {
+	grid-row-start: 4;
+	grid-column: 1;
+}
+
+#createdAt-input {
+	grid-row-start: 4;
+	grid-column: 2;
+}
+*/

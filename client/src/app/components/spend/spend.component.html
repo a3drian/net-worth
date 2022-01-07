@@ -59,3 +59,63 @@
 	<p>Form value:<br>{{ depositForm.value | json }}</p>
 	<p>Form status:<br>{{ depositForm.status }}</p>
 </div>
+
+<!--
+<div>
+	<form [formGroup]="depositForm" *ngIf="ready">
+		<mat-form-field>
+			<mat-label for="amount">Amount:</mat-label>
+			<input type="number" name="amount" formControlName="amount" required
+				[disabled]="!canEdit">
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label id="details-label" for="details">Details:</mat-label>
+			<input id="details-input" type="text" name="details" formControlName="details">
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label id="createdAt-label" for="createdAt">Created at:</mat-label>
+			<input id="createdAt-input" type="date" name="createdAt" formControlName="createdAt" required>
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label for="category">Category:</mat-label>
+			<mat-select name="category" id="category-select" formControlName="category">
+				<mat-option *ngFor="let c of categories" [value]="c">
+					{{ c }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label for="location">Location:</mat-label>
+			<mat-select name="location" id="location-select" formControlName="location">
+				<mat-option *ngFor="let l of locations" [value]="l">
+					{{ l }}
+				</mat-option>
+			</mat-select>
+			<br><br>
+		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label for="city">City:</mat-label>
+			<mat-select name="city" id="city-select" formControlName="city">
+				<mat-option *ngFor="let c of cities" [value]="c">
+					{{ c }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+	</form>
+
+	<button type="button" [disabled]="canEdit" (click)="enableEditing()">Edit</button>
+	<button type="button" [disabled]="!canEdit" (click)="save()">Save</button>
+
+</div>
+
+<div *ngIf="isInDebugMode">
+	<p>Form value:<br>{{ depositForm.value | json }}</p>
+	<p>Form status:<br>{{ depositForm.status }}</p>
+</div>
+-->

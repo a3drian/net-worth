@@ -1,16 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
 // Models:
 import { Currency } from 'net-worth-shared';
-import { Deposit } from 'src/app/models/Deposit';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
 import { CitiesService } from 'src/app/services/cities.service';
 import { CurrenciesService } from 'src/app/services/currencies.service';
-import { DepositsService } from 'src/app/services/deposits.service';
 import { LocationsService } from 'src/app/services/locations.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
@@ -42,13 +39,11 @@ export class DepositFormComponent implements OnInit {
 	locations: LOCATIONS[] = [];
 
 	constructor(
-		private depositsService: DepositsService,
 		private categoriesService: CategoriesService,
 		private citiesService: CitiesService,
 		private currenciesService: CurrenciesService,
 		private locationsService: LocationsService,
-		private formBuilder: FormBuilder,
-		private router: Router
+		private formBuilder: FormBuilder
 	) {
 
 		this.currencies = this.currenciesService.getCurrencies();
