@@ -3,11 +3,12 @@ div {
 }
 form {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr;
 	gap: 0.5rem;
 }
-mat-label {
-	grid-column: 1 / 2;
+
+mat-form-field {
+	max-width: 70%;
 }
 
 /*

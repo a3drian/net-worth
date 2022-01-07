@@ -3,31 +3,24 @@ div {
 }
 form {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr;
 	gap: 0.5rem;
-}
-mat-label {
-	grid-column: 1 / 2;
+	max-width: 400px;
 }
 
-mat-label {
+mat-form-field {
+	max-width: 200px;
 }
 
-input[type='text'] {
-	color: red;
-	padding: 1vw;
-}
+// input[type='text'] {
+// 	color: red;
+// 	padding: 1vw;
+// }
 
-mat-select {
-	border: 2px solid red;
-}
+// mat-select {
+// 	border: 2px solid red;
+// }
 
-mat-option {
-	color: hotpink;
-}
-
-.mat-select-content{
-	width:2000px;
-	background-color: red;
-	font-size: 10px;
-}
+// mat-option {
+// 	color: hotpink;
+// }
