@@ -19,7 +19,7 @@ import { log } from 'src/app/shared/Logger';
 })
 export class DepositCardComponent implements OnInit {
 
-	isInDebugMode: boolean = !Constants.IN_DEBUG_MODE;
+	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
 	@Input()
 	deposit: IDeposit = <IDeposit>{};

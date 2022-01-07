@@ -2,84 +2,24 @@
 
 <div>
 	<form [formGroup]="depositForm">
-		<mat-label for="amount">Amount:</mat-label>
-		<input type="number" name="amount" value="{{ defaultAmount }}" formControlName="amount" required>
 
-		<mat-label for="details">Details:</mat-label>
-		<input type="text" name="details" placeholder="{{ defaultDetailsPlaceholder }}" formControlName="details">
-
-		<!-- <mat-label for="currency">Currency:</mat-label>
-		<mat-select id="currency-select" name="currency" formControlName="currency" required>
-			<mat-option *ngFor="let c of currencies" [value]="c">
-				{{ c.name }} ({{c.symbol}})
-			</mat-option>
-		</mat-select> -->
-
-		<!-- <mat-label for="exchangeRate">Exchange rate:</mat-label>
-		<input type="number" name="exchangeRate" formControlName="exchangeRate" required> -->
-
-		<mat-label for="createdAt">Created at:</mat-label>
-		<input type="date" name="createdAt" formControlName="createdAt" required>
-
-		<mat-label for="category">Category:</mat-label>
-		<mat-select name="category" id="category-select" formControlName="category">
-			<mat-option *ngFor="let c of categories" [value]="c">
-				{{ c }}
-			</mat-option>
-		</mat-select>
-
-		<!-- <mat-label for="recurrent">Recurrent?</mat-label>
-		<input type="checkbox" name="recurrent" formControlName="recurrent"> -->
-
-		<mat-label for="location">Location:</mat-label>
-		<mat-select name="location" id="location-select" formControlName="location">
-			<mat-option *ngFor="let l of locations" [value]="l">
-				{{ l }}
-			</mat-option>
-		</mat-select>
-		<br><br>
-
-		<mat-label for="city">City:</mat-label>
-		<mat-select name="city" id="city-select" formControlName="city">
-			<mat-option *ngFor="let c of cities" [value]="c">
-				{{ c }}
-			</mat-option>
-		</mat-select>
-
-	</form>
-
-	<button type="button" (click)="spendDeposit()">Spend</button>
-
-	<button (click)="redirect()">
-		Go home
-	</button>
-</div>
-
-<div *ngIf="isInDebugMode">
-	<p>Form value:<br>{{ depositForm.value | json }}</p>
-	<p>Form status:<br>{{ depositForm.status }}</p>
-</div>
-
-<!--
-<div>
-	<form [formGroup]="depositForm" *ngIf="ready">
-		<mat-form-field>
+		<mat-form-field appearance="outline">
 			<mat-label for="amount">Amount:</mat-label>
-			<input type="number" name="amount" formControlName="amount" required
-				[disabled]="!canEdit">
+			<input matInput type="number" name="amount" value="{{ defaultAmount }}" formControlName="amount" required>
 		</mat-form-field>
 
-		<mat-form-field>
-			<mat-label id="details-label" for="details">Details:</mat-label>
-			<input id="details-input" type="text" name="details" formControlName="details">
+		<mat-form-field appearance="outline">
+			<mat-label for="details">Details:</mat-label>
+			<input matInput type="text" name="details" placeholder="{{ defaultDetailsPlaceholder }}"
+				formControlName="details">
 		</mat-form-field>
 
-		<mat-form-field>
-			<mat-label id="createdAt-label" for="createdAt">Created at:</mat-label>
-			<input id="createdAt-input" type="date" name="createdAt" formControlName="createdAt" required>
+		<mat-form-field appearance="outline">
+			<mat-label for="createdAt">Created at:</mat-label>
+			<input matInput type="date" name="createdAt" formControlName="createdAt" required>
 		</mat-form-field>
 
-		<mat-form-field>
+		<mat-form-field appearance="outline">
 			<mat-label for="category">Category:</mat-label>
 			<mat-select name="category" id="category-select" formControlName="category">
 				<mat-option *ngFor="let c of categories" [value]="c">
@@ -88,17 +28,16 @@
 			</mat-select>
 		</mat-form-field>
 
-		<mat-form-field>
+		<mat-form-field appearance="outline">
 			<mat-label for="location">Location:</mat-label>
 			<mat-select name="location" id="location-select" formControlName="location">
 				<mat-option *ngFor="let l of locations" [value]="l">
 					{{ l }}
 				</mat-option>
 			</mat-select>
-			<br><br>
 		</mat-form-field>
 
-		<mat-form-field>
+		<mat-form-field appearance="outline">
 			<mat-label for="city">City:</mat-label>
 			<mat-select name="city" id="city-select" formControlName="city">
 				<mat-option *ngFor="let c of cities" [value]="c">
@@ -107,10 +46,48 @@
 			</mat-select>
 		</mat-form-field>
 
+		<mat-checkbox name="recurrent" formControlName="recurrent" (change)="makeRecurrent()" [disabled]="true">
+			<mat-label for="recurrent">Is this a recurrent payment?</mat-label>
+		</mat-checkbox>
+
+		<mat-form-field appearance="outline" *ngIf="recurrent">
+			<mat-label for="frequency">Frequency:</mat-label>
+			<mat-select name="frequency" id="frequency-select" formControlName="frequency">
+				<mat-option *ngFor="let l of frequencies" [value]="l">
+					Every {{ l }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<mat-checkbox name="currencyCheck" formControlName="currencyCheck" (change)="changeCurrency()" [disabled]="true">
+			<mat-label for="currencyCheck">Is this a payment in a different currency?</mat-label>
+		</mat-checkbox>
+
+		<div *ngIf="differentCurrency">
+			<mat-form-field appearance="outline">
+				<mat-label for="currency">Currency:</mat-label>
+				<mat-select id="currency-select" name="currency" formControlName="currency">
+					<mat-option *ngFor="let c of currencies" [value]="c" (onSelectionChange)="updateCurrency(c)">
+						{{ c.name }} ({{ c.symbol }})
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label for="exchangeRate">Exchange rate:</mat-label>
+				<input matInput type="number" name="exchangeRate" formControlName="exchangeRate">
+			</mat-form-field>
+
+			<button mat-stroked-button>Get latest exchange rate for {{ selectedCurrency.name }} </button>
+		</div>
+
 	</form>
 
-	<button type="button" [disabled]="canEdit" (click)="enableEditing()">Edit</button>
-	<button type="button" [disabled]="!canEdit" (click)="save()">Save</button>
+	<button type="button" (click)="spendDeposit()">Add</button>
+
+	<button (click)="redirect()">
+		Go home
+	</button>
 
 </div>
 
@@ -118,4 +95,3 @@
 	<p>Form value:<br>{{ depositForm.value | json }}</p>
 	<p>Form status:<br>{{ depositForm.status }}</p>
 </div>
--->

@@ -33,10 +33,16 @@ export class DepositFormComponent implements OnInit {
 	@Input()
 	deposit!: IDeposit;
 
+	recurrent: boolean = false;
+	differentCurrency: boolean = false;
+	selectedCurrency!: Currency;
+	defaultFrequency = '';
+
 	currencies: Currency[] = [];
 	categories: CATEGORIES[] = [];
 	cities: CITIES[] = [];
 	locations: LOCATIONS[] = [];
+	frequencies: string[] = ['week', 'month'];
 
 	constructor(
 		private categoriesService: CategoriesService,
@@ -67,9 +73,21 @@ export class DepositFormComponent implements OnInit {
 					createdAt: [new Date(this.deposit.createdAt).toISOString().split('T')[0], Validators.required],
 					category: [this.deposit.category],
 					location: [this.deposit.location],
-					city: [this.deposit.city]
+					city: [this.deposit.city],
+					recurrent: [this.recurrent],
+					frequency: [this.defaultFrequency],
+					currencyCheck: [this.differentCurrency],
+					currency: [this.deposit.currency],
+					exchangeRate: [this.deposit.exchangeRate]
 				}
 			);
+	}
+
+	makeRecurrent(): void { this.recurrent = !this.recurrent; }
+	changeCurrency(): void { this.differentCurrency = !this.differentCurrency; }
+
+	updateCurrency(c: Currency) {
+		this.selectedCurrency = c;
 	}
 
 	enableEditing(): void {

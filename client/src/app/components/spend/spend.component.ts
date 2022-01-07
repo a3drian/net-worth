@@ -34,12 +34,18 @@ export class SpendComponent implements OnInit {
 	canEdit: boolean = false;
 	ready: boolean = false;
 
+	recurrent: boolean = false;
+	differentCurrency: boolean = false;
+	selectedCurrency!: Currency;
+
 	currencies: Currency[] = [];
 	categories: CATEGORIES[] = [];
 	cities: CITIES[] = [];
 	locations: LOCATIONS[] = [];
+	frequencies: string[] = ['week', 'month'];
 
 	defaultAmount = 10;
+	defaultDetails = '';
 	defaultDetailsPlaceholder = 'Eg. weekly groceries';
 	defaultCurrency = CURRENCIES.LEI;
 	defaultCreatedAt = new Date().toISOString().split('T')[0];
@@ -47,6 +53,7 @@ export class SpendComponent implements OnInit {
 	defaultCategory = CATEGORIES.GROCERIES;
 	defaultLocation = LOCATIONS.SELGROS;
 	defaultCity = CITIES.BRASOV;
+	defaultFrequency = '';
 
 	constructor(
 		private depositsService: DepositsService,
@@ -71,14 +78,16 @@ export class SpendComponent implements OnInit {
 			.group(
 				{
 					amount: [this.defaultAmount, Validators.required],
-					details: [''],
-					currency: [this.defaultCurrency, Validators.required],
+					details: [this.defaultDetails, Validators.required],
 					createdAt: [this.defaultCreatedAt, Validators.required],
-					exchangeRate: [this.defaultExchangeRate],
-					category: [this.defaultCategory],
-					recurrent: [false],
-					location: [this.defaultLocation],
-					city: [this.defaultCity]
+					category: [this.defaultCategory, Validators.required],
+					location: [this.defaultLocation, Validators.required],
+					city: [this.defaultCity, Validators.required],
+					recurrent: [this.recurrent],
+					frequency: [this.defaultFrequency],
+					currencyCheck: [this.differentCurrency],
+					currency: [this.defaultCurrency],
+					exchangeRate: [this.defaultExchangeRate]
 				}
 			);
 	}
@@ -91,7 +100,14 @@ export class SpendComponent implements OnInit {
 		this.canEdit = !this.canEdit;
 	}
 
+	updateCurrency(c: Currency) {
+		this.selectedCurrency = c;
+	}
+
 	ngOnInit(): void { }
+
+	makeRecurrent(): void { this.recurrent = !this.recurrent; }
+	changeCurrency(): void { this.differentCurrency = !this.differentCurrency; }
 
 	validDepositFromForm(deposit: IDeposit): boolean {
 		if (deposit.details.length === 0) { deposit.details = '...'; }
@@ -105,14 +121,15 @@ export class SpendComponent implements OnInit {
 		const deposit: IDeposit = new Deposit({
 			owner: 'adi@foodspy.com',
 			amount: depositFromForm.amount,
-			currency: CURRENCIES.LEI.name,
-			createdAt: depositFromForm.createdAt,
-			exchangeRate: depositFromForm.exchangeRate,
 			details: depositFromForm.details,
+			createdAt: depositFromForm.createdAt,
 			category: depositFromForm.category,
-			recurrent: depositFromForm.recurrent,
 			location: depositFromForm.location,
-			city: depositFromForm.city
+			city: depositFromForm.city,
+			recurrent: depositFromForm.recurrent,
+			// frequency: depositFromForm.frequency
+			currency: CURRENCIES.LEI.name,
+			exchangeRate: depositFromForm.exchangeRate,
 		});
 		this.depositsService
 			.postDeposit(deposit)
