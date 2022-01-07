@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewComponent } from './view.component';
+import { ShowDepositDialogComponent } from './show-deposit-dialog.component';
 
-describe('ViewComponent', () => {
-  let component: ViewComponent;
-  let fixture: ComponentFixture<ViewComponent>;
+describe('ShowDepositDialogComponent', () => {
+  let component: ShowDepositDialogComponent;
+  let fixture: ComponentFixture<ShowDepositDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ViewComponent ]
+      declarations: [ ShowDepositDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewComponent);
+    fixture = TestBed.createComponent(ShowDepositDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

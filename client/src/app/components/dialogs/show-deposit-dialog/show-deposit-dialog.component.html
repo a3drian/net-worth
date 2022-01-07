@@ -1,0 +1,12 @@
+<p class="debug" *ngIf="isInDebugMode"><b>show-deposit-dialog</b> works!</p>
+
+<h2 mat-dialog-title>Details</h2>
+
+<div>
+
+	<app-deposit-form [deposit]="deposit"></app-deposit-form>
+
+	<button (click)="close()">
+		Close
+	</button>
+</div>

@@ -1,0 +1,21 @@
+<p class="debug" *ngIf="isInDebugMode"><b>deposit-card</b> works!</p>
+
+<div *ngIf="!deleted">
+	<p>
+		<b>{{ deposit.amount }} RON</b> for '{{ deposit.details }}' on {{ deposit.createdAt | date: 'MMM d' }} at location
+		'{{ deposit.location }}' ({{deposit.category}})
+	</p>
+
+	<button (click)="openShowDepositDialog(deposit)">
+		View
+	</button>
+
+	<button (click)="openShowDepositDialog(deposit)">
+		Edit
+	</button>
+
+	<button (click)="openDeleteDepositDialog(deposit)">
+		Delete
+	</button>
+
+</div>

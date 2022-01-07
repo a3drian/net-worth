@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
 	errorResponse: HttpErrorResponse | null = null;
 	today: Date = new Date();
 
-	deposits: any;
+	deposits: IDeposit[] = [];
 	totalAmount!: number;
 
 	constructor(
@@ -47,24 +47,5 @@ export class DashboardComponent implements OnInit {
 		this.router
 			.navigateByUrl(spendUrl)
 			.catch((error) => { log('dashboard.ts', this.navigateToSpendPage.name, `Could not navigate to: ${spendUrl}`, error); });
-	}
-
-	viewDeposit(deposit: IDeposit): void {
-		log('dashboard.ts', this.viewDeposit.name, 'deposit:', deposit._id);
-
-		const viewUrl = `${Constants.appEndpoints.VIEW_URL}/${deposit._id}`;
-		this.router
-			.navigateByUrl(viewUrl)
-			.catch((error) => { log('dashboard.ts', this.navigateToSpendPage.name, `Could not navigate to: ${viewUrl}`, error); });
-	}
-
-	deleteDeposit(deposit: IDeposit): void {
-		log('dashboard.ts', this.deleteDeposit.name, 'deposit:', deposit._id);
-
-		// ask for user confirmation before deleting
-
-		this.depositsService
-			.deleteDeposit(deposit._id)
-			.subscribe();
 	}
 }
