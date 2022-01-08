@@ -123,19 +123,22 @@ async function putDeposit(
 
 	console.log(CLASS_NAME, putDeposit.name, 'body:', body);
 
-	const newDeposit = new Deposit(
+	const editedDeposit = new Deposit(
 		{
 			owner: body.owner,
 			amount: body.amount,
 			currency: body.currency,
 			createdAt: body.createdAt,
-			details: body.details
+			details: body.details,
+			category: body.category,
+			location: body.location,
+			city: body.city
 		}
 	);
 
 	let response: Error | IDeposit;
 	try {
-		response = await depositService.putDeposit(id, newDeposit);
+		response = await depositService.putDeposit(id, editedDeposit);
 	} catch (ex) {
 		return next(ex);
 	}
