@@ -71,6 +71,24 @@ export class DepositsService {
 		return request;
 	}
 
+	putDeposit(
+		id: string,
+		deposit: Partial<IDeposit>
+	) {
+		const url = `${this.BASE_URL}/${id}`;
+
+		log(this.CLASS_NAME, this.putDeposit.name, 'url:', url);
+
+		const request = this.http
+			.put<IDeposit>(
+				url,
+				deposit
+			)
+			.pipe(tap(() => { }));
+			
+		return request;
+	}
+
 	deleteDeposit(id: string) {
 		const url = `${this.BASE_URL}/${id}`;
 

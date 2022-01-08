@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 // Components
 import { DeleteDepositDialogComponent } from '../../dialogs/delete-deposit-dialog/delete-deposit-dialog.component';
@@ -24,6 +24,8 @@ export class DepositCardComponent implements OnInit {
 	@Input()
 	deposit: IDeposit = <IDeposit>{};
 
+	depositId: string = '';
+
 	deleted: boolean = false;
 
 	deleteDepositDialogSub: Subscription = new Subscription();
@@ -35,7 +37,9 @@ export class DepositCardComponent implements OnInit {
 		public showDepositDialog: MatDialog,
 	) { }
 
-	ngOnInit(): void { }
+	ngOnInit(): void {
+		this.depositId = this.deposit._id;
+	}
 
 	ngOnDestroy() {
 		if (this.deleteDepositDialogSub) { this.deleteDepositDialogSub.unsubscribe(); }
@@ -51,14 +55,15 @@ export class DepositCardComponent implements OnInit {
 	}
 
 	saveDeposit(deposit: IDeposit): void {
-		log('deposit-card.ts', this.saveDeposit.name, 'deposit:', deposit._id);
+		log('deposit-card.ts', this.saveDeposit.name, 'deposit:', this.depositId);
 
+		this.depositsService
+			.putDeposit(this.depositId, deposit)
+			.subscribe();
 	}
 
-	openShowDepositDialog(deposit: IDeposit): void {
-		log('deposit-card.ts', this.openShowDepositDialog.name, 'Selected deposit:', deposit);
-
-		const dialogRef = this.showDepositDialog
+	openDialog(deposit: IDeposit): MatDialogRef<ShowDepositDialogComponent> {
+		return this.showDepositDialog
 			.open(
 				ShowDepositDialogComponent,
 				{
@@ -68,12 +73,18 @@ export class DepositCardComponent implements OnInit {
 					width: '400px'
 				}
 			);
+	}
+
+	openShowDepositDialog(deposit: IDeposit): void {
+		log('deposit-card.ts', this.openShowDepositDialog.name, 'Selected deposit:', deposit);
+
+		const dialogRef = this.openDialog(deposit);
 		this.showDepositDialogSub = dialogRef
 			.afterClosed()
 			.subscribe(
-				(canEdit: boolean) => {
-					log('deposit-card.ts', this.openShowDepositDialog.name, 'canEdit:', canEdit);
-					if (canEdit) {
+				(deposit: IDeposit) => {
+					log('deposit-card.ts', this.openShowDepositDialog.name, 'deposit:', deposit);
+					if (deposit) {
 						this.saveDeposit(deposit);
 					}
 				}
