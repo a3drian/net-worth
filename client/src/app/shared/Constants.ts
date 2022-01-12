@@ -10,6 +10,8 @@ export const Constants = Object.freeze({
 	apiEndpoints: Object.freeze({
 		SPEND_BASE_URL: '/api/spend',
 		SPEND_SEARCH_URL: '/owner'
-	})
+	}),
+
+	defaultOwner: 'adi@foodspy2.com'
 
 });

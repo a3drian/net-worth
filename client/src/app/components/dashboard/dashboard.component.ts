@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.depositsService
-			.getDepositsByOwner('adi@foodspy.com')
+			.getDepositsByOwner(Constants.defaultOwner)
 			.subscribe(
 				(deposits: IDeposit[]) => {
 					this.deposits = deposits;
@@ -47,5 +47,10 @@ export class DashboardComponent implements OnInit {
 		this.router
 			.navigateByUrl(spendUrl)
 			.catch((error) => { log('dashboard.ts', this.navigateToSpendPage.name, `Could not navigate to: ${spendUrl}`, error); });
+	}
+
+	updateDeposit(event: any): void {
+		log('dashboard.ts', this.updateDeposit.name, 'typeof(event):', typeof (event));
+		log('dashboard.ts', this.updateDeposit.name, 'event:', event);
 	}
 }

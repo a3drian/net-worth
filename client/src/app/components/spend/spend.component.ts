@@ -31,7 +31,6 @@ export class SpendComponent implements OnInit {
 	DASHBOARD_URL = '/' + Constants.appEndpoints.DASHBOARD_URL;
 
 	depositForm: FormGroup = new FormGroup({});
-	canEdit: boolean = false;
 	ready: boolean = false;
 
 	recurrent: boolean = false;
@@ -92,14 +91,6 @@ export class SpendComponent implements OnInit {
 			);
 	}
 
-	enableEditing(): void {
-		this.canEdit = !this.canEdit;
-	}
-
-	save(): void {
-		this.canEdit = !this.canEdit;
-	}
-
 	updateCurrency(c: Currency) {
 		this.selectedCurrency = c;
 	}
@@ -119,7 +110,7 @@ export class SpendComponent implements OnInit {
 		if (!this.validDepositFromForm(depositFromForm)) { return; }
 
 		const deposit: IDeposit = new Deposit({
-			owner: 'adi@foodspy.com',
+			owner: Constants.defaultOwner,
 			amount: depositFromForm.amount,
 			details: depositFromForm.details,
 			createdAt: depositFromForm.createdAt,
