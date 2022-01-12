@@ -36,7 +36,7 @@
 	-->
 
 	<!-- maybe send the total amount here? and when you "Save", you update the total? -->
-	<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
+	<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit" (depositChange)="updateDeposit($event)">
 	</app-deposit-card>
 
 	<!-- <button>Last month</button> <button>This year</button> -->

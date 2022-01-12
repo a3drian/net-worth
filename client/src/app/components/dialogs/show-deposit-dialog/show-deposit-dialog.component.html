@@ -7,24 +7,27 @@
 	<!-- <app-deposit-form *ngIf="!canEdit" [deposit]="deposit"></app-deposit-form> -->
 	<!-- <app-deposit-form *ngIf="canEdit" [deposit]="deposit"></app-deposit-form> -->
 
+	<p>View or edit deposit</p>
+
 	<form [formGroup]="depositForm">
 
-		<mat-form-field appearance="outline">
+		<!--
+		<mat-form-field appearance="fill">
 			<mat-label for="amount">Amount:</mat-label>
 			<input matInput type="number" name="amount" formControlName="amount" required>
 		</mat-form-field>
 
-		<mat-form-field appearance="outline">
+		<mat-form-field appearance="fill">
 			<mat-label for="details">Details:</mat-label>
 			<input matInput type="text" name="details" formControlName="details">
 		</mat-form-field>
 
-		<mat-form-field appearance="outline">
+		<mat-form-field appearance="fill">
 			<mat-label for="createdAt">Created at:</mat-label>
 			<input matInput type="date" name="createdAt" formControlName="createdAt" required>
 		</mat-form-field>
 
-		<mat-form-field appearance="outline">
+		<mat-form-field appearance="fill">
 			<mat-label for="category">Category:</mat-label>
 			<mat-select name="category" id="category-select" formControlName="category">
 				<mat-option *ngFor="let c of categories" [value]="c">
@@ -33,7 +36,7 @@
 			</mat-select>
 		</mat-form-field>
 
-		<mat-form-field appearance="outline">
+		<mat-form-field appearance="fill">
 			<mat-label for="location">Location:</mat-label>
 			<mat-select name="location" id="location-select" formControlName="location">
 				<mat-option *ngFor="let l of locations" [value]="l">
@@ -42,7 +45,7 @@
 			</mat-select>
 		</mat-form-field>
 
-		<mat-form-field appearance="outline">
+		<mat-form-field appearance="fill">
 			<mat-label for="city">City:</mat-label>
 			<mat-select name="city" id="city-select" formControlName="city">
 				<mat-option *ngFor="let c of cities" [value]="c">
@@ -50,12 +53,58 @@
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
+		-->
 
+		<!-- remove matInput? -->
+		<fieldset>
+			<label for="amount">Amount:</label>
+			<input matInput type="number" name="amount" formControlName="amount" required>
+		</fieldset>
+
+		<fieldset>
+			<label for="details">Details:</label>
+			<input matInput type="text" name="details" formControlName="details" required>
+		</fieldset>
+
+		<fieldset>
+			<label for="createdAt">Date:</label>
+			<input matInput type="date" name="createdAt" formControlName="createdAt" required>
+		</fieldset>
+
+		<fieldset>
+			<label for="category">Category:</label>
+			<select name="category" id="category-select" formControlName="category" required>
+				<option *ngFor="let c of categories" [value]="c">
+					{{ c }}
+				</option>
+			</select>
+		</fieldset>
+
+		<fieldset>
+			<label for="location">Location:</label>
+			<select name="location" id="location-select" formControlName="location" required>
+				<option *ngFor="let l of locations" [value]="l">
+					{{ l }}
+				</option>
+			</select>
+		</fieldset>
+
+		<fieldset>
+			<label for="city">City:</label>
+			<select name="city" id="city-select" formControlName="city" required>
+				<option *ngFor="let c of cities" [value]="c">
+					{{ c }}
+				</option>
+			</select>
+		</fieldset>
+
+		<!-- TODO: Add support for recurrent deposits and deposits in a different currency -->
+		<!--
 		<mat-checkbox name="recurrent" formControlName="recurrent" (change)="makeRecurrent()" [disabled]="true">
 			<mat-label for="recurrent">Is this a recurrent payment?</mat-label>
 		</mat-checkbox>
 
-		<mat-form-field appearance="outline" *ngIf="recurrent">
+		<mat-form-field appearance="fill" *ngIf="recurrent">
 			<mat-label for="frequency">Frequency:</mat-label>
 			<mat-select name="frequency" id="frequency-select" formControlName="frequency">
 				<mat-option *ngFor="let l of frequencies" [value]="l">
@@ -69,7 +118,7 @@
 		</mat-checkbox>
 
 		<div *ngIf="differentCurrency">
-			<mat-form-field appearance="outline">
+			<mat-form-field appearance="fill">
 				<mat-label for="currency">Currency:</mat-label>
 				<mat-select id="currency-select" name="currency" formControlName="currency">
 					<mat-option *ngFor="let c of currencies" [value]="c">
@@ -78,18 +127,24 @@
 				</mat-select>
 			</mat-form-field>
 
-			<mat-form-field appearance="outline">
+			<mat-form-field appearance="fill">
 				<mat-label for="exchangeRate">Exchange rate:</mat-label>
 				<input matInput type="number" name="exchangeRate" formControlName="exchangeRate">
 			</mat-form-field>
 
 			<button mat-stroked-button>Get latest exchange rate for {{ selectedCurrency.name }} </button>
 		</div>
+	-->
 
 	</form>
 
 	<mat-dialog-actions>
-		<button (click)="edit()">Edit</button>
-		<button mat-dialog-close (click)="saveDeposit()">Save</button>
+		<button [disabled]="!canEdit" (click)="edit()">Edit</button>
+		<button [disabled]="canEdit" (click)="save()" mat-dialog-close>Save</button>
 	</mat-dialog-actions>
+</div>
+
+<div *ngIf="isInDebugMode">
+	<p>Form value:<br>{{ depositForm.value | json }}</p>
+	<p>Form status:<br>{{ depositForm.status }}</p>
 </div>

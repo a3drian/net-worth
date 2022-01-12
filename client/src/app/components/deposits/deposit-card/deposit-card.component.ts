@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 // Components
@@ -24,6 +24,8 @@ export class DepositCardComponent implements OnInit {
 	@Input()
 	deposit: IDeposit = <IDeposit>{};
 
+	@Output() depositChange = new EventEmitter<IDeposit>();
+
 	depositId: string = '';
 
 	deleted: boolean = false;
@@ -37,9 +39,7 @@ export class DepositCardComponent implements OnInit {
 		public showDepositDialog: MatDialog,
 	) { }
 
-	ngOnInit(): void {
-		this.depositId = this.deposit._id;
-	}
+	ngOnInit(): void { this.depositId = this.deposit._id; }
 
 	ngOnDestroy() {
 		if (this.deleteDepositDialogSub) { this.deleteDepositDialogSub.unsubscribe(); }
@@ -55,11 +55,17 @@ export class DepositCardComponent implements OnInit {
 	}
 
 	saveDeposit(deposit: IDeposit): void {
-		log('deposit-card.ts', this.saveDeposit.name, 'deposit:', this.depositId);
+		log('deposit-card.ts', this.saveDeposit.name, 'depositId:', this.depositId);
+		log('deposit-card.ts', this.saveDeposit.name, 'deposit:', deposit);
 
 		this.depositsService
 			.putDeposit(this.depositId, deposit)
-			.subscribe();
+			.subscribe(
+				() => {
+					this.deposit = deposit;
+					this.updateAmount(deposit);
+				}
+			);
 	}
 
 	openDialog(deposit: IDeposit): MatDialogRef<ShowDepositDialogComponent> {
@@ -115,6 +121,10 @@ export class DepositCardComponent implements OnInit {
 					}
 				}
 			);
+	}
+
+	updateAmount(value: IDeposit) {
+		this.depositChange.emit(value);
 	}
 
 }

@@ -1,0 +1,53 @@
+$disabled: 0.8;
+
+form {
+	// color: white;
+	// background-color: black;
+}
+
+input,
+select {
+	// color: white;
+	// background-color: rgba(0 0 0 / 1);
+	// border: 1px solid white;
+	// padding: 0.5rem;
+}
+
+input:disabled,
+select:disabled {
+	// color: white;
+	// background-color: rgba(0 0 0 / $disabled);
+	// border: 1px solid gray;
+}
+
+input:active,
+select:active,
+input:focus-within,
+select:focus-within {
+	outline: 1px solid aqua;
+	// border: 1px solid aqua;	// only works if the base state also has "border"
+}
+
+select > option {
+	// color: white;
+	// background-color: black;
+}
+
+fieldset {
+	border: none;
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	padding: 5px 0;
+}
+
+input[type='date'] {
+	font-family: sans-serif;
+}
+
+label {
+	align-self: center;
+}
+
+button {
+	// border: 1px solid black;
+}
