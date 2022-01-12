@@ -1,1 +1,1 @@
-# net-worth
+# NetWorth
