@@ -47,10 +47,10 @@ export function getDepositKVPair(deposit: IDeposit): IDepositKVPair[] {
 
 export function getDepositKVPairDifferences(d1: IDepositKVPair[], d2: IDepositKVPair[]): IDepositKVPairDiff[] {
 	let diff: IDepositKVPairDiff[] = [];
+	// TODO: check if there is any way "d1.length" might end up being different than "d2.length"
 	if (d1.length !== d2.length) {
-		if (d1.length > d2.length) {
-
-		}
+		if (d1.length > d2.length) { }
+		if (d2.length > d1.length) { }
 		return [];
 	}
 	for (let i = 0; i < d1.length; i++) {
