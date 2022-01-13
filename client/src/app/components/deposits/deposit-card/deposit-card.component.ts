@@ -115,7 +115,7 @@ export class DepositCardComponent implements OnInit {
 				(canDelete: boolean) => {
 					log('deposit-card.ts', this.openDeleteDepositDialog.name, 'canDelete:', canDelete);
 					if (canDelete) {
-						setTimeout(() => { this.deleted = true; }, 500);
+						setTimeout(() => { this.deleted = true; }, Constants.updateTimeout);
 						this.deleteDeposit(deposit);
 					}
 				}

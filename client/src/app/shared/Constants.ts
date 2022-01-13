@@ -12,6 +12,8 @@ export const Constants = Object.freeze({
 		SPEND_SEARCH_URL: '/owner'
 	}),
 
-	defaultOwner: 'adi@foodspy2.com'
+	defaultOwner: 'adi@foodspy2.com',
+
+	updateTimeout: 250,
 
 });
