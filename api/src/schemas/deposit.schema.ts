@@ -12,7 +12,7 @@ const depositSchema = new Schema<IDeposit>(
 
 		modifiedAt: { type: Date, required: false },
 		currency: { type: String, required: false },
-		// exchangeRate: { type: Number, required: false },
+		exchangeRate: { type: Number, required: false },
 
 		recurrent: { type: Boolean, required: false },
 		category: { type: String, required: true },
