@@ -87,12 +87,15 @@ async function postDeposit(
 		{
 			owner: body.owner,
 			amount: body.amount,
-			currency: body.currency,
-			createdAt: body.createdAt,
 			details: body.details,
+			createdAt: body.createdAt,
 			category: body.category,
 			location: body.location,
-			city: body.city
+			city: body.city,
+			recurrent: body.recurrent,
+			// frequency: body.frequency,
+			currency: body.currency,
+			exchangeRate: body.exchangeRate
 		}
 	);
 
@@ -127,12 +130,15 @@ async function putDeposit(
 		{
 			owner: body.owner,
 			amount: body.amount,
-			currency: body.currency,
-			createdAt: body.createdAt,
 			details: body.details,
+			createdAt: body.createdAt,
 			category: body.category,
 			location: body.location,
-			city: body.city
+			city: body.city,
+			recurrent: body.recurrent,
+			// frequency: body.frequency,
+			currency: body.currency,
+			exchangeRate: body.exchangeRate
 		}
 	);
 

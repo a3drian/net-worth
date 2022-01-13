@@ -49,6 +49,7 @@ export class SpendComponent implements OnInit {
 	defaultCurrency = CURRENCIES.LEI;
 	defaultCreatedAt = new Date().toISOString().split('T')[0];
 	defaultExchangeRate = 1;
+	defaultRecurrent = false;
 	defaultCategory = CATEGORIES.GROCERIES;
 	defaultLocation = LOCATIONS.SELGROS;
 	defaultCity = CITIES.BRASOV;
@@ -117,10 +118,11 @@ export class SpendComponent implements OnInit {
 			category: depositFromForm.category,
 			location: depositFromForm.location,
 			city: depositFromForm.city,
-			recurrent: depositFromForm.recurrent,
-			// frequency: depositFromForm.frequency
-			currency: CURRENCIES.LEI.name,
-			exchangeRate: depositFromForm.exchangeRate,
+			recurrent: this.defaultRecurrent,
+			// TODO: get actual values
+			// frequency: this.defaultFrequency,
+			currency: this.defaultCurrency.symbol,
+			exchangeRate: this.defaultExchangeRate,
 		});
 		this.depositsService
 			.postDeposit(deposit)
