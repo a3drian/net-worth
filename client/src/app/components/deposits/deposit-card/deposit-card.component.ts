@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
 // Components
 import { DeleteDepositDialogComponent } from '../../dialogs/delete-deposit-dialog/delete-deposit-dialog.component';
 import { ShowDepositDialogComponent } from '../../dialogs/show-deposit-dialog/show-deposit-dialog.component';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
+// rxjs:
+import { Subscription } from 'rxjs';
 // Services:
 import { DepositsService } from 'src/app/services/deposits.service';
 // Shared:
@@ -21,9 +22,7 @@ export class DepositCardComponent implements OnInit {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
-	@Input()
-	deposit: IDeposit = <IDeposit>{};
-
+	@Input() deposit: IDeposit = <IDeposit>{};
 	@Output() depositChange = new EventEmitter<IDeposit>();
 
 	depositId: string = '';
@@ -89,7 +88,7 @@ export class DepositCardComponent implements OnInit {
 			.afterClosed()
 			.subscribe(
 				(deposit: IDeposit) => {
-					log('deposit-card.ts', this.openShowDepositDialog.name, 'deposit:', deposit);
+					log('deposit-card.ts', this.openShowDepositDialog.name, 'Deposit from dialog:', deposit);
 					if (deposit) {
 						this.saveDeposit(deposit);
 					}
