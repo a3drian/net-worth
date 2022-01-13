@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { IDeposit } from 'net-worth-shared';
 // Services:
 import { DepositsService } from 'src/app/services/deposits.service';
+import { InformationService } from 'src/app/services/information.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
 import { log } from 'src/app/shared/Logger';
@@ -23,11 +24,12 @@ export class DashboardComponent implements OnInit {
 	today: Date = new Date();
 
 	deposits: IDeposit[] = [];
-	totalAmount!: number;
+	totalAmount: number = 0;
 
 	constructor(
 		private router: Router,
-		private depositsService: DepositsService
+		private depositsService: DepositsService,
+		private informationService: InformationService
 	) { }
 
 	ngOnInit(): void {
@@ -37,6 +39,8 @@ export class DashboardComponent implements OnInit {
 				(deposits: IDeposit[]) => {
 					this.deposits = deposits;
 					this.totalAmount = this.depositsService.getTotalAmount(this.deposits);
+					this.informationService.totalAmount.next(this.totalAmount);
+					this.informationService.totalAmount.subscribe((totalAmount: number) => this.totalAmount = totalAmount);
 					this.isLoading = false;
 				}
 			);

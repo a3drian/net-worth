@@ -5,11 +5,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IDeposit } from 'net-worth-shared';
 // Models:
 import { Currency } from 'net-worth-shared';
-import { Deposit } from 'src/app/models/Deposit';
+import { getDepositKVPairDifferences, Deposit, getDepositKVPair, IDepositKVPairDiff } from 'src/app/models/Deposit';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
 import { CitiesService } from 'src/app/services/cities.service';
 import { CurrenciesService } from 'src/app/services/currencies.service';
+import { InformationService } from 'src/app/services/information.service';
 import { LocationsService } from 'src/app/services/locations.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
@@ -39,7 +40,8 @@ export class ShowDepositDialogComponent implements OnInit {
 		private citiesService: CitiesService,
 		private currenciesService: CurrenciesService,
 		private locationsService: LocationsService,
-		private formBuilder: FormBuilder
+		private formBuilder: FormBuilder,
+		private informationService: InformationService
 	) {
 		this.currencies = this.currenciesService.getCurrencies();
 		this.categories = this.categoriesService.getCategories();
@@ -76,8 +78,8 @@ export class ShowDepositDialogComponent implements OnInit {
 					category: [this.deposit.category, Validators.required],
 					location: [this.deposit.location, Validators.required],
 					city: [this.deposit.city, Validators.required],
-					recurrent: [this.recurrent],
-					frequency: [this.defaultFrequency],
+					recurrent: [this.deposit.recurrent],
+					// frequency: [this.deposit.frequency],
 					currencyCheck: [this.differentCurrency],
 					currency: [this.deposit.currency],
 					exchangeRate: [this.deposit.exchangeRate]
@@ -93,47 +95,56 @@ export class ShowDepositDialogComponent implements OnInit {
 		this.depositForm.enable();
 	}
 
-	isFormValid(): boolean {
+	private isFormValid(): boolean {
 		return this.depositForm.valid;
 	}
 
-	saveDeposit(): void {
-
+	private saveDeposit(editedDeposit: IDeposit): void {
 		if (!this.isFormValid()) {
 			this.dialogReference.close(null);
 		} else {
-
-			const depositFromForm = this.depositForm.value;
-			const editedDeposit: IDeposit = new Deposit({
-				owner: Constants.defaultOwner,
-				amount: depositFromForm.amount,
-				details: depositFromForm.details,
-				createdAt: depositFromForm.createdAt,
-				category: depositFromForm.category,
-				location: depositFromForm.location,
-				city: depositFromForm.city,
-				recurrent: depositFromForm.recurrent,
-				// frequency: depositFromForm.frequency,
-				currency: depositFromForm.currency,
-				exchangeRate: depositFromForm.exchangeRate,
-			});
-
 			log('show-deposit-dialog.ts', this.saveDeposit.name, 'editedDeposit:', editedDeposit);
-
 			this.dialogReference.close(editedDeposit);
 		}
 	}
 
-	depositChanged(): boolean {
-		// TODO: need to check if there was a change in the form before issuing PUT request
+	private getDepositFromForm() {
+		const depositFromForm = this.depositForm.value;
+		const editedDeposit: IDeposit = new Deposit({
+			owner: Constants.defaultOwner,
+			amount: depositFromForm.amount,
+			details: depositFromForm.details,
+			createdAt: depositFromForm.createdAt,
+			category: depositFromForm.category,
+			location: depositFromForm.location,
+			city: depositFromForm.city,
+			recurrent: depositFromForm.recurrent,
+			// frequency: depositFromForm.frequency,
+			currency: depositFromForm.currency,
+			exchangeRate: depositFromForm.exchangeRate,
+		});
+		return editedDeposit;
+	}
+
+	private depositChanged(editedDeposit: IDeposit): boolean {
+		const d1 = getDepositKVPair(this.deposit);
+		const d2 = getDepositKVPair(editedDeposit);
+		const differences = getDepositKVPairDifferences(d1, d2);
+		if (differences.length === 0) { return false; }
+		const amount: IDepositKVPairDiff = differences.filter((d) => d.key === 'amount')[0];
+		let totalAmount = this.informationService.totalAmount.getValue();
+		totalAmount = (totalAmount - Number(amount.oldValue)) + Number(amount.newValue);
+		this.informationService.totalAmount.next(totalAmount);
 		return true;
 	}
 
 	save(): void {
-		if (this.depositChanged()) { this.saveDeposit(); }
+		const editedDeposit: IDeposit = this.getDepositFromForm();
+		if (this.depositChanged(editedDeposit)) {
+			this.saveDeposit(editedDeposit);
+		}
 
 		this.canEdit = true;
 		this.depositForm.disable();
 	}
-
 }
