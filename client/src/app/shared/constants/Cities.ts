@@ -1,4 +1,4 @@
-export enum CITIES {
+export enum CITY {
 	BRASOV = 'Brașov',
 	BUCURESTI = 'București',
 	CLUJ = 'Cluj-Napoca',
