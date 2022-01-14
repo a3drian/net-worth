@@ -8,6 +8,7 @@ export interface IDeposit {
 	currency?: string;
 	modifiedAt?: Date;
 	exchangeRate?: number;
+	frequency?: string;
 
 	recurrent?: boolean;
 	category?: string;

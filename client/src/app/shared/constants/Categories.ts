@@ -1,4 +1,4 @@
-export enum CATEGORIES {
+export enum CATEGORY {
 	DINING = 'Dining',
 	FINANCES = 'Finances',
 	GOINGOUT = 'Going out',

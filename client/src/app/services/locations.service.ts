@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 // Shared:
-import { LOCATIONS } from '../shared/constants/Locations';
+import { LOCATION } from '../shared/constants/Locations';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class LocationsService {
 
-	locations: LOCATIONS[] = Object.values(LOCATIONS);
+	locations: LOCATION[] = Object.values(LOCATION);
 
 	constructor() { }
 
-	getLocations(): LOCATIONS[] {
+	getLocations(): LOCATION[] {
 		return this.locations;
 	}
 }

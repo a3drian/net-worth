@@ -1,7 +1,7 @@
 // Models:
 import { Currency } from '../models/Currency';
 
-export class CURRENCIES {
+export class CURRENCY {
 	static readonly LEI = new Currency({ name: 'Lei', symbol: 'L', code: 'RON' });
 	static readonly EUR = new Currency({ name: 'Euro', symbol: '€', code: 'EUR' });
 	static readonly GBP = new Currency({ name: 'Lire sterline', symbol: '£', code: 'GBP' });

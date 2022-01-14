@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 // Shared:
-import { CITIES } from '../shared/constants/Cities';
+import { CITY } from '../shared/constants/Cities';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class CitiesService {
 
-	cities: CITIES[] = Object.values(CITIES);
+	cities: CITY[] = Object.values(CITY);
 
 	constructor() { }
 
-	getCities(): CITIES[] {
+	getCities(): CITY[] {
 		return this.cities;
 	}
 }

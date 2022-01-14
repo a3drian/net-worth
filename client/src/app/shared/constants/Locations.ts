@@ -1,4 +1,4 @@
-export enum LOCATIONS {
+export enum LOCATION {
 	CARREFOUR = 'Carrefour',
 	LIDL = 'LIDL',
 	OMV = 'OMV',
