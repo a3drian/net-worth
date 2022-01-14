@@ -7,6 +7,7 @@ export enum CATEGORIES {
 	SERVICES = 'Services',
 	SHOPPING = 'Shopping',
 	SUBS = 'Subscription',
+	TAXES = 'Taxes',
 	TECH = 'Tech',
 	TRANSPORT = 'Transportation',
 	TRAVEL = 'Travel',
