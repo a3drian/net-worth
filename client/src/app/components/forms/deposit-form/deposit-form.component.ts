@@ -11,10 +11,10 @@ import { CurrenciesService } from 'src/app/services/currencies.service';
 import { LocationsService } from 'src/app/services/locations.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
-import { CATEGORIES } from 'src/app/shared/constants/Categories';
-import { CITIES } from 'src/app/shared/constants/Cities';
+import { CATEGORY } from 'src/app/shared/constants/Categories';
+import { CITY } from 'src/app/shared/constants/Cities';
 import { CURRENCIES } from 'net-worth-shared';
-import { LOCATIONS } from 'src/app/shared/constants/Locations';
+import { LOCATION } from 'src/app/shared/constants/Locations';
 import { log } from 'src/app/shared/Logger';
 
 @Component({
@@ -39,9 +39,9 @@ export class DepositFormComponent implements OnInit {
 	defaultFrequency = '';
 
 	currencies: Currency[] = [];
-	categories: CATEGORIES[] = [];
-	cities: CITIES[] = [];
-	locations: LOCATIONS[] = [];
+	categories: CATEGORY[] = [];
+	cities: CITY[] = [];
+	locations: LOCATION[] = [];
 	frequencies: string[] = ['week', 'month'];
 
 	constructor(

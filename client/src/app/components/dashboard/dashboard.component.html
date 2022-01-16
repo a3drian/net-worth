@@ -1,19 +1,24 @@
 <p class="debug" *ngIf="isInDebugMode"><b>dashboard</b> works!</p>
 
+<h1>Net Worth</h1>
+
 <div *ngIf="isLoading" class="loading-spinner">
 	<app-loading-spinner></app-loading-spinner>
 </div>
 
 <div *ngIf="!isLoading">
-	<h1>Net Worth</h1>
 
-	<p>Balances report for {{ today | date: 'MMMM' }}
-		<button routerLink="/spend">Save</button>
-	</p>
+	<div>
+		<p>Nothing saved in {{ today | date: 'MMMM' }} yet.</p>
+		<button (click)="openShowDepositDialog('save')">Save</button>
+	</div>
 
-	<p>Spending report for {{ today | date: 'MMMM' }} - <b>{{ totalAmount }} RON</b>
-		<button (click)="navigateToSpendPage()">Spend</button>
-	</p>
+	<div>
+		<p>Spending report for {{ today | date: 'MMMM' }} - <b>{{ totalAmount }} RON</b></p>
+		<button (click)="openShowDepositDialog('spend')">Spend</button>
+	</div>
+
+	<div>....................</div>
 
 	<!--
 	<p *ngFor="let deposit of deposits">

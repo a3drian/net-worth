@@ -1,8 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+// Components:
+import { ShowDepositDialogComponent } from '../dialogs/show-deposit-dialog/show-deposit-dialog.component';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
+// rxjs:
+import { Subscription } from 'rxjs';
 // Services:
 import { DepositsService } from 'src/app/services/deposits.service';
 import { InformationService } from 'src/app/services/information.service';
@@ -26,10 +30,12 @@ export class DashboardComponent implements OnInit {
 	deposits: IDeposit[] = [];
 	totalAmount: number = 0;
 
+	showDepositDialogSub: Subscription = new Subscription();
+
 	constructor(
-		private router: Router,
 		private depositsService: DepositsService,
-		private informationService: InformationService
+		private informationService: InformationService,
+		public showDepositDialog: MatDialog
 	) { }
 
 	ngOnInit(): void {
@@ -46,11 +52,42 @@ export class DashboardComponent implements OnInit {
 			);
 	}
 
-	navigateToSpendPage(): void {
-		const spendUrl = Constants.appEndpoints.SPEND_URL;
-		this.router
-			.navigateByUrl(spendUrl)
-			.catch((error) => { log('dashboard.ts', this.navigateToSpendPage.name, `Could not navigate to: ${spendUrl}`, error); });
+	ngOnDestroy() { if (this.showDepositDialogSub) { this.showDepositDialogSub.unsubscribe(); } }
+
+	openDialog(): MatDialogRef<ShowDepositDialogComponent> {
+		return this.showDepositDialog
+			.open(
+				ShowDepositDialogComponent,
+				{
+					data: null,
+					panelClass: 'custom-view-deposit-dialog-container',
+					height: '500px',
+					width: '400px'
+				}
+			);
+	}
+
+	openShowDepositDialog(api: string): void {
+		// TODO: use "api" to check for "api/save" or "api/spend"
+		const dialogRef = this.openDialog();
+		this.showDepositDialogSub = dialogRef
+			.afterClosed()
+			.subscribe(
+				(deposit: IDeposit) => {
+					log('dashboard.ts', this.openShowDepositDialog.name, 'Deposit from dialog:', deposit);
+					if (deposit) {
+						this.saveDeposit(deposit);
+					}
+				}
+			);
+	}
+
+	saveDeposit(deposit: IDeposit): void {
+		log('dashboard.ts', this.saveDeposit.name, 'deposit:', deposit);
+
+		this.depositsService
+			.postDeposit(deposit)
+			.subscribe(() => { });
 	}
 
 	updateDeposit(event: any): void {

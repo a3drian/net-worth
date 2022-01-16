@@ -5,18 +5,21 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IDeposit } from 'net-worth-shared';
 // Models:
 import { Currency } from 'net-worth-shared';
-import { getDepositKVPairDifferences, Deposit, getDepositKVPair, IDepositKVPairDiff } from 'src/app/models/Deposit';
+import { Deposit, IDepositKVPairDiff } from 'src/app/models/Deposit';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
 import { CitiesService } from 'src/app/services/cities.service';
 import { CurrenciesService } from 'src/app/services/currencies.service';
+import { DepositsService } from 'src/app/services/deposits.service';
+import { FrequenciesService } from 'src/app/services/frequencies.service';
 import { InformationService } from 'src/app/services/information.service';
 import { LocationsService } from 'src/app/services/locations.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
-import { CATEGORIES } from 'src/app/shared/constants/Categories';
-import { CITIES } from 'src/app/shared/constants/Cities';
-import { LOCATIONS } from 'src/app/shared/constants/Locations';
+import { CATEGORY } from 'src/app/shared/constants/Categories';
+import { CITY } from 'src/app/shared/constants/Cities';
+import { FREQUENCY } from 'src/app/shared/constants/Frequencies';
+import { LOCATION } from 'src/app/shared/constants/Locations';
 import { log } from 'src/app/shared/Logger';
 
 @Component({
@@ -29,6 +32,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
 	canEdit: boolean = true;
+	inEditMode: boolean = false;
 	isFormReady: boolean = false;
 
 	depositForm: FormGroup = new FormGroup({});
@@ -40,13 +44,39 @@ export class ShowDepositDialogComponent implements OnInit {
 		private citiesService: CitiesService,
 		private currenciesService: CurrenciesService,
 		private locationsService: LocationsService,
+		private frequenciesService: FrequenciesService,
 		private formBuilder: FormBuilder,
-		private informationService: InformationService
+		private informationService: InformationService,
+		private depositsService: DepositsService
 	) {
 		this.currencies = this.currenciesService.getCurrencies();
 		this.categories = this.categoriesService.getCategories();
 		this.cities = this.citiesService.getCities();
 		this.locations = this.locationsService.getLocations();
+		this.frequencies = this.frequenciesService.getFrequencies();
+	}
+
+	spendDeposit(): void {
+		const depositFromForm = this.depositForm.value;
+		// if (!this.validDepositFromForm(depositFromForm)) { return; }
+
+		const deposit: IDeposit = new Deposit({
+			owner: this.informationService.owner.value,
+			amount: depositFromForm.amount,
+			details: depositFromForm.details,
+			createdAt: depositFromForm.createdAt,
+			category: depositFromForm.category,
+			location: depositFromForm.location,
+			city: depositFromForm.city,
+			// TODO: get actual values
+			recurrent: this.formDefaults.recurrent,
+			// frequency: this.formDefaults.Frequency,
+			currency: this.formDefaults.currency,
+			exchangeRate: this.formDefaults.exchangeRate,
+		});
+		this.depositsService
+			.postDeposit(deposit)
+			.subscribe();
 	}
 
 	recurrent: boolean = false;
@@ -55,24 +85,63 @@ export class ShowDepositDialogComponent implements OnInit {
 	defaultFrequency = '';
 
 	currencies: Currency[] = [];
-	categories: CATEGORIES[] = [];
-	cities: CITIES[] = [];
-	locations: LOCATIONS[] = [];
-	frequencies: string[] = ['week', 'month'];
+	categories: CATEGORY[] = [];
+	cities: CITY[] = [];
+	locations: LOCATION[] = [];
+	frequencies: FREQUENCY[] = [];
+
+	today: Date = new Date();
+
+	titleText: string = ''
+
+	formDefaults = Constants.formDefaults;
+	formPlaceholders = Constants.formPlaceholders;
 
 	ngOnInit(): void {
 		log('show-deposit-dialog.ts', this.ngOnInit.name, 'this.deposit:', this.deposit);
-		this.initializeForm();
-		this.depositForm.disable();
 
-		this.isFormReady = true;
+		if (this.deposit === null) {
+			this.titleText = 'Add new';
+			this.inEditMode = false;
+			this.initializeEmptyForm();
+
+			this.isFormReady = true;
+		} else {
+			this.titleText = 'View or edit';
+			this.inEditMode = true;
+			this.initializeForm();
+
+			this.isFormReady = true;
+		}
+	}
+
+	private initializeEmptyForm(): void {
+		this.depositForm = this.formBuilder
+			.group(
+				{
+					amount: [this.formDefaults.amount, Validators.required],
+					details: [this.formDefaults.details, Validators.required],
+					createdAt: [this.today.toISOString().split('T')[0], Validators.required],
+					category: [this.formDefaults.category, Validators.required],
+					location: [this.formDefaults.location, Validators.required],
+					city: [this.formDefaults.city, Validators.required],
+					recurrent: [this.formDefaults.recurrent],
+					frequency: [this.formDefaults.frequency],
+					currencyCheck: [this.formDefaults.currencyCheck],
+					currency: [this.formDefaults.currency],
+					exchangeRate: [this.formDefaults.exchangeRate]
+				}
+			);
 	}
 
 	private initializeForm(): void {
 		this.depositForm = this.formBuilder
 			.group(
 				{
-					amount: [this.deposit.amount, Validators.required],
+					amount: [
+						this.deposit.amount,
+						[Validators.required, Validators.min(0)]
+					],
 					details: [this.deposit.details, Validators.required],
 					createdAt: [new Date(this.deposit.createdAt).toISOString().split('T')[0], Validators.required],
 					category: [this.deposit.category, Validators.required],
@@ -90,10 +159,24 @@ export class ShowDepositDialogComponent implements OnInit {
 	makeRecurrent(): void { this.recurrent = !this.recurrent; }
 	changeCurrency(): void { this.differentCurrency = !this.differentCurrency; }
 
-	edit(): void {
+	enableEdit(): void {
 		this.canEdit = false;
 		this.depositForm.enable();
 	}
+
+	disableEdit(): void {
+		this.canEdit = true;
+		this.depositForm.disable();
+	}
+
+	add(): void {
+		const editedDeposit: IDeposit = this.getDepositFromForm();
+		this.updateTotalAmount('0', editedDeposit.amount.toString());
+		this.saveDeposit(editedDeposit);
+		this.enableEdit();
+	}
+	edit(): void { this.enableEdit(); }
+	cancel(): void { this.disableEdit(); }
 
 	private isFormValid(): boolean {
 		return this.depositForm.valid;
@@ -108,10 +191,10 @@ export class ShowDepositDialogComponent implements OnInit {
 		}
 	}
 
-	private getDepositFromForm() {
+	private getDepositFromForm(): IDeposit {
 		const depositFromForm = this.depositForm.value;
 		const editedDeposit: IDeposit = new Deposit({
-			owner: Constants.defaultOwner,
+			owner: this.informationService.owner.value,
 			amount: depositFromForm.amount,
 			details: depositFromForm.details,
 			createdAt: depositFromForm.createdAt,
@@ -127,15 +210,21 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	private depositChanged(editedDeposit: IDeposit): boolean {
-		const d1 = getDepositKVPair(this.deposit);
-		const d2 = getDepositKVPair(editedDeposit);
-		const differences = getDepositKVPairDifferences(d1, d2);
+		const d1 = this.depositsService.getDepositKVPair(this.deposit);
+		const d2 = this.depositsService.getDepositKVPair(editedDeposit);
+		const differences = this.depositsService.getDepositKVPairDifferences(d1, d2);
 		if (differences.length === 0) { return false; }
 		const amount: IDepositKVPairDiff = differences.filter((d) => d.key === 'amount')[0];
-		let totalAmount = this.informationService.totalAmount.getValue();
-		totalAmount = (totalAmount - Number(amount.oldValue)) + Number(amount.newValue);
-		this.informationService.totalAmount.next(totalAmount);
+		const { oldValue, newValue } = amount;
+		if (amount) { this.updateTotalAmount(oldValue, newValue); }
 		return true;
+	}
+
+	private updateTotalAmount(oldValue: string, newValue: string): void {
+		if (!oldValue || !newValue) { return; }
+		let totalAmount = this.informationService.totalAmount.getValue();
+		totalAmount = (totalAmount - Number(oldValue)) + Number(newValue);
+		setTimeout(() => { this.informationService.totalAmount.next(totalAmount); }, Constants.updateTimeout);
 	}
 
 	save(): void {
@@ -144,7 +233,20 @@ export class ShowDepositDialogComponent implements OnInit {
 			this.saveDeposit(editedDeposit);
 		}
 
-		this.canEdit = true;
-		this.depositForm.disable();
+		this.disableEdit();
 	}
+
+	// Form validation:
+	isInputValid(inputName: string): boolean { return this.depositForm.controls[`${inputName}`].valid; }
+
+	amountErrors = {
+		invalidDecimalSeparator: 'Please use "." (decimal point) for fractional values',
+		invalidCharacters: 'Please use only digits and decimal points',
+		empty: 'Please add the amount',
+		negativeValue: 'Please add a positive value'
+	};
+
+	detailsErrors = {
+		empty: 'Please add some details',
+	};
 }

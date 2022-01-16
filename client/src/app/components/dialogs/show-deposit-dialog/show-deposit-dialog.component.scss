@@ -1,4 +1,4 @@
-$disabled: 0.8;
+@import '../../../../styles.scss';
 
 form {
 	// color: white;
@@ -7,10 +7,19 @@ form {
 
 input,
 select {
-	// color: white;
+	color: $foreground-clr;
 	// background-color: rgba(0 0 0 / 1);
 	// border: 1px solid white;
 	// padding: 0.5rem;
+	background-color: $background-clr;
+	border: $border-sz solid $foreground-clr;
+}
+
+::-webkit-input-placeholder,
+::-moz-placeholder,
+:-ms-input-placeholder,
+:-moz-placeholder {
+	color: pink;
 }
 
 input:disabled,
@@ -24,30 +33,107 @@ input:active,
 select:active,
 input:focus-within,
 select:focus-within {
-	outline: 1px solid aqua;
-	// border: 1px solid aqua;	// only works if the base state also has "border"
+	outline: $outline-sz solid $focus-clr;
+	// border: 1px solid $focus-clr; // only works if the base state also has "border"
 }
 
 select > option {
 	// color: white;
 	// background-color: black;
+	font-family: $font-main;
 }
 
 fieldset {
 	border: none;
 	display: grid;
-	grid-template-columns: 1fr 2fr;
+	grid-template-columns: 1fr;
 	padding: 5px 0;
+	margin-bottom: 0.5rem;
 }
 
 input[type='date'] {
-	font-family: sans-serif;
+	// color: $foreground-clr;
+	font-family: $font-main;
 }
 
-label {
-	align-self: center;
+fieldset label {
+	margin-inline-start: 5px;
+	margin-block-end: 0.5rem;
 }
 
-button {
-	// border: 1px solid black;
+fieldset p {
+	margin-inline-start: 5px;
+	margin-block-start: 0.5rem;
+	height: 20px;
+}
+
+.dialog-title {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#close-btn {
+	font-size: calc($font-sz-normal + $font-sz-small);
+	border: none;
+	width: 20px;
+}
+
+.input-error {
+	// outline: $outline-sz solid red;
+	border: $border-sz solid $invalid-clr;
+}
+
+.error {
+	color: $invalid-clr;
+}
+
+fieldset input {
+	box-sizing: border-box;
+}
+
+input,
+select {
+	height: 30px;
+}
+
+$input-max-width: 150px;
+
+input,
+select {
+	// border-left: none;
+	// border-right: none;
+	// border-top: none;
+	max-width: $input-max-width;
+}
+
+#amount {
+	width: $input-max-width;
+}
+
+input:invalid:active:focus-within {
+	color: $foreground-clr;
+	outline: $outline-sz solid $focus-clr;
+	border: $border-sz solid $invalid-clr;
+}
+
+option {
+	font-family: $font-main;
+}
+
+::-webkit-calendar-picker-indicator {
+	filter: invert(1);
+}
+
+mat-dialog-actions {
+	margin-block-start: 1rem;
+}
+
+#div-deposit-form {
+	margin-bottom: 1rem;
+}
+
+fieldset label,
+fieldset p {
+	font-size: $font-sz-normal;
 }

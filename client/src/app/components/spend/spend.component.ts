@@ -14,10 +14,10 @@ import { DepositsService } from 'src/app/services/deposits.service';
 import { LocationsService } from 'src/app/services/locations.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
-import { CATEGORIES } from 'src/app/shared/constants/Categories';
-import { CITIES } from 'src/app/shared/constants/Cities';
+import { CATEGORY } from 'src/app/shared/constants/Categories';
+import { CITY } from 'src/app/shared/constants/Cities';
 import { CURRENCIES } from 'net-worth-shared';
-import { LOCATIONS } from 'src/app/shared/constants/Locations';
+import { LOCATION } from 'src/app/shared/constants/Locations';
 
 @Component({
 	selector: 'app-spend',
@@ -38,9 +38,9 @@ export class SpendComponent implements OnInit {
 	selectedCurrency!: Currency;
 
 	currencies: Currency[] = [];
-	categories: CATEGORIES[] = [];
-	cities: CITIES[] = [];
-	locations: LOCATIONS[] = [];
+	categories: CATEGORY[] = [];
+	cities: CITY[] = [];
+	locations: LOCATION[] = [];
 	frequencies: string[] = ['week', 'month'];
 
 	defaultAmount = 10;
@@ -50,9 +50,9 @@ export class SpendComponent implements OnInit {
 	defaultCreatedAt = new Date().toISOString().split('T')[0];
 	defaultExchangeRate = 1;
 	defaultRecurrent = false;
-	defaultCategory = CATEGORIES.GROCERIES;
-	defaultLocation = LOCATIONS.SELGROS;
-	defaultCity = CITIES.BRASOV;
+	defaultCategory = CATEGORY.GROCERIES;
+	defaultLocation = LOCATION.SELGROS;
+	defaultCity = CITY.BRASOV;
 	defaultFrequency = '';
 
 	constructor(
