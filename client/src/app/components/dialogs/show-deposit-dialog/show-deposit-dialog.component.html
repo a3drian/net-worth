@@ -1,74 +1,34 @@
-<p class="debug" *ngIf="isInDebugMode"><b>show-deposit-dialog</b> works!</p>
+<p class="debug" *ngIf="isInDebugMode"><b>spend</b> works!</p>
 
-<h2 mat-dialog-title>Details</h2>
+<div class="dialog-title">
+	<h3>{{ titleText }}</h3>
+	<button id="close-btn" aria-label="Close dialog" mat-dialog-close>X</button>
+</div>
 
-<div>
-	<!-- Open this by default: -->
-	<!-- <app-deposit-form *ngIf="!canEdit" [deposit]="deposit"></app-deposit-form> -->
-	<!-- <app-deposit-form *ngIf="canEdit" [deposit]="deposit"></app-deposit-form> -->
-
-	<p>View or edit deposit</p>
-
+<div id="div-deposit-form">
 	<form [formGroup]="depositForm">
-
-		<!--
-		<mat-form-field appearance="fill">
-			<mat-label for="amount">Amount:</mat-label>
-			<input matInput type="number" name="amount" formControlName="amount" required>
-		</mat-form-field>
-
-		<mat-form-field appearance="fill">
-			<mat-label for="details">Details:</mat-label>
-			<input matInput type="text" name="details" formControlName="details">
-		</mat-form-field>
-
-		<mat-form-field appearance="fill">
-			<mat-label for="createdAt">Created at:</mat-label>
-			<input matInput type="date" name="createdAt" formControlName="createdAt" required>
-		</mat-form-field>
-
-		<mat-form-field appearance="fill">
-			<mat-label for="category">Category:</mat-label>
-			<mat-select name="category" id="category-select" formControlName="category">
-				<mat-option *ngFor="let c of categories" [value]="c">
-					{{ c }}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-
-		<mat-form-field appearance="fill">
-			<mat-label for="location">Location:</mat-label>
-			<mat-select name="location" id="location-select" formControlName="location">
-				<mat-option *ngFor="let l of locations" [value]="l">
-					{{ l }}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-
-		<mat-form-field appearance="fill">
-			<mat-label for="city">City:</mat-label>
-			<mat-select name="city" id="city-select" formControlName="city">
-				<mat-option *ngFor="let c of cities" [value]="c">
-					{{ c }}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-		-->
 
 		<!-- remove matInput? -->
 		<fieldset>
 			<label for="amount">Amount:</label>
-			<input matInput type="number" name="amount" formControlName="amount" required>
+			<input matInput id="amount" [ngClass]="!isInputValid('amount') ? 'input-error' : ''" type="number" name="amount"
+				formControlName="amount" placeholder="{{ formPlaceholders.amount }}" required>
+			<p *ngIf="isInputValid('amount')">How much did you spend?</p>
+			<p class="error" *ngIf="!isInputValid('amount')">Please add the amount...</p>
 		</fieldset>
 
 		<fieldset>
 			<label for="details">Details:</label>
-			<input matInput type="text" name="details" formControlName="details" required>
+			<input matInput id="details" [ngClass]="!isInputValid('details') ? 'input-error' : ''" type="text" name="details"
+				formControlName="details" placeholder="{{ formPlaceholders.details }}" required>
+			<p *ngIf="isInputValid('details')">What did you spend it on?</p>
+			<p class="error" *ngIf="!isInputValid('details')">Please add some details...</p>
 		</fieldset>
 
 		<fieldset>
 			<label for="createdAt">Date:</label>
-			<input matInput type="date" name="createdAt" formControlName="createdAt" required>
+			<input matInput id="date" type="date" name="createdAt" formControlName="createdAt" required>
+			<p>When did you spend it?</p>
 		</fieldset>
 
 		<fieldset>
@@ -78,6 +38,7 @@
 					{{ c }}
 				</option>
 			</select>
+			<p>Choose a category for easier filtering</p>
 		</fieldset>
 
 		<fieldset>
@@ -87,6 +48,7 @@
 					{{ l }}
 				</option>
 			</select>
+			<p>Where did you spend it?</p>
 		</fieldset>
 
 		<fieldset>
@@ -96,55 +58,24 @@
 					{{ c }}
 				</option>
 			</select>
+			<p>In which city did you spend it?</p>
 		</fieldset>
 
-		<!-- TODO: Add support for recurrent deposits and deposits in a different currency -->
-		<!--
-		<mat-checkbox name="recurrent" formControlName="recurrent" (change)="makeRecurrent()" [disabled]="true">
-			<mat-label for="recurrent">Is this a recurrent payment?</mat-label>
-		</mat-checkbox>
-
-		<mat-form-field appearance="fill" *ngIf="recurrent">
-			<mat-label for="frequency">Frequency:</mat-label>
-			<mat-select name="frequency" id="frequency-select" formControlName="frequency">
-				<mat-option *ngFor="let l of frequencies" [value]="l">
-					Every {{ l }}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-
-		<mat-checkbox name="currencyCheck" formControlName="currencyCheck" (change)="changeCurrency()" [disabled]="true">
-			<mat-label for="currencyCheck">Is this a payment in a different currency?</mat-label>
-		</mat-checkbox>
-
-		<div *ngIf="differentCurrency">
-			<mat-form-field appearance="fill">
-				<mat-label for="currency">Currency:</mat-label>
-				<mat-select id="currency-select" name="currency" formControlName="currency">
-					<mat-option *ngFor="let c of currencies" [value]="c">
-						{{ c.name }} ({{ c.symbol }})
-					</mat-option>
-				</mat-select>
-			</mat-form-field>
-
-			<mat-form-field appearance="fill">
-				<mat-label for="exchangeRate">Exchange rate:</mat-label>
-				<input matInput type="number" name="exchangeRate" formControlName="exchangeRate">
-			</mat-form-field>
-
-			<button mat-stroked-button>Get latest exchange rate for {{ selectedCurrency.name }} </button>
-		</div>
-	-->
-
 	</form>
-
-	<mat-dialog-actions>
-		<button [disabled]="!canEdit" (click)="edit()">Edit</button>
-		<button [disabled]="canEdit" (click)="save()" mat-dialog-close>Save</button>
-	</mat-dialog-actions>
 </div>
 
+<mat-dialog-actions *ngIf="inEditMode">
+	<button *ngIf="canEdit" (click)="save()" mat-dialog-close>Save</button>
+	<!-- <button *ngIf="canEdit" (click)="cancel()">Cancel</button> -->
+</mat-dialog-actions>
+
+<mat-dialog-actions *ngIf="!inEditMode">
+	<button *ngIf="canEdit" (click)="add()" mat-dialog-close>Add</button>
+</mat-dialog-actions>
+
 <div *ngIf="isInDebugMode">
-	<p>Form value:<br>{{ depositForm.value | json }}</p>
 	<p>Form status:<br>{{ depositForm.status }}</p>
+	<p>amount: {{ isInputValid('amount') }}</p>
+	<p>details: {{ isInputValid('details') }}</p>
+	<p>Form value:<br>{{ depositForm.value | json }}</p>
 </div>

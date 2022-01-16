@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-// Components
+// Components:
 import { DeleteDepositDialogComponent } from '../../dialogs/delete-deposit-dialog/delete-deposit-dialog.component';
 import { ShowDepositDialogComponent } from '../../dialogs/show-deposit-dialog/show-deposit-dialog.component';
 // Interfaces:
@@ -35,7 +35,7 @@ export class DepositCardComponent implements OnInit {
 	constructor(
 		private depositsService: DepositsService,
 		public deleteDepositDialog: MatDialog,
-		public showDepositDialog: MatDialog,
+		public showDepositDialog: MatDialog
 	) { }
 
 	ngOnInit(): void { this.depositId = this.deposit._id; }
@@ -67,7 +67,7 @@ export class DepositCardComponent implements OnInit {
 			);
 	}
 
-	openDialog(deposit: IDeposit): MatDialogRef<ShowDepositDialogComponent> {
+	getShowDepositDialogRef(deposit: IDeposit): MatDialogRef<ShowDepositDialogComponent> {
 		return this.showDepositDialog
 			.open(
 				ShowDepositDialogComponent,
@@ -80,10 +80,23 @@ export class DepositCardComponent implements OnInit {
 			);
 	}
 
+	getDeleteDepositDialogRef(deposit: IDeposit): MatDialogRef<DeleteDepositDialogComponent> {
+		return this.deleteDepositDialog
+			.open(
+				DeleteDepositDialogComponent,
+				{
+					data: deposit,
+					panelClass: 'custom-delete-deposit-dialog-container',
+					height: '250px',
+					width: '400px'
+				}
+			);
+	}
+
 	openShowDepositDialog(deposit: IDeposit): void {
 		log('deposit-card.ts', this.openShowDepositDialog.name, 'Selected deposit:', deposit);
 
-		const dialogRef = this.openDialog(deposit);
+		const dialogRef = this.getShowDepositDialogRef(deposit);
 		this.showDepositDialogSub = dialogRef
 			.afterClosed()
 			.subscribe(
@@ -99,16 +112,7 @@ export class DepositCardComponent implements OnInit {
 	openDeleteDepositDialog(deposit: IDeposit): void {
 		log('deposit-card.ts', this.openDeleteDepositDialog.name, 'Selected deposit:', deposit);
 
-		const dialogRef = this.deleteDepositDialog
-			.open(
-				DeleteDepositDialogComponent,
-				{
-					data: deposit,
-					panelClass: 'custom-delete-deposit-dialog-container',
-					height: '200px',
-					width: '400px'
-				}
-			);
+		const dialogRef = this.getDeleteDepositDialogRef(deposit);
 		this.deleteDepositDialogSub = dialogRef
 			.afterClosed()
 			.subscribe(

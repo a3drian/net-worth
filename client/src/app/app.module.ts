@@ -48,12 +48,8 @@ import { Constants } from './shared/Constants';
 		BrowserModule,
 		RouterModule.forRoot([
 			{ path: '', redirectTo: Constants.appEndpoints.DASHBOARD_URL, pathMatch: 'full' },
-			{
-				path: appRoutes.dashboard.path, component: DashboardComponent,
-				children: []
-			},
+			{ path: appRoutes.dashboard.path, component: DashboardComponent },
 			{ path: appRoutes.login.path, component: LoginComponent },
-			{ path: appRoutes.spend.path, component: SpendComponent },
 			{ path: '**', component: NotFoundPageComponent }
 		]),
 		HttpClientModule,

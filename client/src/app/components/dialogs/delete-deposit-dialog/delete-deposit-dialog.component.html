@@ -1,6 +1,9 @@
 <p class="debug" *ngIf="isInDebugMode"><b>delete-deposit-dialog</b> works!</p>
 
-<h2 mat-dialog-title>Confirm deletion</h2>
+<div class="dialog-title">
+	<h3>Confirm deletion</h3>
+	<button id="close-btn" aria-label="Close dialog" mat-dialog-close>X</button>
+</div>
 
 <main>
    <div>Are you sure you want to delete '{{ deposit.details }}' from {{ deposit.createdAt | date: 'MMMM d' }}?</div>

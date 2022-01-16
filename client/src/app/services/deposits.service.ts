@@ -17,7 +17,7 @@ import { log } from '../shared/Logger';
 export class DepositsService {
 
 	private readonly BASE_URL: string = Constants.apiEndpoints.SPEND_BASE_URL;
-	private readonly SEARCH_URL: string = this.BASE_URL + Constants.apiEndpoints.SPEND_SEARCH_URL;
+	private readonly SEARCH_URL: string = this.BASE_URL + Constants.apiEndpoints.SEARCH_URL;
 
 	private readonly CLASS_NAME = 'deposits.service.ts';
 
