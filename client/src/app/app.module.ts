@@ -23,7 +23,6 @@ import { DepositFormComponent } from './components/forms/deposit-form/deposit-fo
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
-import { SpendComponent } from './components/spend/spend.component';
 // Dialogs:
 import { DeleteDepositDialogComponent } from './components/dialogs/delete-deposit-dialog/delete-deposit-dialog.component';
 import { ShowDepositDialogComponent } from './components/dialogs/show-deposit-dialog/show-deposit-dialog.component';
@@ -38,7 +37,6 @@ import { Constants } from './shared/Constants';
 		NotFoundPageComponent,
 		DashboardComponent,
 		LoadingSpinnerComponent,
-		SpendComponent,
 		DepositFormComponent,
 		DepositCardComponent,
 		ShowDepositDialogComponent,
