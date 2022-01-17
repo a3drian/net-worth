@@ -5,10 +5,9 @@
 	<button id="close-btn" aria-label="Close dialog" mat-dialog-close>X</button>
 </div>
 
-<div id="div-deposit-form">
+<mat-dialog-content>
 	<form [formGroup]="depositForm">
 
-		<!-- remove matInput? -->
 		<fieldset>
 			<label for="amount">Amount:</label>
 			<input matInput id="amount" [ngClass]="!isInputValid('amount') ? 'input-error' : ''" type="number" name="amount"
@@ -62,17 +61,19 @@
 		</fieldset>
 
 	</form>
-</div>
+	<!-- </div> -->
+</mat-dialog-content>
 
-<mat-dialog-actions *ngIf="inEditMode">
+<mat-dialog-actions *ngIf="inEditMode" align="center">
 	<button *ngIf="canEdit" (click)="save()" mat-dialog-close>Save</button>
 	<!-- <button *ngIf="canEdit" (click)="cancel()">Cancel</button> -->
 </mat-dialog-actions>
 
-<mat-dialog-actions *ngIf="!inEditMode">
+<mat-dialog-actions *ngIf="!inEditMode" align="center">
 	<button *ngIf="canEdit" (click)="add()" mat-dialog-close>Add</button>
 </mat-dialog-actions>
 
+<!-- DEBUG MODE: -->
 <div *ngIf="isInDebugMode">
 	<p>Form status:<br>{{ depositForm.status }}</p>
 	<p>amount: {{ isInputValid('amount') }}</p>

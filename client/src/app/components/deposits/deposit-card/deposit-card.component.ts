@@ -74,8 +74,7 @@ export class DepositCardComponent implements OnInit {
 				{
 					data: deposit,
 					panelClass: 'custom-view-deposit-dialog-container',
-					height: '500px',
-					width: '400px'
+					width: Constants.dialogDimensions.width
 				}
 			);
 	}
@@ -87,8 +86,7 @@ export class DepositCardComponent implements OnInit {
 				{
 					data: deposit,
 					panelClass: 'custom-delete-deposit-dialog-container',
-					height: '250px',
-					width: '400px'
+					width: Constants.dialogDimensions.width
 				}
 			);
 	}
