@@ -103,6 +103,19 @@ body {
 .custom-delete-deposit-dialog-container mat-dialog-content {
 	background: $background-clr;
 	color: $foreground-clr;
+	// padding: 5px;
+}
+
+.custom-view-deposit-dialog-container mat-dialog-actions,
+.custom-delete-deposit-dialog-container mat-dialog-actions {
+	// margin-block-start: 0.5rem;
+	// margin-block-end: 0.5rem;	// for some reason, adds too much margin
+}
+
+input::placeholder {
+	color: $dark-purple !important;
+	background: $foreground-clr;
+	// opacity: 1;
 }
 
 input,
@@ -114,6 +127,7 @@ select {
 button {
 	margin-inline-end: 0.5rem;
 	padding-top: 4px;
+	transition: 0.25s ease;
 	width: 80px;
 }
 button {

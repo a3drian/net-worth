@@ -1,33 +1,6 @@
 @import '../../../../styles.scss';
 
-form {
-	// color: white;
-	// background-color: black;
-}
-
-input,
-select {
-	color: $foreground-clr;
-	// background-color: rgba(0 0 0 / 1);
-	// border: 1px solid white;
-	// padding: 0.5rem;
-	background-color: $background-clr;
-	border: $border-sz solid $foreground-clr;
-}
-
-::-webkit-input-placeholder,
-::-moz-placeholder,
-:-ms-input-placeholder,
-:-moz-placeholder {
-	color: pink;
-}
-
-input:disabled,
-select:disabled {
-	// color: white;
-	// background-color: rgba(0 0 0 / $disabled);
-	// border: 1px solid gray;
-}
+$input-max-width: 150px;
 
 input:active,
 select:active,
@@ -38,51 +11,29 @@ select:focus-within {
 }
 
 select > option {
-	// color: white;
-	// background-color: black;
 	font-family: $font-main;
-}
-
-option:hover {
-	color: hotpink;
-}
-
-fieldset {
-	border: none;
-	display: grid;
-	grid-template-columns: 1fr;
-	padding: 5px 0;
-	margin-bottom: 0.5rem;
 }
 
 input[type='date'] {
-	// color: $foreground-clr;
 	font-family: $font-main;
-}
-
-fieldset label {
-	margin-inline-start: 5px;
-	margin-block-end: 0.5rem;
-}
-
-fieldset p {
-	margin-inline-start: 5px;
-	margin-block-start: 0.5rem;
-	height: 20px;
 }
 
 .dialog-title {
 	display: flex;
-	color: $foreground-clr;
-	justify-content: space-between;
 	align-items: center;
+	justify-content: space-between;
+	color: $foreground-clr;
 	margin-block-end: 0.5rem;
+}
+
+.dialog-title h3 {
+	border-bottom: $border-sz solid $foreground-clr;
 }
 
 #close-btn {
 	font-size: $font-sz-normal;
-	width: 30px;
 	font-style: heavy;
+	width: 30px;
 }
 
 .input-error {
@@ -103,13 +54,8 @@ select {
 	height: 30px;
 }
 
-$input-max-width: 150px;
-
 input,
 select {
-	// border-left: none;
-	// border-right: none;
-	// border-top: none;
 	max-width: $input-max-width;
 }
 
@@ -118,21 +64,32 @@ select {
 }
 
 input:invalid:active:focus-within {
+	border: $border-sz solid $invalid-clr;
 	color: $foreground-clr;
 	outline: $outline-sz solid $focus-clr;
-	border: $border-sz solid $invalid-clr;
 }
 
 ::-webkit-calendar-picker-indicator {
 	filter: invert(1);
 }
 
-mat-dialog-actions {
-	margin-block-start: 1rem;
+fieldset {
+	display: grid;
+	grid-template-columns: 1fr;
+	border: none;
+	margin-bottom: 0.5rem;
+	padding: 5px 0;
 }
 
-#div-deposit-form {
-	margin-bottom: 1rem;
+fieldset label {
+	margin-inline-start: 5px;
+	margin-block-end: 0.5rem;
+}
+
+fieldset p {
+	margin-inline-start: 5px;
+	margin-block-start: 0.5rem;
+	height: 20px;
 }
 
 fieldset label,
@@ -141,5 +98,5 @@ fieldset p {
 }
 
 fieldset p:not(#error) {
-	font-size: 0.75rem;
+	font-size: 0.8rem;
 }

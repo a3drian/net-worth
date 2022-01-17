@@ -41,7 +41,7 @@ export const Constants = Object.freeze({
 	}),
 
 	dialogDimensions: Object.freeze({
-		width: '350px'
+		width: '320px'
 	})
 
 });

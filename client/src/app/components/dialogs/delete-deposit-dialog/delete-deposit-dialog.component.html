@@ -9,7 +9,7 @@
 	Are you sure you want to delete '{{ deposit.details }}' from {{ deposit.createdAt | date: 'MMMM d' }}?
 </mat-dialog-content>
 
-<mat-dialog-actions>
+<mat-dialog-actions align="center">
 	<button mat-dialog-close (click)="getConfirmation(true)">Yes</button>
 	<button mat-dialog-close (click)="getConfirmation(false)">No</button>
 </mat-dialog-actions>
