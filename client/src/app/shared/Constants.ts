@@ -38,6 +38,10 @@ export const Constants = Object.freeze({
 	formPlaceholders: Object.freeze({
 		amount: 10,
 		details: 'Groceries...',
+	}),
+
+	dialogDimensions: Object.freeze({
+		width: '350px'
 	})
 
 });

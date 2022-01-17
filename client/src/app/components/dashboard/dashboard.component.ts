@@ -61,8 +61,7 @@ export class DashboardComponent implements OnInit {
 				{
 					data: null,
 					panelClass: 'custom-view-deposit-dialog-container',
-					height: '500px',
-					width: '400px'
+					width: Constants.dialogDimensions.width
 				}
 			);
 	}

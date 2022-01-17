@@ -43,6 +43,10 @@ select > option {
 	font-family: $font-main;
 }
 
+option:hover {
+	color: hotpink;
+}
+
 fieldset {
 	border: none;
 	display: grid;
@@ -69,14 +73,16 @@ fieldset p {
 
 .dialog-title {
 	display: flex;
+	color: $foreground-clr;
 	justify-content: space-between;
 	align-items: center;
+	margin-block-end: 0.5rem;
 }
 
 #close-btn {
-	font-size: calc($font-sz-normal + $font-sz-small);
-	border: none;
-	width: 20px;
+	font-size: $font-sz-normal;
+	width: 30px;
+	font-style: heavy;
 }
 
 .input-error {
@@ -117,10 +123,6 @@ input:invalid:active:focus-within {
 	border: $border-sz solid $invalid-clr;
 }
 
-option {
-	font-family: $font-main;
-}
-
 ::-webkit-calendar-picker-indicator {
 	filter: invert(1);
 }
@@ -136,4 +138,8 @@ mat-dialog-actions {
 fieldset label,
 fieldset p {
 	font-size: $font-sz-normal;
+}
+
+fieldset p:not(#error) {
+	font-size: 0.75rem;
 }

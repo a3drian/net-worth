@@ -100,19 +100,23 @@ export class ShowDepositDialogComponent implements OnInit {
 	ngOnInit(): void {
 		log('show-deposit-dialog.ts', this.ngOnInit.name, 'this.deposit:', this.deposit);
 
-		if (this.deposit === null) {
-			this.titleText = 'Add new';
-			this.inEditMode = false;
-			this.initializeEmptyForm();
+		this.deposit === null ? this.intializeAddPage() : this.initializeEditPage();
+	}
 
-			this.isFormReady = true;
-		} else {
-			this.titleText = 'View or edit';
-			this.inEditMode = true;
-			this.initializeForm();
+	private intializeAddPage(): void {
+		this.titleText = 'Add new';
+		this.inEditMode = false;
+		this.initializeEmptyForm();
 
-			this.isFormReady = true;
-		}
+		this.isFormReady = true;
+	}
+
+	private initializeEditPage(): void {
+		this.titleText = 'View or edit';
+		this.inEditMode = true;
+		this.initializeForm();
+
+		this.isFormReady = true;
 	}
 
 	private initializeEmptyForm(): void {
@@ -159,12 +163,12 @@ export class ShowDepositDialogComponent implements OnInit {
 	makeRecurrent(): void { this.recurrent = !this.recurrent; }
 	changeCurrency(): void { this.differentCurrency = !this.differentCurrency; }
 
-	enableEdit(): void {
+	private enableEdit(): void {
 		this.canEdit = false;
 		this.depositForm.enable();
 	}
 
-	disableEdit(): void {
+	private disableEdit(): void {
 		this.canEdit = true;
 		this.depositForm.disable();
 	}
@@ -240,7 +244,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	isInputValid(inputName: string): boolean { return this.depositForm.controls[`${inputName}`].valid; }
 
 	amountErrors = {
-		invalidDecimalSeparator: 'Please use "." (decimal point) for fractional values',
+		invalidDecimalSeparator: `Please use '.' (decimal point) for fractional values`,
 		invalidCharacters: 'Please use only digits and decimal points',
 		empty: 'Please add the amount',
 		negativeValue: 'Please add a positive value'

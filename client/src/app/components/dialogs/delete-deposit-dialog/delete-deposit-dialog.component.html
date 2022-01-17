@@ -5,10 +5,11 @@
 	<button id="close-btn" aria-label="Close dialog" mat-dialog-close>X</button>
 </div>
 
-<main>
-   <div>Are you sure you want to delete '{{ deposit.details }}' from {{ deposit.createdAt | date: 'MMMM d' }}?</div>
-   <mat-dialog-actions>
-      <button mat-dialog-close (click)="getConfirmation(true)">Yes</button>
-      <button mat-dialog-close (click)="getConfirmation(false)">No</button>
-   </mat-dialog-actions>
-</main>
+<mat-dialog-content>
+	Are you sure you want to delete '{{ deposit.details }}' from {{ deposit.createdAt | date: 'MMMM d' }}?
+</mat-dialog-content>
+
+<mat-dialog-actions>
+	<button mat-dialog-close (click)="getConfirmation(true)">Yes</button>
+	<button mat-dialog-close (click)="getConfirmation(false)">No</button>
+</mat-dialog-actions>
