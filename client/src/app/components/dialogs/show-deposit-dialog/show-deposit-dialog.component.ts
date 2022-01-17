@@ -92,7 +92,8 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	today: Date = new Date();
 
-	titleText: string = ''
+	titleText: string = '';
+	amountErrorMessage: string = '';
 
 	formDefaults = Constants.formDefaults;
 	formPlaceholders = Constants.formPlaceholders;
@@ -241,12 +242,39 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	// Form validation:
-	isInputValid(inputName: string): boolean { return this.depositForm.controls[`${inputName}`].valid; }
+	isInputValid(inputName: string): boolean {
+		// this.initializeError(inputName);
+		return this.depositForm.controls[`${inputName}`].valid;
+	}
+
+	/*
+	initializeError(inputName: string): void {
+		if (inputName === 'amount') {
+			const input = this.depositForm.controls[`${inputName}`];
+			const inputValue: number | string = input.value;
+			console.log('inputValue:', inputValue);
+			if (inputValue === null) {
+				console.log('input is NULL:', input);
+				this.amountErrorMessage = this.amountErrors.empty;
+				return;
+			}
+			if (inputValue < 0) {
+				this.amountErrorMessage = this.amountErrors.negativeValue;
+			} else if (inputValue.toString().includes(',')) {
+				this.amountErrorMessage = this.amountErrors.invalidDecimalSeparator;
+			} else if (inputValue.toString().length === 0) {
+				this.amountErrorMessage = this.amountErrors.empty;
+			} else if (inputValue.toString().includes('#')) {
+				this.amountErrorMessage = this.amountErrors.invalidCharacters;
+			}
+		}
+	}
+	*/
 
 	amountErrors = {
-		invalidDecimalSeparator: `Please use '.' (decimal point) for fractional values`,
-		invalidCharacters: 'Please use only digits and decimal points',
 		empty: 'Please add the amount',
+		invalidCharacters: 'Please use only digits and decimal points',
+		invalidDecimalSeparator: `Please use '.' (decimal point) for fractional values`,
 		negativeValue: 'Please add a positive value'
 	};
 
