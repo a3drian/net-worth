@@ -1,11 +1,12 @@
-// Shared
-import { CURRENCY } from 'net-worth-shared';
+// Shared:
+import { Currency, CURRENCY } from 'net-worth-shared';
 import { CATEGORY } from './constants/Categories';
 import { CITY } from './constants/Cities';
+import { FREQUENCY } from './constants/Frequencies';
 import { LOCATION } from './constants/Locations';
 
 export const Constants = Object.freeze({
-	IN_DEBUG_MODE: false,
+	IN_DEBUG_MODE: true,
 
 	appEndpoints: Object.freeze({
 		LOGIN_URL: 'login',
@@ -25,19 +26,20 @@ export const Constants = Object.freeze({
 	formDefaults: Object.freeze({
 		amount: 10,
 		details: 'Groceries',
-		currency: CURRENCY.LEI.symbol,
-		exchangeRate: 1,
-		recurrent: false,
-		currencyCheck: false,
 		category: CATEGORY.GROCERIES,
 		location: LOCATION.SELGROS,
 		city: CITY.BRASOV,
-		frequency: '',
+		recurrent: false,
+		frequency: FREQUENCY.WEEKLY,
+		differentCurrency: false,
+		currency: new Currency(CURRENCY.EUR),
+		exchangeRate: 4.9,
 	}),
 
 	formPlaceholders: Object.freeze({
 		amount: 10,
 		details: 'Groceries...',
+		exchangeRate: 4.9,
 	}),
 
 	dialogDimensions: Object.freeze({
