@@ -10,14 +10,15 @@ const depositSchema = new Schema<IDeposit>(
 		details: { type: String, required: true },
 		createdAt: { type: Date, required: true },
 
-		modifiedAt: { type: Date, required: false },
-		currency: { type: String, required: false },
-		exchangeRate: { type: Number, required: false },
-
-		recurrent: { type: Boolean, required: false },
 		category: { type: String, required: true },
 		location: { type: String, required: true },
 		city: { type: String, required: true },
+
+		recurrent: { type: Boolean, required: false },
+		frequency: { type: String, required: false },
+
+		currency: { type: String, required: false },
+		exchangeRate: { type: Number, required: false },
 	},
 	{
 		collection: 'Deposits',

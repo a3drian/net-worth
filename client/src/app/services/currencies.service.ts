@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 // Models:
 import { Currency } from 'net-worth-shared';
 // Shared:
-import { CURRENCIES } from 'net-worth-shared';
+import { CURRENCY } from 'net-worth-shared';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class CurrenciesService {
 
-	currencies: Currency[] = Object.values(CURRENCIES);
+	currencies: Currency[] = Object.values(CURRENCY);
 
 	constructor() { }
 
