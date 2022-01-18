@@ -70,7 +70,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			city: depositFromForm.city,
 			// TODO: get actual values
 			recurrent: this.formDefaults.recurrent,
-			// frequency: this.formDefaults.Frequency,
+			frequency: this.formDefaults.frequency,
 			currency: this.formDefaults.currency,
 			exchangeRate: this.formDefaults.exchangeRate,
 		});
@@ -93,7 +93,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	today: Date = new Date();
 
 	titleText: string = '';
-	amountErrorMessage: string = '';
+	amountErrorMessage: string = Constants.amountErrors.negativeValue;
 
 	formDefaults = Constants.formDefaults;
 	formPlaceholders = Constants.formPlaceholders;
@@ -153,7 +153,7 @@ export class ShowDepositDialogComponent implements OnInit {
 					location: [this.deposit.location, Validators.required],
 					city: [this.deposit.city, Validators.required],
 					recurrent: [this.deposit.recurrent],
-					// frequency: [this.deposit.frequency],
+					frequency: [this.deposit.frequency],
 					currencyCheck: [this.differentCurrency],
 					currency: [this.deposit.currency],
 					exchangeRate: [this.deposit.exchangeRate]
@@ -207,7 +207,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			location: depositFromForm.location,
 			city: depositFromForm.city,
 			recurrent: depositFromForm.recurrent,
-			// frequency: depositFromForm.frequency,
+			frequency: depositFromForm.frequency,
 			currency: depositFromForm.currency,
 			exchangeRate: depositFromForm.exchangeRate,
 		});
@@ -270,15 +270,4 @@ export class ShowDepositDialogComponent implements OnInit {
 		}
 	}
 	*/
-
-	amountErrors = {
-		empty: 'Please add the amount',
-		invalidCharacters: 'Please use only digits and decimal points',
-		invalidDecimalSeparator: `Please use '.' (decimal point) for fractional values`,
-		negativeValue: 'Please add a positive value'
-	};
-
-	detailsErrors = {
-		empty: 'Please add some details',
-	};
 }

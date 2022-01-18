@@ -5,13 +5,13 @@ export interface IDeposit {
 	details: string;
 	createdAt: Date;
 
-	currency?: string;
-	modifiedAt?: Date;
-	exchangeRate?: number;
-	frequency?: string;
-
-	recurrent?: boolean;
 	category?: string;
 	location?: string;
 	city?: string;
+
+	recurrent?: boolean;
+	frequency?: string;
+
+	currency?: string;
+	exchangeRate?: number;
 }

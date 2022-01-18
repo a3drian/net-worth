@@ -13,7 +13,6 @@ import { LocationsService } from 'src/app/services/locations.service';
 import { Constants } from 'src/app/shared/Constants';
 import { CATEGORY } from 'src/app/shared/constants/Categories';
 import { CITY } from 'src/app/shared/constants/Cities';
-import { CURRENCIES } from 'net-worth-shared';
 import { LOCATION } from 'src/app/shared/constants/Locations';
 import { log } from 'src/app/shared/Logger';
 

@@ -1,5 +1,5 @@
 // Shared
-import { CURRENCIES } from 'net-worth-shared';
+import { CURRENCY } from 'net-worth-shared';
 import { CATEGORY } from './constants/Categories';
 import { CITY } from './constants/Cities';
 import { LOCATION } from './constants/Locations';
@@ -25,7 +25,7 @@ export const Constants = Object.freeze({
 	formDefaults: Object.freeze({
 		amount: 10,
 		details: 'Groceries',
-		currency: CURRENCIES.LEI.symbol,
+		currency: CURRENCY.LEI.symbol,
 		exchangeRate: 1,
 		recurrent: false,
 		currencyCheck: false,
@@ -42,6 +42,17 @@ export const Constants = Object.freeze({
 
 	dialogDimensions: Object.freeze({
 		width: '320px'
-	})
+	}),
+
+	amountErrors: Object.freeze({
+		empty: 'Please add the amount',
+		invalidCharacters: 'Please use only digits and decimal points',
+		invalidDecimalSeparator: `Please use '.' (decimal point) for fractional values`,
+		negativeValue: 'Please add a positive value'
+	}),
+
+	detailsErrors: Object.freeze({
+		empty: 'Please add some details',
+	}),
 
 });
