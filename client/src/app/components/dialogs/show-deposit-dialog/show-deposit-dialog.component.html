@@ -109,11 +109,11 @@
 </mat-dialog-content>
 
 <mat-dialog-actions *ngIf="inEditMode" align="center">
-	<button *ngIf="canEdit" (click)="save()" mat-dialog-close>Save</button>
+	<button (click)="save()" mat-dialog-close>Save</button>
 </mat-dialog-actions>
 
 <mat-dialog-actions *ngIf="!inEditMode" align="center">
-	<button *ngIf="canEdit" (click)="add()" mat-dialog-close>Add</button>
+	<button (click)="add()" mat-dialog-close>Add</button>
 </mat-dialog-actions>
 
 <!-- DEBUG MODE: -->

@@ -93,7 +93,7 @@ async function postDeposit(
 			location: body.location,
 			city: body.city,
 			recurrent: body.recurrent,
-			// frequency: body.frequency,
+			frequency: body.frequency,
 			currency: body.currency,
 			exchangeRate: body.exchangeRate
 		}
@@ -136,7 +136,7 @@ async function putDeposit(
 			location: body.location,
 			city: body.city,
 			recurrent: body.recurrent,
-			// frequency: body.frequency,
+			frequency: body.frequency,
 			currency: body.currency,
 			exchangeRate: body.exchangeRate
 		}
