@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
 // Models:
+import { Control } from 'src/app/models/Control';
 import { Currency } from 'net-worth-shared';
-import { Deposit, IDepositKVPairDiff } from 'src/app/models/Deposit';
+import { Deposit, DepositDifferences, DepositFromForm, DepositProperties } from 'src/app/models/Deposit';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
 import { CitiesService } from 'src/app/services/cities.service';
@@ -30,9 +31,10 @@ import { log } from 'src/app/shared/Logger';
 })
 export class ShowDepositDialogComponent implements OnInit {
 
+	CLASS_NAME = 'show-deposit-dialog.ts';
+
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
-	canEdit: boolean = true;
 	inEditMode: boolean = false;
 	isFormReady: boolean = false;
 
@@ -104,7 +106,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	amountErrorMessage: string = Constants.amountErrors.negativeValue;
 
 	ngOnInit(): void {
-		log('show-deposit-dialog.ts', this.ngOnInit.name, 'this.deposit:', this.deposit);
+		log(this.CLASS_NAME, this.ngOnInit.name, 'this.deposit:', this.deposit);
 
 		// setTimeout(() => {
 		this.deposit === null ? this.intializeAddPage() : this.initializeEditPage();
@@ -160,13 +162,12 @@ export class ShowDepositDialogComponent implements OnInit {
 		console.log('defaultCurrency:', differentCurrency);
 		const currency = differentCurrency ? this.deposit.currency : CURRENCY.EUR;
 
+		const amount = new FormControl(this.deposit.amount, [Validators.required, Validators.min(0)]);
+
 		this.depositForm = this.formBuilder
 			.group(
 				{
-					amount: [
-						this.deposit.amount,
-						[Validators.required, Validators.min(0)]
-					],
+					amount: amount,
 					details: [this.deposit.details, Validators.required],
 					createdAt: [new Date(this.deposit.createdAt).toISOString().split('T')[0], Validators.required],
 					category: [this.deposit.category, Validators.required],
@@ -212,77 +213,64 @@ export class ShowDepositDialogComponent implements OnInit {
 		this.showRate = false;
 	}
 	updateCurrency(c: Currency): void {
-		log('show-deposit-dialog.ts', this.updateCurrency.name, 'c:', c);
+		log(this.CLASS_NAME, this.updateCurrency.name, 'c:', c);
 		this.selectedCurrency = c;
 		this.showRate = false;
 	}
 
-	private enableEdit(): void {
-		this.canEdit = false;
-		this.depositForm.enable();
-	}
+	private isFormValid(): boolean { return this.depositForm.valid; }
 
-	private disableEdit(): void {
-		this.canEdit = true;
-		this.depositForm.disable();
-	}
+	private getDifferences(): DepositDifferences[] {
+		const controls: Control[] = Object
+			.entries(this.depositForm.controls)
+			.map<Control>((c: [string, AbstractControl]) => {
+				return { key: c[0] as DepositProperties, value: c[1].value, dirty: c[1].dirty, touched: c[1].touched }
+			});
 
-	add(): void {
-		const editedDeposit: IDeposit = this.getDepositFromForm();
-		this.updateTotalAmount('0', editedDeposit.amount.toString());
-		this.saveDeposit(editedDeposit);
-		this.enableEdit();
-	}
-	edit(): void { this.enableEdit(); }
-	cancel(): void { this.disableEdit(); }
+		const modifiedControls = controls.filter(c => c.dirty && c.touched);
 
-	private isFormValid(): boolean {
-		return this.depositForm.valid;
-	}
+		const differences = modifiedControls
+			.map<DepositDifferences>(
+				(c: Control) => {
+					const k: DepositProperties = c.key;
+					const oldValue = this.deposit[k];
+					if (!oldValue) { return { key: c.key as DepositProperties, oldValue: '', newValue: c.value } }
+					return { key: c.key as DepositProperties, oldValue: oldValue.toString(), newValue: c.value }
+				});
 
-	private saveDeposit(editedDeposit: IDeposit): void {
-		if (!this.isFormValid()) {
-			this.dialogReference.close(null);
-		} else {
-			log('show-deposit-dialog.ts', this.saveDeposit.name, 'editedDeposit:', editedDeposit);
-			this.dialogReference.close(editedDeposit);
-		}
+		log(this.CLASS_NAME, this.getDifferences.name, 'controls:', controls);
+		log(this.CLASS_NAME, this.getDifferences.name, 'differences:', differences);
+
+		return differences;
 	}
 
 	private getDepositFromForm(): IDeposit {
-		const depositFromForm = this.depositForm.value;
+		const formContents = this.depositForm.value;
 
-		const frequency = depositFromForm.recurrent ? depositFromForm.frequency : this.deposit.recurrent;
-		const currency = depositFromForm.differentCurrency ? depositFromForm.currency : this.deposit.currency;
-		const exchangeRate = currency ? depositFromForm.exchangeRate : this.deposit.exchangeRate;
-
-		const editedDeposit: IDeposit = new Deposit({
-			owner: this.informationService.owner.value,
-			amount: depositFromForm.amount,
-			details: depositFromForm.details,
-			createdAt: depositFromForm.createdAt,
-			category: depositFromForm.category,
-			location: depositFromForm.location,
-			city: depositFromForm.city,
-			recurrent: depositFromForm.recurrent,
-			frequency: frequency,
-			currency: currency,
-			exchangeRate: exchangeRate,
+		let depositFromForm = new DepositFromForm({
+			amount: formContents.amount,
+			details: formContents.details,
+			createdAt: formContents.createdAt,
+			category: formContents.category,
+			location: formContents.location,
+			city: formContents.city
 		});
 
-		log('show-deposit-dialog.ts', this.getDepositFromForm.name, 'depositFromForm:', editedDeposit);
-		return editedDeposit;
-	}
+		const updatedDeposit: IDeposit = new Deposit({
+			amount: formContents.amount,
+			details: formContents.details,
+			createdAt: formContents.createdAt,
+			category: formContents.category,
+			location: formContents.location,
+			city: formContents.city,
+			recurrent: formContents.recurrent,
+			frequency: formContents.frequency,
+			currency: formContents.currency,
+			exchangeRate: formContents.exchangeRate,
+		});
 
-	private depositChanged(editedDeposit: IDeposit): boolean {
-		const d1 = this.depositsService.getDepositKVPair(this.deposit);
-		const d2 = this.depositsService.getDepositKVPair(editedDeposit);
-		const differences = this.depositsService.getDepositKVPairDifferences(d1, d2);
-		if (differences.length === 0) { return false; }
-		const amount: IDepositKVPairDiff = differences.filter((d) => d.key === 'amount')[0];
-		const { oldValue, newValue } = amount;
-		if (amount) { this.updateTotalAmount(oldValue, newValue); }
-		return true;
+		log(this.CLASS_NAME, this.getDepositFromForm.name, 'depositFromForm:', updatedDeposit);
+		return updatedDeposit;
 	}
 
 	private updateTotalAmount(oldValue: string, newValue: string): void {
@@ -292,13 +280,37 @@ export class ShowDepositDialogComponent implements OnInit {
 		setTimeout(() => { this.informationService.totalAmount.next(totalAmount); }, Constants.updateTimeout);
 	}
 
-	save(): void {
-		const editedDeposit: IDeposit = this.getDepositFromForm();
-		if (this.depositChanged(editedDeposit)) {
-			this.saveDeposit(editedDeposit);
-		}
+	private getUpdatedDeposit(): IDeposit {
+		return <IDeposit>{};
+	}
 
-		this.disableEdit();
+	private depositChanged(): boolean {
+		const differences = this.getDifferences();
+		if (differences.length === 0) { return false; }
+		const amount: DepositDifferences = differences.filter((d) => d.key === 'amount')[0];
+		const { oldValue, newValue } = amount;
+		if (amount) { this.updateTotalAmount(oldValue, newValue); }
+		return true;
+	}
+
+	private saveDeposit(updatedDeposit: IDeposit): void {
+		if (!this.isFormValid()) {
+			this.dialogReference.close(null);
+		} else {
+			log(this.CLASS_NAME, this.saveDeposit.name, 'updatedDeposit:', updatedDeposit);
+			this.dialogReference.close(updatedDeposit);
+		}
+	}
+
+	save(): void {
+		const updatedDeposit: IDeposit = this.getDepositFromForm();
+		if (this.depositChanged()) { this.saveDeposit(updatedDeposit); }
+	}
+
+	add(): void {
+		const updatedDeposit: IDeposit = this.getDepositFromForm();
+		this.updateTotalAmount('0', updatedDeposit.amount.toString());
+		this.saveDeposit(updatedDeposit);
 	}
 
 	// Form validation:
