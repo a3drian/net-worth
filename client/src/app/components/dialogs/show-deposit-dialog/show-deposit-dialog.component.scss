@@ -100,3 +100,39 @@ fieldset p {
 fieldset p:not(#error) {
 	font-size: 0.8rem;
 }
+
+#recurrent-check,
+#currency-check {
+	display: flex;
+	align-items: center;
+	color: $foreground-clr;
+}
+
+#recurrent-check label,
+#currency-check label {
+	margin: 0;
+}
+
+input[type='checkbox']:hover {
+	// TODO: change color when you hover over the checkbox
+}
+
+#fetch-exchangeRate-btn {
+	border: 0;
+	background-color: $background-clr;
+	color: $foreground-clr;
+	font-size: 0.8rem;
+	outline: 0;
+	text-decoration: underline;
+	width: 250px;
+}
+#fetch-exchangeRate-btn:hover:not(:disabled) {
+	border: 0;
+	color: $foreground-clr;
+	outline: 0;
+
+	cursor: pointer;
+
+	text-decoration: none;
+	text-shadow: none;
+}
