@@ -6,6 +6,15 @@
 		'{{ deposit.location }}' ({{deposit.category}})
 	</p>
 
+	<!-- TODO: Use semantic HTML -->
+	<div style="font-size: 0.8rem;">
+		<!-- TODO: if not recurrent, say "One time payment" and hide Frequency -->
+		<p *ngIf="!deposit.recurrent">One time payment</p>
+		<p *ngIf="deposit.recurrent">{{ deposit.frequency }} payment</p>
+		<p>Currency: {{ deposit.currency }} | Exchange rate: {{ deposit.exchangeRate }}</p>
+		<b>{{ deposit.city }}</b>
+	</div>
+
 	<button (click)="openShowDepositDialog(deposit)">
 		Details
 	</button>
@@ -13,5 +22,7 @@
 	<button (click)="openDeleteDepositDialog(deposit)">
 		Delete
 	</button>
+
+	<hr>
 
 </div>

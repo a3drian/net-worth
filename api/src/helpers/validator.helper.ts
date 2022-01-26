@@ -22,10 +22,10 @@ export function validDeposit(deposit: Partial<IDeposit>): boolean {
 		typeof deposit !== 'object' ||
 		!deposit.owner ||
 		!deposit.amount ||
-		!deposit.currency ||
+		!deposit.details ||
 		!deposit.createdAt
 	) {
-		log(CLASS_NAME, validId.name, `partial deposit is not valid!`);
+		log(CLASS_NAME, validId.name, 'partial deposit is not valid!');
 		return false;
 	}
 
@@ -38,7 +38,7 @@ export function validSearchQuery(searchQuery: ISearchOption): boolean {
 		typeof searchQuery !== 'object' ||
 		!searchQuery.owner
 	) {
-		log(CLASS_NAME, validSearchQuery.name, `search query is not valid!`);
+		log(CLASS_NAME, validSearchQuery.name, 'search query is not valid!');
 		return false;
 	}
 
@@ -47,12 +47,12 @@ export function validSearchQuery(searchQuery: ISearchOption): boolean {
 
 export function validOldDeposit(id: string, deposit: Partial<IDeposit>): boolean {
 	if (validDeposit(deposit)) {
-		console.log('DEPOSIT:', deposit)
+		console.log('DEPOSIT:', deposit);
 		if (id === (String)(new ObjectId(deposit._id))) {
 			return true;
 		}
 	}
 
-	log(CLASS_NAME, validId.name, `old deposit (with id) is not valid!`);
+	log(CLASS_NAME, validId.name, 'old deposit (with id) is not valid!');
 	return false;
 }
