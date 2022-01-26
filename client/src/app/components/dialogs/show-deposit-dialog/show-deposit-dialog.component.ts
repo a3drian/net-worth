@@ -159,27 +159,37 @@ export class ShowDepositDialogComponent implements OnInit {
 	private initializeEditableForm(): void {
 		// necessary because "IDeposit" does not have a "differentCurrency" property
 		const differentCurrency = this.deposit.currency === CURRENCY.LEI.symbol ? false : true;
-		console.log('defaultCurrency:', differentCurrency);
+		log(this.CLASS_NAME, this.initializeEditableForm.name, 'loaded deposit has different currency:', differentCurrency);
 		const currency = differentCurrency ? this.deposit.currency : CURRENCY.EUR;
 
 		const amount = new FormControl(this.deposit.amount, [Validators.required, Validators.min(0)]);
+		const details = new FormControl(this.deposit.details, [Validators.required]);
+		const createdAt = new FormControl(new Date(this.deposit.createdAt).toISOString().split('T')[0], [Validators.required]);
+		const category = new FormControl(this.deposit.category, [Validators.required]);
+		const location = new FormControl(this.deposit.location, [Validators.required]);
+		const city = new FormControl(this.deposit.city, [Validators.required]);
+		const exchangeRate = new FormControl(this.deposit.exchangeRate, [Validators.min(0)]);
+		const recurrent = new FormControl(this.deposit.recurrent, []);
+		const frequency = new FormControl(this.deposit.frequency, []);
 
 		this.depositForm = this.formBuilder
 			.group(
 				{
 					amount: amount,
-					details: [this.deposit.details, Validators.required],
-					createdAt: [new Date(this.deposit.createdAt).toISOString().split('T')[0], Validators.required],
-					category: [this.deposit.category, Validators.required],
-					location: [this.deposit.location, Validators.required],
-					city: [this.deposit.city, Validators.required],
-					recurrent: [this.deposit.recurrent],
-					frequency: [this.deposit.frequency],
-					differentCurrency: [differentCurrency],
-					currency: [currency],
-					exchangeRate: [this.deposit.exchangeRate, Validators.min(0)]
+					details: details,
+					createdAt: createdAt,
+					category: category,
+					location: location,
+					city: city,
+					recurrent: recurrent,
+					frequency: frequency,
+					differentCurrency: new FormControl(differentCurrency, []),
+					currency: new FormControl(currency, []),
+					exchangeRate: exchangeRate
 				}
 			);
+
+		log(this.CLASS_NAME, this.initializeEditableForm.name, 'initialized form:', this.depositForm.value);
 	}
 
 	makeRecurrent(): void { this.recurrent = !this.recurrent; }
@@ -238,38 +248,36 @@ export class ShowDepositDialogComponent implements OnInit {
 					return { key: c.key as DepositProperties, oldValue: oldValue.toString(), newValue: c.value }
 				});
 
-		log(this.CLASS_NAME, this.getDifferences.name, 'controls:', controls);
-		log(this.CLASS_NAME, this.getDifferences.name, 'differences:', differences);
+		// log(this.CLASS_NAME, this.getDifferences.name, 'controls:', controls);
+		// log(this.CLASS_NAME, this.getDifferences.name, 'differences:', differences);
 
 		return differences;
 	}
 
-	private getDepositFromForm(): IDeposit {
-		const formContents = this.depositForm.value;
+	private getFormContents(): IDeposit {
 
-		let depositFromForm = new DepositFromForm({
-			amount: formContents.amount,
-			details: formContents.details,
-			createdAt: formContents.createdAt,
-			category: formContents.category,
-			location: formContents.location,
-			city: formContents.city
+		const differences = this.getDifferences();
+		if (differences.length === 0) { return this.deposit; }
+
+		log(this.CLASS_NAME, this.getFormContents.name, 'differences:', differences);
+
+		// TODO: always check if types match with "IDeposit" types
+		let depositDifferences: { [key: string]: boolean | Date | number | string } = {};
+
+		differences.forEach((diff: DepositDifferences) => {
+			const key = diff.key;
+			const value = diff.newValue;
+			depositDifferences[key] = value;
 		});
 
-		const updatedDeposit: IDeposit = new Deposit({
-			amount: formContents.amount,
-			details: formContents.details,
-			createdAt: formContents.createdAt,
-			category: formContents.category,
-			location: formContents.location,
-			city: formContents.city,
-			recurrent: formContents.recurrent,
-			frequency: formContents.frequency,
-			currency: formContents.currency,
-			exchangeRate: formContents.exchangeRate,
-		});
+		depositDifferences['owner'] = this.informationService.owner.value;
+		log(this.CLASS_NAME, this.getFormContents.name, 'final differences:', depositDifferences);
 
-		log(this.CLASS_NAME, this.getDepositFromForm.name, 'depositFromForm:', updatedDeposit);
+		const depositFromForm: DepositFromForm = depositDifferences as DepositFromForm;
+		const updatedDeposit: IDeposit = depositFromForm as IDeposit;
+
+		// TODO: e un bug pt. ca lipsesc valorile pentru restul proprietatilor, o sa apara "150 RON for {} on {} .."
+		log(this.CLASS_NAME, this.getFormContents.name, 'depositFromForm:', updatedDeposit);
 		return updatedDeposit;
 	}
 
@@ -303,12 +311,12 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	save(): void {
-		const updatedDeposit: IDeposit = this.getDepositFromForm();
+		const updatedDeposit: IDeposit = this.getFormContents();
 		if (this.depositChanged()) { this.saveDeposit(updatedDeposit); }
 	}
 
 	add(): void {
-		const updatedDeposit: IDeposit = this.getDepositFromForm();
+		const updatedDeposit: IDeposit = this.getFormContents();
 		this.updateTotalAmount('0', updatedDeposit.amount.toString());
 		this.saveDeposit(updatedDeposit);
 	}
