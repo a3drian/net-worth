@@ -33,7 +33,10 @@ export type DepositDifferences = {
 	newValue: string;
 };
 
-export class DepositFromForm {
+export class DepositDTO {
+	id?: string;
+	owner?: string;
+
 	amount?: number;
 	details?: string;
 	createdAt?: Date;
@@ -47,7 +50,7 @@ export class DepositFromForm {
 	currency?: string;
 	exchangeRate?: number;
 
-	public constructor(partial?: Partial<DepositFromForm>) {
+	public constructor(partial?: Partial<DepositDTO>) {
 		Object.assign(this, partial);
 	}
 }
