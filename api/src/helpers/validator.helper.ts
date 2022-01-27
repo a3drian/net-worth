@@ -25,7 +25,7 @@ export function validDeposit(deposit: Partial<IDeposit>): boolean {
 		!deposit.details ||
 		!deposit.createdAt
 	) {
-		log(CLASS_NAME, validId.name, 'partial deposit is not valid!');
+		log(CLASS_NAME, validDeposit.name, 'partial deposit is not valid!');
 		return false;
 	}
 
@@ -53,6 +53,6 @@ export function validOldDeposit(id: string, deposit: Partial<IDeposit>): boolean
 		}
 	}
 
-	log(CLASS_NAME, validId.name, 'old deposit (with id) is not valid!');
+	log(CLASS_NAME, validOldDeposit.name, 'old deposit (with id) is not valid!');
 	return false;
 }

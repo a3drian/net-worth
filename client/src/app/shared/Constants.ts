@@ -21,7 +21,7 @@ export const Constants = Object.freeze({
 
 	defaultOwner: 'adi@foodspy2.com',
 
-	updateTimeout: 250,
+	updateTimeout: 500,
 
 	formDefaults: Object.freeze({
 		amount: 10,

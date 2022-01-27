@@ -62,7 +62,7 @@ export class DepositCardComponent implements OnInit {
 			.subscribe(
 				() => {
 					this.deposit = deposit;
-					this.updateAmount(deposit);
+					// this.updateAmount(deposit);
 				}
 			);
 	}
