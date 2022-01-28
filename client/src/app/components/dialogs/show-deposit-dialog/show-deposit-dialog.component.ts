@@ -214,7 +214,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	makeRecurrent(): void {
 		this.recurrent = !this.recurrent;
 		if (this.recurrent === true) {
-			const recurrent = new FormControl(this.formDefaults.recurrent, []);
+			const recurrent = new FormControl(true, []);
 			const frequency = new FormControl(this.formDefaults.frequency, []);
 			this.depositForm.addControl('recurrent', recurrent);
 			this.depositForm.addControl('frequency', frequency);
@@ -244,7 +244,7 @@ export class ShowDepositDialogComponent implements OnInit {
 		this.differentCurrency = !this.differentCurrency;
 		this.showRate = false;
 		if (this.differentCurrency === true) {
-			const differentCurrency = new FormControl(this.formDefaults.differentCurrency, []);
+			const differentCurrency = new FormControl(true, []);
 			const currency = new FormControl(this.formDefaults.currency, []);
 			const exchangeRate = new FormControl(this.formDefaults.exchangeRate, []);
 			this.depositForm.addControl('differentCurrency', differentCurrency);
@@ -279,11 +279,18 @@ export class ShowDepositDialogComponent implements OnInit {
 					(c: Control) => {
 						const k: DepositProperties = c.key;
 						const oldValue = deposit[k];
-						if (!oldValue) { return { key: k as DepositProperties, oldValue: '' as DepositValues, newValue: c.value as DepositValues } }
+						const v: DepositValues = c.value;
+						if (!oldValue) {
+							return {
+								key: k as DepositProperties,
+								oldValue: '' as DepositValues,
+								newValue: v as DepositValues
+							}
+						}
 						return {
 							key: k as DepositProperties,
 							oldValue: oldValue as DepositValues,
-							newValue: c.value as DepositValues
+							newValue: v as DepositValues
 						}
 					});
 
@@ -299,7 +306,12 @@ export class ShowDepositDialogComponent implements OnInit {
 				.map<DepositDifferences>(
 					(c: Control) => {
 						const k: DepositProperties = c.key;
-						return { key: k as DepositProperties, oldValue: '' as DepositValues, newValue: c.value as DepositValues }
+						const v: DepositValues = c.value;
+						return {
+							key: k as DepositProperties,
+							oldValue: '' as DepositValues,
+							newValue: v as DepositValues
+						}
 					});
 
 			// log(this.CLASS_NAME, this.getDifferences.name, 'controls:', controls);
