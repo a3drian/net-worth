@@ -43,72 +43,19 @@
 
 		<fieldset>
 			<label for="location">Location:</label>
-			<select name="location" id="location-select" formControlName="location" required>
-				<option *ngFor="let l of locations" [value]="l">
-					{{ l }}
-				</option>
-			</select>
-			<p>Where did you spend it?</p>
+			<input matInput id="location" [ngClass]="!isInputValid('location') ? 'input-error' : ''" type="text"
+				name="location" formControlName="location" placeholder="{{ formPlaceholders.location }}" required>
+			<p *ngIf="isInputValid('location')">What did you spend it on?</p>
+			<p class="error" *ngIf="!isInputValid('location')">Where did you spend it?</p>
 		</fieldset>
 
 		<fieldset>
 			<label for="city">City:</label>
-			<select name="city" id="city-select" formControlName="city" required>
-				<option *ngFor="let c of cities" [value]="c">
-					{{ c }}
-				</option>
-			</select>
-			<p>In which city did you spend it?</p>
+			<input matInput id="city" [ngClass]="!isInputValid('city') ? 'input-error' : ''" type="text" name="city"
+				formControlName="city" placeholder="{{ formPlaceholders.city }}" required>
+			<p *ngIf="isInputValid('city')">What did you spend it on?</p>
+			<p class="error" *ngIf="!isInputValid('city')">In which city did you spend it?</p>
 		</fieldset>
-
-		<!-- RECURRENT -->
-		<!--
-		<fieldset id="recurrent-check">
-			<input type="checkbox" name="recurrent" formControlName="recurrent" (change)="makeRecurrent()">
-			<label id="recurrent-label" for="recurrent">Recurrent payment?</label>
-		</fieldset>
-
-		<fieldset *ngIf="recurrent">
-			<label for="frequency">Frequency:</label>
-			<select name="frequency" id="frequency-select" formControlName="frequency">
-				<option *ngFor="let f of frequencies" [value]="f">
-					{{ f }}
-				</option>
-			</select>
-			<p>Set up a recurring payment</p>
-		</fieldset>
-		-->
-
-		<!-- DIFFERENT CURRENCY -->
-		<!--
-		<fieldset id="currency-check">
-			<input type="checkbox" name="differentCurrency" formControlName="differentCurrency" (change)="changeCurrency()">
-			<label for="differentCurrency">Payment in a different currency?</label>
-		</fieldset>
-
-		<fieldset *ngIf="differentCurrency">
-
-			<fieldset>
-				<label for="currency">Currency:</label>
-				<select id="currency-select" name="currency" formControlName="currency">
-					<option *ngFor="let c of currencies" [value]="c" (click)="updateCurrency(c)">
-						{{ c.name }} ({{ c.symbol }})
-					</option>
-				</select>
-			</fieldset>
-			-->
-
-			<!-- TODO: use a proper <button> instead of a <p> -->
-			<!--
-			<p *ngIf="showFetchExchangeRateButton()" id="fetch-exchangeRate-btn"
-				(click)="fetchExchangeRate(selectedCurrency)">
-				Get live exchange rate for {{ selectedCurrency.code }}
-			</p>
-
-			<p *ngIf="showRate">1 {{ selectedCurrency.code }} = {{ rate }} RON</p>
-
-		</fieldset>
-		-->
 
 	</form>
 

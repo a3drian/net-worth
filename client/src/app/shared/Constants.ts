@@ -1,8 +1,6 @@
 // Shared:
-import { Currency, CURRENCY } from 'net-worth-shared';
 import { CATEGORY } from './constants/Categories';
 import { CITY } from './constants/Cities';
-import { FREQUENCY } from './constants/Frequencies';
 import { LOCATION } from './constants/Locations';
 
 export const Constants = Object.freeze({
@@ -19,7 +17,7 @@ export const Constants = Object.freeze({
 		SEARCH_URL: '/owner'
 	}),
 
-	defaultOwner: 'adi@foodspy2.com',
+	defaultOwner: 'adi@foodspy3.com',
 
 	updateTimeout: 500,
 
@@ -28,18 +26,15 @@ export const Constants = Object.freeze({
 		details: 'Groceries',
 		category: CATEGORY.GROCERIES,
 		location: LOCATION.SELGROS,
-		city: CITY.BRASOV,
-		recurrent: false,
-		frequency: FREQUENCY.WEEKLY,
-		differentCurrency: false,
-		currency: new Currency(CURRENCY.EUR),
-		exchangeRate: 4.9,
+		city: CITY.BRASOV
 	}),
 
 	formPlaceholders: Object.freeze({
 		amount: 10,
 		details: 'Groceries...',
-		exchangeRate: 4.9,
+		category: CATEGORY.GROCERIES,
+		location: LOCATION.SELGROS,
+		city: CITY.BRASOV
 	}),
 
 	dialogDimensions: Object.freeze({
