@@ -24,11 +24,11 @@ export type DepositProperties =
 export type DepositValues =
 	boolean | Date | number | string;
 
-export type DepositDifferences = {
+export interface DepositDifferences {
 	key: DepositProperties;
 	oldValue: DepositValues;
 	newValue: DepositValues;
-};
+}
 
 export class DepositDTO {
 	id?: string;

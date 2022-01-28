@@ -1,10 +1,10 @@
 // Models:
-import { DepositProperties } from './Deposit';
+import { DepositProperties, DepositValues } from './Deposit';
 
-export type Control = {
+export interface IControl {
 	key: DepositProperties;
-	value: any;
+	value: DepositValues;
 	dirty: boolean;
 	touched: boolean;
 	valid: boolean;
-};
+}
