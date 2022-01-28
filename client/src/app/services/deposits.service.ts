@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
 // Models:
-import { IDepositKVPair } from '../models/Deposit';
 import { SearchOption } from '../models/SearchOption';
 // rxjs:
 import { Observable, tap } from 'rxjs';
@@ -106,18 +105,6 @@ export class DepositsService {
 		let total = 0;
 		deposits.forEach((deposit: IDeposit) => { total += deposit.amount });
 		return total;
-	}
-
-	getDepositKVPair(deposit: IDeposit): IDepositKVPair[] {
-		// TODO: compara sa fie aceleasi proprietati ca intr-un IDeposit
-		const d: IDepositKVPair[] = Object.entries(deposit)
-			.map(e => { return { key: e[0], value: e[1] } })
-			.filter(e => e.key !== '_id')
-			.filter(e => e.key !== '_ver')
-			.sort((a, b) => { return a.key.localeCompare(b.key) })
-			.map(e => e.key === 'createdAt' ?
-				{ key: 'createdAt', value: new Date(e.value).toISOString() } : { key: e.key.toString(), value: e.value.toString() });
-		return d;
 	}
 
 }

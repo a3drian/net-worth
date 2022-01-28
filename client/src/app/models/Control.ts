@@ -7,4 +7,5 @@ export type Control = {
 	value: any;
 	dirty: boolean;
 	touched: boolean;
+	valid: boolean;
 }
