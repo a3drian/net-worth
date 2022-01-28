@@ -97,10 +97,10 @@ export class DepositCardComponent implements OnInit {
 		this.showDepositDialogSub = dialogRef
 			.afterClosed()
 			.subscribe(
-				(deposit: IDeposit) => {
-					log('deposit-card.ts', this.openShowDepositDialog.name, 'Deposit from dialog:', deposit);
-					if (deposit) {
-						this.saveDeposit(deposit);
+				(d: IDeposit) => {
+					log('deposit-card.ts', this.openShowDepositDialog.name, 'Deposit from dialog:', d);
+					if (d) {
+						this.saveDeposit(d);
 					}
 				}
 			);

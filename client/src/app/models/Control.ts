@@ -1,4 +1,3 @@
-
 // Models:
 import { DepositProperties } from './Deposit';
 
@@ -8,4 +7,4 @@ export type Control = {
 	dirty: boolean;
 	touched: boolean;
 	valid: boolean;
-}
+};
