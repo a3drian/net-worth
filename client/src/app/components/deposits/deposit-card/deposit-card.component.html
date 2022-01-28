@@ -8,9 +8,6 @@
 
 	<!-- TODO: Use semantic HTML -->
 	<div style="font-size: 0.8rem;">
-		<!-- TODO: if not recurrent, say "One time payment" and hide Frequency -->
-		<p *ngIf="!deposit.recurrent">One time payment <span *ngIf="deposit.currency">in {{ deposit.currency }} (1{{ deposit.currency }} = {{ deposit.exchangeRate }} RON)</span></p>
-		<p *ngIf="deposit.recurrent">{{ deposit.frequency }} payment</p>
 		<p>
 			<i>{{ deposit.category }}</i>
 			<br>
@@ -25,12 +22,6 @@
 	<button (click)="openDeleteDepositDialog(deposit)">
 		Delete
 	</button>
-
-	<p class="debug" *ngIf="isInDebugMode">
-		Recurrent: {{ deposit.recurrent }} | Frequency: {{ deposit.frequency }}
-		<br>
-		Currency: {{ deposit.currency }} | Exchange rate: {{ deposit.exchangeRate }}
-	</p>
 
 	<hr>
 

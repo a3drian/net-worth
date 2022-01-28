@@ -10,11 +10,12 @@
 
 	<div>
 		<p>Nothing saved in {{ today | date: 'MMMM' }} yet.</p>
-		<button (click)="openShowDepositDialog('save')">Save</button>
+		<button (click)="openShowDepositDialog('save')" disabled>Save</button>
 	</div>
 
 	<div>
-		<p>Spending report for {{ today | date: 'MMMM' }} - <b>{{ totalAmount }} RON</b></p>
+		<p *ngIf="totalAmount === 0">Nothing spent in {{ today | date: 'MMMM' }} yet.</p>
+		<p *ngIf="totalAmount !== 0">Spending report for {{ today | date: 'MMMM' }} - <b>{{ totalAmount }} RON</b></p>
 		<button (click)="openShowDepositDialog('spend')">Spend</button>
 	</div>
 

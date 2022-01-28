@@ -21,9 +21,9 @@ import { log } from 'src/app/shared/Logger';
 })
 export class ShowDepositDialogComponent implements OnInit {
 
-	CLASS_NAME = 'show-deposit-dialog.ts';
-
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
+
+	CLASS_NAME = 'show-deposit-dialog.ts';
 
 	inEditMode: boolean = false;
 	isFormReady: boolean = false;
@@ -31,16 +31,6 @@ export class ShowDepositDialogComponent implements OnInit {
 	canSubmit: boolean = true;
 
 	depositForm: FormGroup = new FormGroup({});
-
-	constructor(
-		@Inject(MAT_DIALOG_DATA) public deposit: IDeposit,
-		public dialogReference: MatDialogRef<ShowDepositDialogComponent>,
-		private formBuilder: FormBuilder,
-		private informationService: InformationService,
-		private categoriesService: CategoriesService
-	) {
-		this.categories = this.categoriesService.getCategories();
-	}
 
 	formDefaults = Constants.formDefaults;
 	formPlaceholders = Constants.formPlaceholders;
@@ -52,9 +42,17 @@ export class ShowDepositDialogComponent implements OnInit {
 	titleText: string = '';
 	amountErrorMessage: string = Constants.amountErrors.negativeValue;
 
-	ngOnInit(): void {
-		log(this.CLASS_NAME, this.ngOnInit.name, 'this.deposit:', this.deposit);
+	constructor(
+		@Inject(MAT_DIALOG_DATA) public deposit: IDeposit,
+		public dialogReference: MatDialogRef<ShowDepositDialogComponent>,
+		private formBuilder: FormBuilder,
+		private informationService: InformationService,
+		private categoriesService: CategoriesService
+	) {
+		this.categories = this.categoriesService.getCategories();
+	}
 
+	ngOnInit(): void {
 		// setTimeout(() => {
 		this.deposit === null ? this.intializeAddPage() : this.initializeEditPage();
 		// }, 750);
@@ -76,31 +74,16 @@ export class ShowDepositDialogComponent implements OnInit {
 		this.isFormReady = true;
 	}
 
-	private initializeEmptyForm(): void {
-		this.depositForm = this.formBuilder
-			.group(
-				{
-					amount: [
-						this.formDefaults.amount,
-						[Validators.required, Validators.min(0)]
-					],
-					details: [this.formDefaults.details, Validators.required],
-					createdAt: [this.today.toISOString().split('T')[0], Validators.required],
-					category: [this.formDefaults.category, Validators.required],
-					location: [this.formDefaults.location, Validators.required],
-					city: [this.formDefaults.city, Validators.required]
-				}
-			);
-	}
+	private initializeDepositForm(
+		initial: IDeposit | { amount: number; details: string; category: CATEGORY; location: string; city: string; },
+		initialDate: Date): void {
 
-	private initializeEditableForm(): void {
-
-		const amount = new FormControl(this.deposit.amount, [Validators.required, Validators.min(0)]);
-		const details = new FormControl(this.deposit.details, [Validators.required]);
-		const createdAt = new FormControl(new Date(this.deposit.createdAt).toISOString().split('T')[0], [Validators.required]);
-		const category = new FormControl(this.deposit.category, [Validators.required]);
-		const location = new FormControl(this.deposit.location, [Validators.required]);
-		const city = new FormControl(this.deposit.city, [Validators.required]);
+		const amount = new FormControl(initial.amount, [Validators.required, Validators.min(0)]);
+		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(30)]);
+		const createdAt = new FormControl(initialDate.toISOString().split('T')[0], [Validators.required]);
+		const category = new FormControl(initial.category, [Validators.required]);
+		const location = new FormControl(initial.location, [Validators.required, Validators.maxLength(20)]);
+		const city = new FormControl(initial.city, [Validators.required, Validators.maxLength(20)]);
 
 		this.depositForm = this.formBuilder
 			.group(
@@ -113,17 +96,28 @@ export class ShowDepositDialogComponent implements OnInit {
 					city: city
 				}
 			);
-
-		log(this.CLASS_NAME, this.initializeEditableForm.name, 'initialized form:', this.depositForm.value);
 	}
 
-	private isFormValid(): boolean { return this.depositForm.valid; }
+	private initializeEmptyForm(): void {
+		this.initializeDepositForm(this.formDefaults, this.today);
+		log(this.CLASS_NAME, this.initializeEmptyForm.name, 'initialized empty form:', this.depositForm.value);
+	}
+
+	private initializeEditableForm(): void {
+		this.initializeDepositForm(this.deposit, new Date(this.deposit.createdAt));
+		log(this.CLASS_NAME, this.initializeEditableForm.name, 'initialized editable form:', this.depositForm.value);
+	}
+
+	isFormValid(): boolean { return this.depositForm.valid; }
 
 	private getDifferences(deposit: IDeposit | null): DepositDifferences[] {
 		const controls: Control[] = Object
 			.entries(this.depositForm.controls)
 			.map<Control>((c: [string, AbstractControl]) => {
-				return { key: c[0] as DepositProperties, value: c[1].value, dirty: c[1].dirty, touched: c[1].touched, valid: c[1].valid }
+				return {
+					key: c[0] as DepositProperties, value: c[1].value as DepositValues,
+					dirty: c[1].dirty, touched: c[1].touched, valid: c[1].valid
+				}
 			});
 
 		if (deposit) {
@@ -189,12 +183,11 @@ export class ShowDepositDialogComponent implements OnInit {
 			const key = diff.key;
 			const value = diff.newValue;
 			depositDifferences[key] = value;
-
 		});
 
 		depositDifferences['owner'] = this.informationService.owner.value;
-		log(this.CLASS_NAME, this.getFormDifferences.name, 'final differences:', depositDifferences);
 
+		log(this.CLASS_NAME, this.getFormDifferences.name, 'final differences:', depositDifferences);
 		return depositDifferences;
 	}
 
@@ -208,6 +201,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			log(this.CLASS_NAME, this.getFormContents.name, 'updated depositFromForm:', updatedDeposit);
 			return updatedDeposit;
 		} else {
+
 			const depositDifferences = this.getFormDifferences(null);
 			const depositFromForm: DepositDTO = depositDifferences as DepositDTO;
 			const newDeposit = depositFromForm as IDeposit;
@@ -259,16 +253,8 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	save(): void {
 		const updatedDeposit: IDeposit = this.getFormContents(this.deposit);
-		// TODO: maybe remove this function check?
-		const differences = this.getDifferences(this.deposit);
-		if (this.depositChanged(differences)) {
-			const amount: DepositDifferences = differences.filter((d) => d.key === 'amount')[0];
-			if (amount) {
-				const { oldValue, newValue } = amount;
-				this.updateTotalAmount(oldValue.toString(), newValue.toString());
-			}
-			this.saveDeposit(updatedDeposit);
-		}
+		this.updateTotalAmount(this.deposit.amount.toString(), updatedDeposit.amount.toString());
+		this.saveDeposit(updatedDeposit);
 	}
 
 	add(): void {
