@@ -8,6 +8,7 @@
   "scripts": {
     "ng": "ng",
     "lint:ts": "eslint --ext .ts .",
+    "lint:ts:fix": "eslint --ext .ts . --fix",
     "lint": "npm run lint:ts",
     "start": "ng serve",
     "proxy": "ng serve --proxy-config ./proxy.json",

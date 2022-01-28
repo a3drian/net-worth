@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 // Interfaces:
+import { IControl } from 'src/app/models/Control';
 import { IDeposit } from 'net-worth-shared';
 // Models:
-import { Control } from 'src/app/models/Control';
 import { DepositDifferences, DepositDTO, DepositProperties, DepositValues } from 'src/app/models/Deposit';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
@@ -130,9 +130,9 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	private getDifferences(deposit: IDeposit | null): DepositDifferences[] {
-		const controls: Control[] = Object
+		const controls: IControl[] = Object
 			.entries(this.depositForm.controls)
-			.map<Control>((c: [string, AbstractControl]) => {
+			.map<IControl>((c: [string, AbstractControl]) => {
 				return {
 					key: c[0] as DepositProperties, value: c[1].value as DepositValues,
 					dirty: c[1].dirty, touched: c[1].touched, valid: c[1].valid
@@ -144,7 +144,7 @@ export class ShowDepositDialogComponent implements OnInit {
 
 			const differences = modifiedControls
 				.map<DepositDifferences>(
-					(c: Control) => {
+					(c: IControl) => {
 						const k: DepositProperties = c.key;
 						const oldValue = deposit[k];
 						const v: DepositValues = c.value;
@@ -172,7 +172,7 @@ export class ShowDepositDialogComponent implements OnInit {
 
 			const differences = modifiedControls
 				.map<DepositDifferences>(
-					(c: Control) => {
+					(c: IControl) => {
 						const k: DepositProperties = c.key;
 						const v: DepositValues = c.value;
 						return {
