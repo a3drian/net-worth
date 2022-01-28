@@ -1,4 +1,4 @@
-import { IDeposit } from 'net-worth-shared';
+import { Currency, IDeposit } from 'net-worth-shared';
 
 export class Deposit implements IDeposit {
 	_id!: string;
@@ -27,10 +27,13 @@ export type DepositProperties =
 	'category' | 'location' | 'city' |
 	'recurrent' | 'frequency' | 'currency' | 'exchangeRate';
 
+export type DepositValues =
+	boolean | Date | number | string | Currency;
+
 export type DepositDifferences = {
 	key: DepositProperties;
-	oldValue: string;
-	newValue: string;
+	oldValue: DepositValues;
+	newValue: DepositValues;
 };
 
 export class DepositDTO {
@@ -53,15 +56,4 @@ export class DepositDTO {
 	public constructor(partial?: Partial<DepositDTO>) {
 		Object.assign(this, partial);
 	}
-}
-
-export interface IDepositKVPair {
-	key: string,
-	value: string
-}
-
-export interface IDepositKVPairDiff {
-	key: string;
-	oldValue: string;
-	newValue: string;
 }
