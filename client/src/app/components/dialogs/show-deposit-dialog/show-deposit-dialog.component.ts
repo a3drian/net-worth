@@ -5,24 +5,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IDeposit } from 'net-worth-shared';
 // Models:
 import { Control } from 'src/app/models/Control';
-import { Currency } from 'net-worth-shared';
-import { Deposit, DepositDifferences, DepositDTO, DepositProperties, DepositValues } from 'src/app/models/Deposit';
+import { DepositDifferences, DepositDTO, DepositProperties, DepositValues } from 'src/app/models/Deposit';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
-import { CitiesService } from 'src/app/services/cities.service';
-import { CurrenciesService } from 'src/app/services/currencies.service';
-import { DepositsService } from 'src/app/services/deposits.service';
-import { ExchangeRatesService } from 'src/app/services/exchangeRates.service';
-import { FrequenciesService } from 'src/app/services/frequencies.service';
 import { InformationService } from 'src/app/services/information.service';
-import { LocationsService } from 'src/app/services/locations.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
 import { CATEGORY } from 'src/app/shared/constants/Categories';
-import { CITY } from 'src/app/shared/constants/Cities';
-import { CURRENCY } from 'net-worth-shared';
-import { FREQUENCY } from 'src/app/shared/constants/Frequencies';
-import { LOCATION } from 'src/app/shared/constants/Locations';
 import { log } from 'src/app/shared/Logger';
 
 @Component({
@@ -46,63 +35,17 @@ export class ShowDepositDialogComponent implements OnInit {
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public deposit: IDeposit,
 		public dialogReference: MatDialogRef<ShowDepositDialogComponent>,
-		private categoriesService: CategoriesService,
-		private citiesService: CitiesService,
-		private currenciesService: CurrenciesService,
-		private locationsService: LocationsService,
-		private frequenciesService: FrequenciesService,
-		private exchangeRatesService: ExchangeRatesService,
 		private formBuilder: FormBuilder,
 		private informationService: InformationService,
-		private depositsService: DepositsService
+		private categoriesService: CategoriesService
 	) {
-		// TODO: fix default selected Currency
-		this.currencies = this.currenciesService.getCurrencies();
 		this.categories = this.categoriesService.getCategories();
-		this.cities = this.citiesService.getCities();
-		this.locations = this.locationsService.getLocations();
-		this.frequencies = this.frequenciesService.getFrequencies();
-	}
-
-	spendDeposit(): void {
-		const depositFromForm = this.depositForm.value;
-		// if (!this.validDepositFromForm(depositFromForm)) { return; }
-
-		const deposit: IDeposit = new Deposit({
-			owner: this.informationService.owner.value,
-			amount: depositFromForm.amount,
-			details: depositFromForm.details,
-			createdAt: depositFromForm.createdAt,
-			category: depositFromForm.category,
-			location: depositFromForm.location,
-			city: depositFromForm.city,
-			// TODO: get actual values
-			recurrent: this.formDefaults.recurrent,
-			frequency: this.formDefaults.frequency,
-			currency: this.formDefaults.currency.symbol,
-			exchangeRate: this.formDefaults.exchangeRate,
-		});
-		this.depositsService
-			.postDeposit(deposit)
-			.subscribe();
 	}
 
 	formDefaults = Constants.formDefaults;
 	formPlaceholders = Constants.formPlaceholders;
 
-	recurrent: boolean = Constants.formDefaults.recurrent;
-	differentCurrency: boolean = Constants.formDefaults.differentCurrency;
-	selectedCurrency: Currency = Constants.formDefaults.currency;
-	defaultFrequency = Constants.formDefaults.frequency;
-
-	rate: number = Constants.formDefaults.exchangeRate;
-	showRate: boolean = false;
-
-	currencies: Currency[] = [];
 	categories: CATEGORY[] = [];
-	cities: CITY[] = [];
-	locations: LOCATION[] = [];
-	frequencies: FREQUENCY[] = [];
 
 	today: Date = new Date();
 
@@ -145,44 +88,12 @@ export class ShowDepositDialogComponent implements OnInit {
 					createdAt: [this.today.toISOString().split('T')[0], Validators.required],
 					category: [this.formDefaults.category, Validators.required],
 					location: [this.formDefaults.location, Validators.required],
-					city: [this.formDefaults.city, Validators.required],
-					// recurrent: [this.formDefaults.recurrent],
-					// frequency: [this.formDefaults.frequency],
-					// differentCurrency: [this.formDefaults.differentCurrency],
-					// currency: [this.formDefaults.currency],
-					// exchangeRate: [this.formDefaults.exchangeRate, Validators.min(0)]
+					city: [this.formDefaults.city, Validators.required]
 				}
 			);
 	}
 
-	showFetchExchangeRateButton(): boolean {
-		const defaultCurrency = this.selectedCurrency.name === CURRENCY.LEI.name ? true : false;
-		return !this.showRate && !defaultCurrency;
-	}
-
-	private isDepositRecurrent() {
-		const recurrent = this.deposit.recurrent ? true : false;
-		log(this.CLASS_NAME, this.initializeEditableForm.name, 'loaded deposit is recurrent:', recurrent);
-		this.recurrent = recurrent;
-		const frequency = recurrent ? this.deposit.frequency : '';
-		return { recurrent, frequency };
-	}
-
-	private isDepositInDifferentCurrency() {
-		const differentCurrency = this.deposit.currency === CURRENCY.LEI.symbol ? false : true;
-		log(this.CLASS_NAME, this.initializeEditableForm.name, 'loaded deposit has different currency:', differentCurrency);
-		this.differentCurrency = differentCurrency;
-		const currency = differentCurrency ? this.deposit.currency : CURRENCY.LEI;
-		const exchangeRate = differentCurrency ? this.deposit.exchangeRate : 1;
-		return { differentCurrency, currency, exchangeRate };
-	}
-
 	private initializeEditableForm(): void {
-
-		const { recurrent, frequency } = this.isDepositRecurrent();
-
-		// necessary because "IDeposit" does not have a "differentCurrency" property
-		const { differentCurrency, currency, exchangeRate } = this.isDepositInDifferentCurrency();
 
 		const amount = new FormControl(this.deposit.amount, [Validators.required, Validators.min(0)]);
 		const details = new FormControl(this.deposit.details, [Validators.required]);
@@ -199,67 +110,11 @@ export class ShowDepositDialogComponent implements OnInit {
 					createdAt: createdAt,
 					category: category,
 					location: location,
-					city: city,
-					recurrent: new FormControl(recurrent, []),
-					frequency: new FormControl(frequency, []),
-					differentCurrency: new FormControl(differentCurrency, []),
-					currency: new FormControl(currency, []),
-					exchangeRate: new FormControl(exchangeRate, [Validators.min(0)])
+					city: city
 				}
 			);
 
 		log(this.CLASS_NAME, this.initializeEditableForm.name, 'initialized form:', this.depositForm.value);
-	}
-
-	makeRecurrent(): void {
-		this.recurrent = !this.recurrent;
-		if (this.recurrent === true) {
-			const recurrent = new FormControl(true, []);
-			const frequency = new FormControl(this.formDefaults.frequency, []);
-			this.depositForm.addControl('recurrent', recurrent);
-			this.depositForm.addControl('frequency', frequency);
-		} else {
-			this.depositForm.removeControl('recurrent');
-			this.depositForm.removeControl('frequency');
-		}
-	}
-
-	private updateExchangeRate(rate: number): void {
-		// still need to populate the form so the POST request will be successful
-		const exchangeRate: AbstractControl | null = this.depositForm.get('exchangeRate');
-		if (!exchangeRate) { return; }
-		exchangeRate.setValue(rate);
-		this.rate = rate;
-		this.showRate = true;
-	}
-
-	fetchExchangeRate(c: Currency): void {
-		const currency = c.name;
-		const rate = this.exchangeRatesService.getExchangeRate(currency);
-		this.showRate = false;
-		setTimeout(() => { this.updateExchangeRate(rate); }, 500);
-	}
-
-	changeCurrency(): void {
-		this.differentCurrency = !this.differentCurrency;
-		this.showRate = false;
-		if (this.differentCurrency === true) {
-			const differentCurrency = new FormControl(true, []);
-			const currency = new FormControl(this.formDefaults.currency, []);
-			const exchangeRate = new FormControl(this.formDefaults.exchangeRate, []);
-			this.depositForm.addControl('differentCurrency', differentCurrency);
-			this.depositForm.addControl('currency', currency);
-			this.depositForm.addControl('exchangeRate', exchangeRate);
-		} else {
-			this.depositForm.removeControl('differentCurrency');
-			this.depositForm.removeControl('currency');
-			this.depositForm.removeControl('exchangeRate');
-		}
-	}
-	updateCurrency(c: Currency): void {
-		log(this.CLASS_NAME, this.updateCurrency.name, 'c:', c);
-		this.selectedCurrency = c;
-		this.showRate = false;
 	}
 
 	private isFormValid(): boolean { return this.depositForm.valid; }
@@ -332,14 +187,9 @@ export class ShowDepositDialogComponent implements OnInit {
 
 		differences.forEach((diff: DepositDifferences) => {
 			const key = diff.key;
-			if (key === 'currency') {
-				// TODO: re-factor
-				const value = (diff.newValue as Currency).symbol;
-				depositDifferences[key] = value;
-			} else {
-				const value = diff.newValue;
-				depositDifferences[key] = value;
-			}
+			const value = diff.newValue;
+			depositDifferences[key] = value;
+
 		});
 
 		depositDifferences['owner'] = this.informationService.owner.value;
@@ -384,14 +234,6 @@ export class ShowDepositDialogComponent implements OnInit {
 			location: deposit.location ? deposit.location : this.deposit.location,
 			city: deposit.city ? deposit.city : this.deposit.city,
 		};
-		if (this.recurrent) {
-			updatedDeposit.recurrent = deposit.recurrent ? deposit.recurrent : this.deposit.recurrent;
-			updatedDeposit.frequency = deposit.frequency ? deposit.frequency : this.deposit.frequency;
-		}
-		if (this.differentCurrency) {
-			updatedDeposit.currency = deposit.currency ? deposit.currency : this.deposit.currency;
-			updatedDeposit.exchangeRate = deposit.currency && deposit.exchangeRate ? deposit.exchangeRate : this.deposit.exchangeRate;
-		}
 		return updatedDeposit;
 	}
 
