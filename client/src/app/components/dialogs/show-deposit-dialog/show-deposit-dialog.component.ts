@@ -58,6 +58,26 @@ export class ShowDepositDialogComponent implements OnInit {
 		// }, 750);
 	}
 
+	isFormValid(): boolean { return this.depositForm.valid; }
+
+	save(): void {
+		const updatedDeposit: IDeposit = this.getFormContents(this.deposit);
+		this.updateTotalAmount(this.deposit.amount.toString(), updatedDeposit.amount.toString());
+		this.saveDeposit(updatedDeposit);
+	}
+
+	add(): void {
+		const newDeposit: IDeposit = this.getFormContents(null);
+		this.updateTotalAmount('0', newDeposit.amount.toString());
+		this.saveDeposit(newDeposit);
+	}
+
+	// Form validation:
+	isInputValid(inputName: string): boolean {
+		// this.initializeError(inputName);
+		return this.depositForm.controls[`${inputName}`].valid;
+	}
+
 	private intializeAddPage(): void {
 		this.titleText = 'Add new';
 		this.inEditMode = false;
@@ -75,7 +95,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	private initializeDepositForm(
-		initial: IDeposit | { amount: number; details: string; category: CATEGORY; location: string; city: string; },
+		initial: IDeposit | { amount: number, details: string, category: CATEGORY, location: string, city: string },
 		initialDate: Date
 	): void {
 
@@ -109,8 +129,6 @@ export class ShowDepositDialogComponent implements OnInit {
 		log(this.CLASS_NAME, this.initializeEditableForm.name, 'initialized editable form:', this.depositForm.value);
 	}
 
-	isFormValid(): boolean { return this.depositForm.valid; }
-
 	private getDifferences(deposit: IDeposit | null): DepositDifferences[] {
 		const controls: Control[] = Object
 			.entries(this.depositForm.controls)
@@ -118,7 +136,7 @@ export class ShowDepositDialogComponent implements OnInit {
 				return {
 					key: c[0] as DepositProperties, value: c[1].value as DepositValues,
 					dirty: c[1].dirty, touched: c[1].touched, valid: c[1].valid
-				}
+				};
 			});
 
 		if (deposit) {
@@ -135,13 +153,13 @@ export class ShowDepositDialogComponent implements OnInit {
 								key: k as DepositProperties,
 								oldValue: '' as DepositValues,
 								newValue: v as DepositValues
-							}
+							};
 						}
 						return {
 							key: k as DepositProperties,
 							oldValue: oldValue as DepositValues,
 							newValue: v as DepositValues
-						}
+						};
 					});
 
 			// log(this.CLASS_NAME, this.getDifferences.name, 'controls:', controls);
@@ -161,7 +179,7 @@ export class ShowDepositDialogComponent implements OnInit {
 							key: k as DepositProperties,
 							oldValue: '' as DepositValues,
 							newValue: v as DepositValues
-						}
+						};
 					});
 
 			// log(this.CLASS_NAME, this.getDifferences.name, 'controls:', controls);
@@ -178,7 +196,7 @@ export class ShowDepositDialogComponent implements OnInit {
 		log(this.CLASS_NAME, this.getFormDifferences.name, 'differences:', differences);
 
 		// TODO: always check if types match with "IDeposit" types
-		let depositDifferences: { [key: string]: DepositValues } = {};
+		const depositDifferences: { [key: string]: DepositValues } = {};
 
 		differences.forEach((diff: DepositDifferences) => {
 			const key = diff.key;
@@ -250,24 +268,6 @@ export class ShowDepositDialogComponent implements OnInit {
 			log(this.CLASS_NAME, this.saveDeposit.name, 'updatedDeposit:', updatedDeposit);
 			this.dialogReference.close(updatedDeposit);
 		}
-	}
-
-	save(): void {
-		const updatedDeposit: IDeposit = this.getFormContents(this.deposit);
-		this.updateTotalAmount(this.deposit.amount.toString(), updatedDeposit.amount.toString());
-		this.saveDeposit(updatedDeposit);
-	}
-
-	add(): void {
-		const newDeposit: IDeposit = this.getFormContents(null);
-		this.updateTotalAmount('0', newDeposit.amount.toString());
-		this.saveDeposit(newDeposit);
-	}
-
-	// Form validation:
-	isInputValid(inputName: string): boolean {
-		// this.initializeError(inputName);
-		return this.depositForm.controls[`${inputName}`].valid;
 	}
 
 	/*

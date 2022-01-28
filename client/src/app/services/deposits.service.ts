@@ -103,7 +103,7 @@ export class DepositsService {
 
 	getTotalAmount(deposits: IDeposit[]): number {
 		let total = 0;
-		deposits.forEach((deposit: IDeposit) => { total += deposit.amount });
+		deposits.forEach((deposit: IDeposit) => { total += deposit.amount; });
 		return total;
 	}
 

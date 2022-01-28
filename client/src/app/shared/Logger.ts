@@ -10,6 +10,7 @@ const blackBkg = 'background-color: black; color: white;' + big + padded;
 const blueBkg = 'background-color: blue; color: white;' + big + padded;
 const greenBkg = 'background-color: green; color: white;' + padded;
 
+/* eslint no-console: "off" */
 const log = function (
 	className: string,
 	caller: string,
@@ -45,4 +46,4 @@ const log = function (
 			console.groupEnd();
 		}
 	}
-}
+};

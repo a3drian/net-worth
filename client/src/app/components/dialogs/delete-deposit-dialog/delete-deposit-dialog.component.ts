@@ -24,15 +24,15 @@ export class DeleteDepositDialogComponent implements OnInit {
 
 	ngOnInit(): void { }
 
+	getConfirmation(confirmation: boolean): void {
+		if (confirmation === true) { this.updateTotalAmount(); }
+		this.dialogReference.close(confirmation);
+	}
+
 	private updateTotalAmount(): boolean {
 		let totalAmount = this.informationService.totalAmount.getValue();
 		totalAmount = totalAmount - this.deposit.amount;
 		setTimeout(() => { this.informationService.totalAmount.next(totalAmount); }, Constants.updateTimeout);
 		return true;
-	}
-
-	getConfirmation(confirmation: boolean): void {
-		if (confirmation === true) { this.updateTotalAmount(); }
-		this.dialogReference.close(confirmation);
 	}
 }
