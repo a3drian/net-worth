@@ -88,9 +88,4 @@ export class DashboardComponent implements OnInit {
 			.postDeposit(deposit)
 			.subscribe(() => { });
 	}
-
-	updateDeposit(event: any): void {
-		log('dashboard.ts', this.updateDeposit.name, 'typeof(event):', typeof (event));
-		log('dashboard.ts', this.updateDeposit.name, 'event:', event);
-	}
 }

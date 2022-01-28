@@ -76,7 +76,8 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	private initializeDepositForm(
 		initial: IDeposit | { amount: number; details: string; category: CATEGORY; location: string; city: string; },
-		initialDate: Date): void {
+		initialDate: Date
+	): void {
 
 		const amount = new FormControl(initial.amount, [Validators.required, Validators.min(0)]);
 		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(30)]);
@@ -231,9 +232,9 @@ export class ShowDepositDialogComponent implements OnInit {
 		return updatedDeposit;
 	}
 
+	// TODO: add subscription to form to enable "Save" / "Add" button
 	private depositChanged(differences: DepositDifferences[]): boolean {
 		if (differences.length === 0) {
-			// TODO: add subscription to form to enable "Save" / "Add" button
 			this.canSubmit = false;
 			return false;
 		} else {
