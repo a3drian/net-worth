@@ -19,7 +19,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './components/app/app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DepositCardComponent } from './components/deposits/deposit-card/deposit-card.component';
-import { DepositFormComponent } from './components/forms/deposit-form/deposit-form.component';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
@@ -37,7 +36,6 @@ import { Constants } from './shared/Constants';
 		NotFoundPageComponent,
 		DashboardComponent,
 		LoadingSpinnerComponent,
-		DepositFormComponent,
 		DepositCardComponent,
 		ShowDepositDialogComponent,
 		DeleteDepositDialogComponent,

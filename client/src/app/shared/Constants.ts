@@ -1,7 +1,5 @@
 // Shared:
 import { CATEGORY } from './constants/Categories';
-import { CITY } from './constants/Cities';
-import { LOCATION } from './constants/Locations';
 
 export const Constants = Object.freeze({
 	IN_DEBUG_MODE: true,
@@ -25,16 +23,16 @@ export const Constants = Object.freeze({
 		amount: 10,
 		details: 'Groceries',
 		category: CATEGORY.GROCERIES,
-		location: LOCATION.SELGROS,
-		city: CITY.BRASOV
+		location: 'Selgros',
+		city: 'Brașov'
 	}),
 
 	formPlaceholders: Object.freeze({
 		amount: 10,
 		details: 'Groceries...',
 		category: CATEGORY.GROCERIES,
-		location: LOCATION.SELGROS,
-		city: CITY.BRASOV
+		location: 'Selgros',
+		city: 'Brașov'
 	}),
 
 	dialogDimensions: Object.freeze({

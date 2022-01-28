@@ -1,4 +1,4 @@
-import { Currency, IDeposit } from 'net-worth-shared';
+import { IDeposit } from 'net-worth-shared';
 
 export class Deposit implements IDeposit {
 	_id!: string;
@@ -11,11 +11,6 @@ export class Deposit implements IDeposit {
 	location?: string;
 	city?: string;
 
-	recurrent?: boolean;
-	frequency?: string;
-	currency?: string;
-	exchangeRate?: number;
-
 	public constructor(partial?: Partial<Deposit>) {
 		Object.assign(this, partial);
 	}
@@ -24,11 +19,10 @@ export class Deposit implements IDeposit {
 // TODO: can you extract these automtically?
 export type DepositProperties =
 	'amount' | 'details' | 'createdAt' |
-	'category' | 'location' | 'city' |
-	'recurrent' | 'frequency' | 'currency' | 'exchangeRate';
+	'category' | 'location' | 'city';
 
 export type DepositValues =
-	boolean | Date | number | string | Currency;
+	boolean | Date | number | string;
 
 export type DepositDifferences = {
 	key: DepositProperties;
@@ -47,11 +41,6 @@ export class DepositDTO {
 	category?: string;
 	location?: string;
 	city?: string;
-
-	recurrent?: boolean;
-	frequency?: string;
-	currency?: string;
-	exchangeRate?: number;
 
 	public constructor(partial?: Partial<DepositDTO>) {
 		Object.assign(this, partial);
