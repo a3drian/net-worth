@@ -31,8 +31,8 @@ export const Constants = Object.freeze({
 		amount: 10,
 		details: 'Groceries...',
 		category: CATEGORY.GROCERIES,
-		location: 'Selgros',
-		city: 'Brașov'
+		location: 'Selgros...',
+		city: 'Brașov...'
 	}),
 
 	dialogDimensions: Object.freeze({

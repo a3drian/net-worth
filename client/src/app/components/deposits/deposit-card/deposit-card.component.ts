@@ -23,7 +23,6 @@ export class DepositCardComponent implements OnInit {
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
 	@Input() deposit: IDeposit = <IDeposit>{};
-	@Output() depositChange = new EventEmitter<IDeposit>();
 
 	depositId: string = '';
 
@@ -123,9 +122,4 @@ export class DepositCardComponent implements OnInit {
 				}
 			);
 	}
-
-	updateAmount(value: IDeposit) {
-		this.depositChange.emit(value);
-	}
-
 }
