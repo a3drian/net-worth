@@ -27,6 +27,7 @@ const log = function (
 		}
 		if (object) {
 			const type = typeof (object);
+			// console.log('type:', type);
 			if (type === 'boolean') {
 				console.group(`%c${className}%c${caller}%c ${message} %c${object.valueOf()}`, blackBkg, blueBkg, big, greenBkg);
 				console.groupEnd();
@@ -41,8 +42,11 @@ const log = function (
 		} else if (object === false) {
 			console.group(`%c${className}%c${caller}%c ${message} %c${object.valueOf()}`, blackBkg, blueBkg, big, greenBkg);
 			console.groupEnd();
+		} else if (object === 0 || object === null) {
+			console.group(`%c${className}%c${caller}%c ${message} %c${object}`, blackBkg, blueBkg, big, greenBkg);
+			console.groupEnd();
 		} else {
-			console.group(`%c${className}%c${caller}%c ${message}`, blackBkg, blueBkg, big);
+			console.group(`%c${className}%c${caller}%c ${message} `, blackBkg, blueBkg, big);
 			console.groupEnd();
 		}
 	}

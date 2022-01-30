@@ -1,4 +1,4 @@
-<p class="debug" *ngIf="isInDebugMode"><b>dashboard</b> works!</p>
+<pre class="debug" *ngIf="isInDebugMode"><b>dashboard</b> works!</pre>
 
 <h1>Net Worth</h1>
 
@@ -6,7 +6,7 @@
 	<app-loading-spinner></app-loading-spinner>
 </div>
 
-<div *ngIf="!isLoading">
+<main *ngIf="!isLoading">
 
 	<div>
 		<p>Nothing saved in {{ today | date: 'MMMM' }} yet.</p>
@@ -21,30 +21,10 @@
 
 	<div>....................</div>
 
-	<!--
-	<p *ngFor="let deposit of deposits">
-		<b>{{ deposit.amount }} RON</b> in {{ deposit.createdAt | date: 'd.M' }} for '{{ deposit.details }}' at loc. '{{
-		deposit.location }}' in cat. '{{deposit.category}}'
-
-		<button (click)="viewDeposit(deposit)">
-			View
-		</button>
-
-		<button (click)="viewDeposit(deposit)">
-			Edit
-		</button>
-
-		<button (click)="openConfirmationDialog(deposit)">
-			Delete
-		</button>
-
-	</p>
-	-->
-
 	<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
 	</app-deposit-card>
 
 	<!-- <button>Last month</button> <button>This year</button> -->
-</div>
+</main>
 
 <router-outlet></router-outlet>
