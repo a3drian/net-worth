@@ -1,6 +1,6 @@
-<p class="debug" *ngIf="isInDebugMode"><b>deposit-card</b> works!</p>
+<pre class="debug" *ngIf="isInDebugMode"><b>deposit-card</b> works!</pre>
 
-<div *ngIf="!deleted">
+<main *ngIf="!deleted">
 
 	<p>
 		<b>{{ deposit.amount }} RON</b> for '{{ deposit.details }}' on {{ deposit.createdAt | date: 'MMM d' }}
@@ -23,6 +23,4 @@
 		Delete
 	</button>
 
-	<hr>
-
-</div>
+</main>

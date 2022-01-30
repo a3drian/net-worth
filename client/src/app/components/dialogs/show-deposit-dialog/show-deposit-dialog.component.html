@@ -1,4 +1,4 @@
-<p class="debug" *ngIf="isInDebugMode"><b>show-deposit-dialog</b> works!</p>
+<pre class="debug" *ngIf="isInDebugMode"><b>show-deposit-dialog</b> works!</pre>
 
 <div class="dialog-title">
 	<h3>{{ titleText }}</h3>
@@ -14,7 +14,7 @@
 			<input matInput id="amount" [ngClass]="!isInputValid('amount') ? 'input-error' : ''" type="number" name="amount"
 				formControlName="amount" placeholder="{{ formPlaceholders.amount }}" required>
 			<p *ngIf="isInputValid('amount')">How much did you spend?</p>
-			<p class="error" *ngIf="!isInputValid('amount')">{{ amountErrorMessage }}</p>
+			<p class="error" *ngIf="!isAmountValid()">{{ amountErrorMessage }}</p>
 		</fieldset>
 
 		<fieldset>
@@ -22,7 +22,7 @@
 			<input matInput id="details" [ngClass]="!isInputValid('details') ? 'input-error' : ''" type="text" name="details"
 				formControlName="details" placeholder="{{ formPlaceholders.details }}" required>
 			<p *ngIf="isInputValid('details')">What did you spend it on?</p>
-			<p class="error" *ngIf="!isInputValid('details')">Please add some details...</p>
+			<p class="error" *ngIf="!isDetailsValid()">{{ detailsErrorMessage }}</p>
 		</fieldset>
 
 		<fieldset>
@@ -46,7 +46,7 @@
 			<input matInput id="location" [ngClass]="!isInputValid('location') ? 'input-error' : ''" type="text"
 				name="location" formControlName="location" placeholder="{{ formPlaceholders.location }}" required>
 			<p *ngIf="isInputValid('location')">What did you spend it on?</p>
-			<p class="error" *ngIf="!isInputValid('location')">Where did you spend it?</p>
+			<p class="error" *ngIf="!isLocationValid()">{{ locationErrorMessage }}</p>
 		</fieldset>
 
 		<fieldset>
@@ -54,7 +54,7 @@
 			<input matInput id="city" [ngClass]="!isInputValid('city') ? 'input-error' : ''" type="text" name="city"
 				formControlName="city" placeholder="{{ formPlaceholders.city }}" required>
 			<p *ngIf="isInputValid('city')">What did you spend it on?</p>
-			<p class="error" *ngIf="!isInputValid('city')">In which city did you spend it?</p>
+			<p class="error" *ngIf="!isCityValid()">{{ cityErrorMessage }}</p>
 		</fieldset>
 
 	</form>
@@ -62,7 +62,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions *ngIf="inEditMode" align="center">
-	<button [disabled]="!isFormValid()" (click)="save()" mat-dialog-close>Save</button>
+	<button [disabled]="!hasDepositChanged()" (click)="save()" mat-dialog-close>Update</button>
 </mat-dialog-actions>
 
 <mat-dialog-actions *ngIf="!inEditMode" align="center">
@@ -70,9 +70,10 @@
 </mat-dialog-actions>
 
 <!-- DEBUG MODE: -->
-<div *ngIf="isInDebugMode">
-	<p>Form status:<br>{{ depositForm.status }}</p>
-	<p>amount: {{ isInputValid('amount') }}</p>
-	<p>details: {{ isInputValid('details') }}</p>
-	<p>Form value:<br>{{ depositForm.value | json }}</p>
+<div class="debug-div" *ngIf="isInDebugMode">
+	<pre>Form status:{{ depositForm.status }}</pre>
+	<pre>amount: {{ isInputValid('amount') }}</pre>
+	<pre>details: {{ isInputValid('details') }}</pre>
+	<pre>Form value:<br>{{ depositForm.value | json }}</pre>
+	<pre>depositChanged: {{ depositChanged.getValue() }}</pre>
 </div>

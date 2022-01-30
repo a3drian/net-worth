@@ -48,6 +48,7 @@ export const Constants = Object.freeze({
 
 	detailsErrors: Object.freeze({
 		empty: 'Please add some details',
+		tooLong: 'Please use fewer characters'
 	}),
 
 });

@@ -11,7 +11,5 @@ export class CategoriesService {
 
 	constructor() { }
 
-	getCategories(): CATEGORY[] {
-		return this.categories;
-	}
+	getCategories(): CATEGORY[] { return this.categories; }
 }

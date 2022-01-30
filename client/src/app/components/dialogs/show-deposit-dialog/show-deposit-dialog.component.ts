@@ -6,9 +6,13 @@ import { IControl } from 'src/app/models/Control';
 import { IDeposit } from 'net-worth-shared';
 // Models:
 import { DepositDifferences, DepositDTO, DepositProperties, DepositValues } from 'src/app/models/Deposit';
+// rxjs:
+import { BehaviorSubject } from 'rxjs';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
 import { InformationService } from 'src/app/services/information.service';
+// Validators:
+import { positiveNumberValidator } from 'src/app/shared/validators/positiveNumberValidator';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
 import { CATEGORY } from 'src/app/shared/constants/Categories';
@@ -40,7 +44,15 @@ export class ShowDepositDialogComponent implements OnInit {
 	today: Date = new Date();
 
 	titleText: string = '';
-	amountErrorMessage: string = Constants.amountErrors.negativeValue;
+
+	amountErrors = Constants.amountErrors;
+	detailsErrors = Constants.detailsErrors;
+	amountErrorMessage: string = Constants.amountErrors.empty;
+	detailsErrorMessage: string = Constants.detailsErrors.empty;
+	locationErrorMessage: string = '';
+	cityErrorMessage: string = '';
+
+	depositChanged = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public deposit: IDeposit,
@@ -56,6 +68,7 @@ export class ShowDepositDialogComponent implements OnInit {
 		// setTimeout(() => {
 		this.deposit === null ? this.intializeAddPage() : this.initializeEditPage();
 		// }, 750);
+		this.formValueChanged();
 	}
 
 	isFormValid(): boolean { return this.depositForm.valid; }
@@ -63,7 +76,8 @@ export class ShowDepositDialogComponent implements OnInit {
 	save(): void {
 		const updatedDeposit: IDeposit = this.getFormContents(this.deposit);
 		this.updateTotalAmount(this.deposit.amount.toString(), updatedDeposit.amount.toString());
-		this.saveDeposit(updatedDeposit);
+		const changed = this.depositChanged.getValue();
+		if (changed) { this.saveDeposit(updatedDeposit); }
 	}
 
 	add(): void {
@@ -74,8 +88,60 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	// Form validation:
 	isInputValid(inputName: string): boolean {
-		// this.initializeError(inputName);
 		return this.depositForm.controls[`${inputName}`].valid;
+	}
+
+	isAmountValid(): boolean {
+		const control = this.depositForm.controls['amount'];
+		const errors = control.errors;
+		if (!errors) { return true; }
+		const required = errors['required'];
+		if (required) { this.amountErrorMessage = this.amountErrors.empty; }
+		const negative = errors['negative'];
+		if (negative) { this.amountErrorMessage = this.amountErrors.negativeValue; }
+		return control.valid;
+	}
+
+	isDetailsValid(): boolean {
+		const control = this.depositForm.controls['details'];
+		const errors = control.errors;
+		if (!errors) { return true; }
+		const required = errors['required'];
+		if (required) { this.detailsErrorMessage = this.detailsErrors.empty; }
+		const tooLong = errors['maxlength'];
+		if (tooLong) { this.detailsErrorMessage = this.detailsErrors.tooLong; }
+		return control.valid;
+	}
+
+	isLocationValid(): boolean {
+		const control = this.depositForm.controls['location'];
+		const errors = control.errors;
+		if (!errors) { return true; }
+		const required = errors['required'];
+		if (required) { this.locationErrorMessage = 'Please add a location'; }
+		const tooLong = errors['maxlength'];
+		if (tooLong) { this.locationErrorMessage = this.detailsErrors.tooLong; }
+		return control.valid;
+	}
+
+	isCityValid(): boolean {
+		const control = this.depositForm.controls['city'];
+		const errors = control.errors;
+		if (!errors) { return true; }
+		const required = errors['required'];
+		if (required) { this.cityErrorMessage = 'Please add a city'; }
+		const tooLong = errors['maxlength'];
+		if (tooLong) { this.cityErrorMessage = this.detailsErrors.tooLong; }
+		return control.valid;
+	}
+
+	hasDepositChanged(): boolean {
+		if (this.isFormValid()) {
+			if (this.depositChanged.getValue() === true) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private intializeAddPage(): void {
@@ -99,8 +165,8 @@ export class ShowDepositDialogComponent implements OnInit {
 		initialDate: Date
 	): void {
 
-		const amount = new FormControl(initial.amount, [Validators.required, Validators.min(0)]);
-		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(30)]);
+		const amount = new FormControl(initial.amount, [Validators.required, Validators.min(0), positiveNumberValidator()]);
+		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(20)]);
 		const createdAt = new FormControl(initialDate.toISOString().split('T')[0], [Validators.required]);
 		const category = new FormControl(initial.category, [Validators.required]);
 		const location = new FormControl(initial.location, [Validators.required, Validators.maxLength(20)]);
@@ -127,6 +193,13 @@ export class ShowDepositDialogComponent implements OnInit {
 	private initializeEditableForm(): void {
 		this.initializeDepositForm(this.deposit, new Date(this.deposit.createdAt));
 		log(this.CLASS_NAME, this.initializeEditableForm.name, 'initialized editable form:', this.depositForm.value);
+	}
+
+	private updateTotalAmount(oldValue: string, newValue: string): void {
+		if (!oldValue || !newValue) { return; }
+		let totalAmount = this.informationService.totalAmount.getValue();
+		totalAmount = (totalAmount - Number(oldValue)) + Number(newValue);
+		setTimeout(() => { this.informationService.totalAmount.next(totalAmount); }, Constants.updateTimeout);
 	}
 
 	private getDifferences(deposit: IDeposit | null): DepositDifferences[] {
@@ -191,9 +264,14 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	private getFormDifferences(deposit: IDeposit | null) {
 		const differences = this.getDifferences(deposit);
-		if (differences.length === 0) { return deposit; }
+		if (differences.length === 0) {
+			this.depositChanged.next(false);
+			return deposit;
+		}
 
 		log(this.CLASS_NAME, this.getFormDifferences.name, 'differences:', differences);
+
+		this.depositChanged.next(true);
 
 		// TODO: always check if types match with "IDeposit" types
 		const depositDifferences: { [key: string]: DepositValues } = {};
@@ -208,6 +286,20 @@ export class ShowDepositDialogComponent implements OnInit {
 
 		log(this.CLASS_NAME, this.getFormDifferences.name, 'final differences:', depositDifferences);
 		return depositDifferences;
+	}
+
+	private getUpdatedDeposit(deposit: DepositDTO): IDeposit {
+		const updatedDeposit = <IDeposit>{
+			_id: this.deposit._id,	// after "Save", DELETE request fails because "id" is "undefined"
+			owner: deposit.owner ? deposit.owner : this.deposit.owner,
+			amount: deposit.amount ? deposit.amount : this.deposit.amount,
+			details: deposit.details ? deposit.details : this.deposit.details,
+			createdAt: deposit.createdAt ? deposit.createdAt : this.deposit.createdAt,
+			category: deposit.category ? deposit.category : this.deposit.category,
+			location: deposit.location ? deposit.location : this.deposit.location,
+			city: deposit.city ? deposit.city : this.deposit.city,
+		};
+		return updatedDeposit;
 	}
 
 	private getFormContents(deposit: IDeposit | null): IDeposit {
@@ -230,35 +322,15 @@ export class ShowDepositDialogComponent implements OnInit {
 		}
 	}
 
-	private updateTotalAmount(oldValue: string, newValue: string): void {
-		if (!oldValue || !newValue) { return; }
-		let totalAmount = this.informationService.totalAmount.getValue();
-		totalAmount = (totalAmount - Number(oldValue)) + Number(newValue);
-		setTimeout(() => { this.informationService.totalAmount.next(totalAmount); }, Constants.updateTimeout);
-	}
-
-	private getUpdatedDeposit(deposit: DepositDTO): IDeposit {
-		const updatedDeposit = <IDeposit>{
-			owner: deposit.owner ? deposit.owner : this.deposit.owner,
-			amount: deposit.amount ? deposit.amount : this.deposit.amount,
-			details: deposit.details ? deposit.details : this.deposit.details,
-			createdAt: deposit.createdAt ? deposit.createdAt : this.deposit.createdAt,
-			category: deposit.category ? deposit.category : this.deposit.category,
-			location: deposit.location ? deposit.location : this.deposit.location,
-			city: deposit.city ? deposit.city : this.deposit.city,
-		};
-		return updatedDeposit;
-	}
-
-	// TODO: add subscription to form to enable "Save" / "Add" button
-	private depositChanged(differences: DepositDifferences[]): boolean {
-		if (differences.length === 0) {
-			this.canSubmit = false;
-			return false;
-		} else {
-			this.canSubmit = true;
-			return true;
-		}
+	private formValueChanged() {
+		this.depositForm
+			.valueChanges
+			.subscribe(
+				selectedValue => {
+					log(this.CLASS_NAME, this.formValueChanged.name, 'selectedValue:', selectedValue);
+					this.depositChanged.next(true);
+				}
+			);
 	}
 
 	private saveDeposit(updatedDeposit: IDeposit): void {
@@ -269,28 +341,4 @@ export class ShowDepositDialogComponent implements OnInit {
 			this.dialogReference.close(updatedDeposit);
 		}
 	}
-
-	/*
-	initializeError(inputName: string): void {
-		if (inputName === 'amount') {
-			const input = this.depositForm.controls[`${inputName}`];
-			const inputValue: number | string = input.value;
-			console.log('inputValue:', inputValue);
-			if (inputValue === null) {
-				console.log('input is NULL:', input);
-				this.amountErrorMessage = this.amountErrors.empty;
-				return;
-			}
-			if (inputValue < 0) {
-				this.amountErrorMessage = this.amountErrors.negativeValue;
-			} else if (inputValue.toString().includes(',')) {
-				this.amountErrorMessage = this.amountErrors.invalidDecimalSeparator;
-			} else if (inputValue.toString().length === 0) {
-				this.amountErrorMessage = this.amountErrors.empty;
-			} else if (inputValue.toString().includes('#')) {
-				this.amountErrorMessage = this.amountErrors.invalidCharacters;
-			}
-		}
-	}
-	*/
 }
