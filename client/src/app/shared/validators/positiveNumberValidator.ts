@@ -25,5 +25,5 @@ export function positiveNumberValidator(): ValidatorFn {
 		const negative = validType && validValue;
 
 		return !negative ? { 'negative': true } : null;
-	}
+	};
 }
