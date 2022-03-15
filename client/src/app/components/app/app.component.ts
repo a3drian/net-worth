@@ -10,5 +10,5 @@ import { Constants } from '../../shared/Constants';
 export class AppComponent {
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
-	title = 'Net Worth';
+	title = 'Spendit';
 }
