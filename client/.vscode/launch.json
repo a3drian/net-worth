@@ -3,8 +3,27 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "ng serve",
+			"name": "ng serve (Chrome)",
 			"type": "chrome",
+			"request": "launch",
+			"preLaunchTask": "npm: proxy",
+			"url": "http://localhost:4200/",
+			"webRoot": "${workspaceFolder}",
+			"sourceMapPathOverrides": {
+				"webpack:/*": "${webRoot}/*",
+				"/./*": "${webRoot}/*",
+				"/src/*": "${webRoot}/*",
+				"/*": "*",
+				"/./~/*": "${webRoot}/node_modules/*"
+			},
+			"skipFiles": [
+				"<node_internals>/**",
+				"${workspaceRoot}/node_modules/**/*.js"
+			]
+		},
+		{
+			"name": "ng serve (Firefox)",
+			"type": "firefox",
 			"request": "launch",
 			"preLaunchTask": "npm: proxy",
 			"url": "http://localhost:4200/",
