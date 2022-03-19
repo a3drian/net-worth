@@ -44,7 +44,7 @@ export class DepositsService {
 	getDepositsByOwner(
 		email: string
 	): Observable<IDeposit[]> {
-		log(this.CLASS_NAME, this.getDepositsByOwner.name, 'owner:', email);
+		log(this.CLASS_NAME, this.getDepositsByOwner.name, 'email:', email);
 
 		const request = this.http
 			.post<IDeposit[]>(
