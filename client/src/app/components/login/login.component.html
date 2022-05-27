@@ -1,14 +1,47 @@
 <pre class="debug" *ngIf="isInDebugMode"><b>login</b> works!</pre>
 
-<h1>
-	Spendit
-</h1>
+<body>
 
-<div *ngIf="isLoading" class="loading-spinner">
-	<app-loading-spinner></app-loading-spinner>
-</div>
+	<div *ngIf="isLoading" class="loading-spinner">
+		<app-loading-spinner></app-loading-spinner>
+	</div>
 
-<div *ngIf="!isLoading">
-	<button (click)="login()">Sign in with Google</button>
-	<button (click)="login()">Sign in with Microsoft</button>
-</div>
+	<main *ngIf="!isLoading">
+
+		<div id="title">
+			<h1>Spendit</h1>
+			<h4>You've earned it!</h4>
+		</div>
+
+		<div id="buttons">
+			<!-- <div class="login-button login-button--disabled">
+				<img class="login-button__img login-button__img--disabled" src="../../../assets/icons/coloured/apple.png" alt="Apple logo">
+				<button class="login-button__button login-button__button--disabled" (click)="login()" disabled>
+					Sign in with Apple
+				</button>
+			</div> -->
+
+		<div class="login-button">
+			<img class="login-button__img" src="../../../assets/icons/coloured/g.png" alt="Google logo">
+			<button class="login-button__button" (click)="loginWithGoogle()">
+				Sign in
+			</button>
+		</div>
+
+			<!-- <div class="login-button login-button--disabled">
+				<img class="login-button__img login-button__img--disabled" src="../../../assets/icons/coloured/facebook.png" alt="Facebook logo">
+				<button class="login-button__button login-button__button--disabled" (click)="login()" disabled>
+					Sign in with Facebook
+				</button>
+			</div>
+
+			<div class="login-button login-button--disabled">
+				<img class="login-button__img login-button__img--disabled" src="../../../assets/icons/coloured/ms.png" alt="Microsoft logo">
+				<button class="login-button__button login-button__button--disabled" (click)="login()" disabled>
+					Sign in with Microsoft
+				</button>
+			</div> -->
+		</div>
+
+	</main>
+</body>
