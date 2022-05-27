@@ -1,30 +1,37 @@
 <pre class="debug" *ngIf="isInDebugMode"><b>dashboard</b> works!</pre>
 
-<h1>Spendit</h1>
+<body>
 
-<div *ngIf="isLoading" class="loading-spinner">
-	<app-loading-spinner></app-loading-spinner>
-</div>
-
-<main *ngIf="!isLoading">
-
-	<div>
-		<p>Nothing saved in {{ today | date: 'MMMM' }} yet.</p>
-		<button (click)="openShowDepositDialog('save')" disabled>Save</button>
+	<div *ngIf="isLoading" class="loading-spinner">
+		<app-loading-spinner></app-loading-spinner>
 	</div>
 
-	<div>
-		<p *ngIf="totalAmount === 0">Nothing spent in {{ today | date: 'MMMM' }} yet.</p>
-		<p *ngIf="totalAmount !== 0">Spending report for {{ today | date: 'MMMM' }} - <b>{{ totalAmount }} RON</b></p>
-		<button (click)="openShowDepositDialog('spend')">Spend</button>
-	</div>
+	<main *ngIf="!isLoading">
 
-	<div>....................</div>
+		<div id="title">
+			<h1>Spendit</h1>
+			<button (click)="logout()">Log out</button>
+			<h4>Welcome, {{ user?.displayName }}!</h4>
+		</div>
 
-	<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
-	</app-deposit-card>
+		<div>
+			<p>Nothing saved in {{ today | date: 'MMMM' }} yet.</p>
+			<button (click)="openShowDepositDialog('save')" disabled>Save</button>
+		</div>
 
-	<!-- <button>Last month</button> <button>This year</button> -->
-</main>
+		<div>
+			<p *ngIf="totalAmount === 0">Nothing spent in {{ today | date: 'MMMM' }} yet.</p>
+			<p *ngIf="totalAmount !== 0">Spending report for {{ today | date: 'MMMM' }} - <b>{{ totalAmount }} RON</b></p>
+			<button (click)="openShowDepositDialog('spend')">Spend</button>
+		</div>
+
+		<div>....................</div>
+
+		<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
+		</app-deposit-card>
+
+		<!-- <button>Last month</button> <button>This year</button> -->
+	</main>
+</body>
 
 <router-outlet></router-outlet>
