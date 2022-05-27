@@ -50,8 +50,14 @@ import { environment } from '../environments/environment';
 		BrowserModule,
 		RouterModule.forRoot([
 			{ path: '', redirectTo: appRoutes.dashboard.path, pathMatch: 'full' },
-			{ path: appRoutes.dashboard.path, component: DashboardComponent },
-			{ path: appRoutes.login.path, component: LoginComponent },
+			{
+				path: appRoutes.dashboard.path, component: DashboardComponent,
+				canActivate: [AuthGuard]
+			},
+			{
+				path: appRoutes.login.path, component: LoginComponent,
+				canActivate: [LoginGuard]
+			},
 			{ path: '**', component: NotFoundPageComponent }
 		]),
 		HttpClientModule,

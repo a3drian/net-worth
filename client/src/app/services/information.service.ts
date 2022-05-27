@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 // rxjs:
-import { BehaviorSubject } from 'rxjs';
-// Shared:
-import { Constants } from '../shared/Constants';
+import { BehaviorSubject, tap } from 'rxjs';
+// Interfaces:
+import { IUser } from '../models/User';
+// Services:
+import { AuthService } from './auth.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,7 +12,17 @@ import { Constants } from '../shared/Constants';
 export class InformationService {
 
 	public totalAmount = new BehaviorSubject<number>(0);
-	public owner = new BehaviorSubject<string>(Constants.defaultOwner);
+	public owner = new BehaviorSubject<string>('');
+	public user = new BehaviorSubject<IUser | null>(null);
 
-	constructor() { }
+	constructor(private authService: AuthService) {
+		const userAuthenticated = this.authService.isAuthenticated();
+		if (userAuthenticated) {
+			this.authService.autoLogin();
+			const user = this.authService.user.value;
+			const email = user ? user.email : '';
+			this.owner.next(email);
+			if (user) { this.user.next(user); }
+		}
+	}
 }
