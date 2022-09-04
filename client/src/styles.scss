@@ -125,6 +125,7 @@ input,
 select {
 	background-color: $background-clr;
 	border: $border-sz solid $foreground-clr;
+	border-radius: 3px;
 	color: $foreground-clr;
 }
 button {
@@ -137,6 +138,7 @@ button {
 button {
 	background: $foreground-clr;
 	border: $border-sz solid $foreground-clr;
+	border-radius: 3px;
 	color: $background-clr;
 }
 button:hover:not(:disabled) {
@@ -158,5 +160,6 @@ button:disabled {
 
 button:focus {
 	outline: $outline-sz solid $focus-clr;
+	outline-offset: 2px;
 	transition: none;
 }
