@@ -39,17 +39,7 @@ $netWorth-theme: mat.define-light-theme(
 @import './app/styles/classes.scss';
 @import './app/styles/colors.scss';
 @import './app/styles/reset.scss';
-
-$font-main: 'Overpass';
-
-$disabled: 0.8;
-
-$font-sz-normal: 1rem;
-$font-sz-small: calc($font-sz-normal / 2);
-$font-sz-double: calc($font-sz-normal * 2);
-
-$border-sz: 2px;
-$outline-sz: 2px;
+@import './app/styles/variables.scss';
 
 //
 

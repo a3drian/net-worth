@@ -1,4 +1,4 @@
-@import '../../styles/colors.scss';
+@import '../../styles/common.scss';
 
 body {
 	display: grid;
@@ -69,7 +69,6 @@ div#buttons {
 		margin-inline-end: 0.5rem;
 		width: 100%;
 
-		&--disabled {
-		}
+		&--disabled {}
 	}
 }
