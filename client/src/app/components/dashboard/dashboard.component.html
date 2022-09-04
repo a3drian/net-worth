@@ -1,18 +1,12 @@
 <pre class="debug" *ngIf="isInDebugMode"><b>dashboard</b> works!</pre>
 
-<body>
-
 	<div *ngIf="isLoading" class="loading-spinner">
 		<app-loading-spinner></app-loading-spinner>
 	</div>
 
-	<main *ngIf="!isLoading">
+	<app-header *ngIf="!isLoading"></app-header>
 
-		<div id="title">
-			<h1>Spendit</h1>
-			<button (click)="logout()">Log out</button>
-			<h4>Welcome, {{ user?.displayName }}!</h4>
-		</div>
+	<main *ngIf="!isLoading">
 
 		<div>
 			<p>Nothing saved in {{ today | date: 'MMMM' }} yet.</p>
@@ -32,6 +26,4 @@
 
 		<!-- <button>Last month</button> <button>This year</button> -->
 	</main>
-</body>
 
-<router-outlet></router-outlet>

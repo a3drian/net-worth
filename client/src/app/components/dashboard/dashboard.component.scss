@@ -1,7 +1,4 @@
-body {
-	display: grid;
-	grid-template-columns: auto auto auto;
-}
+@import '../../styles/common.scss';
 
 .loading-spinner {
 	grid-column: 2;
@@ -14,15 +11,4 @@ main {
 	max-width: 600px;
 	margin-inline-start: auto;
 	margin-inline-end: auto;
-}
-
-div#title {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	grid-template-rows: 1fr 1fr;
-	margin-bottom: 20px;
-
-	button {
-		justify-self: end;
-	}
 }
