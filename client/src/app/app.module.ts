@@ -31,6 +31,8 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 // Guards:
 import { AuthGuard } from './guards/auth.guard';
 import { LoginGuard } from './guards/login.guard';
+// Pipes:
+import { AmountPipe } from './shared/pipes/amountPipe';
 // Shared:
 import { appRoutes } from './app.routes';
 import { environment } from '../environments/environment';
@@ -45,6 +47,7 @@ import { environment } from '../environments/environment';
 		DepositCardComponent,
 		ShowDepositDialogComponent,
 		DeleteDepositDialogComponent,
+		AmountPipe
 	],
 	imports: [
 		BrowserModule,
