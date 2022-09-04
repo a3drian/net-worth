@@ -39,17 +39,7 @@ $netWorth-theme: mat.define-light-theme(
 @import './app/styles/classes.scss';
 @import './app/styles/colors.scss';
 @import './app/styles/reset.scss';
-
-$font-main: 'Overpass';
-
-$disabled: 0.8;
-
-$font-sz-normal: 1rem;
-$font-sz-small: calc($font-sz-normal / 2);
-$font-sz-double: calc($font-sz-normal * 2);
-
-$border-sz: 2px;
-$outline-sz: 2px;
+@import './app/styles/variables.scss';
 
 //
 
@@ -82,6 +72,7 @@ body {
 	margin: 0;
 	font-family: $font-main;
 	padding: 1rem;
+	padding-block-start: 0;
 	background-color: $background-clr;
 	color: $foreground-clr;
 }
@@ -125,6 +116,7 @@ input,
 select {
 	background-color: $background-clr;
 	border: $border-sz solid $foreground-clr;
+	border-radius: 3px;
 	color: $foreground-clr;
 }
 button {
@@ -137,6 +129,7 @@ button {
 button {
 	background: $foreground-clr;
 	border: $border-sz solid $foreground-clr;
+	border-radius: 3px;
 	color: $background-clr;
 }
 button:hover:not(:disabled) {
@@ -158,5 +151,6 @@ button:disabled {
 
 button:focus {
 	outline: $outline-sz solid $focus-clr;
+	outline-offset: 2px;
 	transition: none;
 }

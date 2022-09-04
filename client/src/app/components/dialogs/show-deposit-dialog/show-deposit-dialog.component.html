@@ -45,7 +45,7 @@
 			<label for="location">Location:</label>
 			<input matInput id="location" [ngClass]="!isInputValid('location') ? 'input-error' : ''" type="text"
 				name="location" formControlName="location" placeholder="{{ formPlaceholders.location }}" required>
-			<p *ngIf="isInputValid('location')">What did you spend it on?</p>
+			<p *ngIf="isInputValid('location')">Where did you spend it?</p>
 			<p class="error" *ngIf="!isLocationValid()">{{ locationErrorMessage }}</p>
 		</fieldset>
 
@@ -53,7 +53,7 @@
 			<label for="city">City:</label>
 			<input matInput id="city" [ngClass]="!isInputValid('city') ? 'input-error' : ''" type="text" name="city"
 				formControlName="city" placeholder="{{ formPlaceholders.city }}" required>
-			<p *ngIf="isInputValid('city')">What did you spend it on?</p>
+			<p *ngIf="isInputValid('city')">In what city did you spend it?</p>
 			<p class="error" *ngIf="!isCityValid()">{{ cityErrorMessage }}</p>
 		</fieldset>
 

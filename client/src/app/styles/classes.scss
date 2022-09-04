@@ -2,6 +2,9 @@
 
 .loading-spinner {
 	text-align: center;
+	// if used as grid item
+	align-self: center;
+	justify-self: center;
 }
 
 .debug-div {

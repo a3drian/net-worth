@@ -1,5 +1,12 @@
-h1,
+@import '../../styles/common.scss';
+
+.loading-spinner {
+	grid-column: 2;
+	grid-row: 2;
+}
+
 main {
+	grid-column: 2;
 	width: 100%;
 	max-width: 600px;
 	margin-inline-start: auto;

@@ -39,11 +39,13 @@ const log = function (
 				console.log(object);
 				console.groupEnd();
 			}
-		} else if (object === false) {
-			console.group(`%c${className}%c${caller}%c ${message} %c${object.valueOf()}`, blackBkg, blueBkg, big, greenBkg);
+		} else if (object === false || object === undefined) {
+			const o = object === false ? object.valueOf() : '';
+			console.group(`%c${className}%c${caller}%c ${message} %c${o}`, blackBkg, blueBkg, big, greenBkg);
 			console.groupEnd();
 		} else if (object === 0 || object === null) {
-			console.group(`%c${className}%c${caller}%c ${message} %c${object}`, blackBkg, blueBkg, big, greenBkg);
+			const o = object === 0 ? '0' : 'null';
+			console.group(`%c${className}%c${caller}%c ${message} %c${o}`, blackBkg, blueBkg, big, greenBkg);
 			console.groupEnd();
 		} else {
 			console.group(`%c${className}%c${caller}%c ${message} `, blackBkg, blueBkg, big);

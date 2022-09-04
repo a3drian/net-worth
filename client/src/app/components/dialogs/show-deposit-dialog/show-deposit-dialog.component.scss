@@ -1,4 +1,4 @@
-@import '../../../../styles.scss';
+@import '../../../styles/common.scss';
 
 $input-max-width: 150px;
 
@@ -7,7 +7,12 @@ select:active,
 input:focus-within,
 select:focus-within {
 	outline: $outline-sz solid $focus-clr;
+	outline-offset: 2px;
 	// border: 1px solid $focus-clr; // only works if the base state also has "border"
+
+	&::selection {
+		background-color: $default-selection;
+	}
 }
 
 select > option {
@@ -16,6 +21,14 @@ select > option {
 
 input[type='date'] {
 	font-family: $font-main;
+
+	// doesn't work:
+	/*
+	&::selection {
+		background-color: $foreground-clr;
+		color: $background-clr;
+	}
+	*/
 }
 
 .dialog-title {

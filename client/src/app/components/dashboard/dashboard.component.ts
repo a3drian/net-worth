@@ -1,13 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 // Components:
 import { ShowDepositDialogComponent } from '../dialogs/show-deposit-dialog/show-deposit-dialog.component';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
+import { IUser } from 'src/app/models/User';
 // rxjs:
 import { Subscription } from 'rxjs';
 // Services:
+import { AuthService } from 'src/app/services/auth.service';
 import { DepositsService } from 'src/app/services/deposits.service';
 import { InformationService } from 'src/app/services/information.service';
 // Shared:
@@ -30,17 +33,23 @@ export class DashboardComponent implements OnInit {
 	deposits: IDeposit[] = [];
 	totalAmount: number = 0;
 
+	owner: string = '';
+	user: IUser | null = null;
 	showDepositDialogSub: Subscription = new Subscription();
 
 	constructor(
 		private depositsService: DepositsService,
 		private informationService: InformationService,
-		public showDepositDialog: MatDialog
-	) { }
+		public showDepositDialog: MatDialog,
+		private authService: AuthService
+	) {
+		this.owner = this.informationService.owner.value;
+		this.user = this.authService.user.value;
+	}
 
 	ngOnInit(): void {
 		this.depositsService
-			.getDepositsByOwner(this.informationService.owner.value)
+			.getDepositsByOwner(this.owner)
 			.subscribe(
 				(deposits: IDeposit[]) => {
 					this.deposits = deposits;
