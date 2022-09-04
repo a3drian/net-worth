@@ -12,6 +12,7 @@
     "lint:ts": "eslint --ext .ts .",
     "lint": "npm run lint:ts",
     "build:tsc": "npm run type:check && tsc",
+		"build": "npm run build:tsc",
     "start:tsc": "npm run type:check && npm run ts:node:dev",
     "ts:node:dev": "ts-node-dev --watch -- src/index",
     "ts:node:debug": "ts-node-dev --inspect --watch -- src/index",
