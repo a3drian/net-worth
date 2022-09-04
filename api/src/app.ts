@@ -10,6 +10,7 @@ import { env } from './env';
 // Interfaces:
 import { IExpressError } from 'net-worth-shared';
 // Routes:
+import { setHealthCheckRoute } from './routes/health-check.route';
 import { setSpendRoute } from './routes/spend.route';
 // Shared:
 import { Constants } from './shared/Constants';
@@ -51,6 +52,7 @@ async function makeApp(): Promise<Application> {
 	app.use(express.json());
 
 	// routes
+	app.use(env.HEALTH_CHECK_ROUTE, setHealthCheckRoute(Router()));
 	app.use(env.SPEND_ROUTE, setSpendRoute(Router()));
 
 	// 404
