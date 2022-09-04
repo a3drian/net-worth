@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './components/app/app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DepositCardComponent } from './components/deposits/deposit-card/deposit-card.component';
+import { HeaderComponent } from './components/dashboard/header/header.component';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
@@ -40,13 +41,14 @@ import { environment } from '../environments/environment';
 @NgModule({
 	declarations: [
 		AppComponent,
+		DashboardComponent,
+		DepositCardComponent,
+		HeaderComponent,
+		LoadingSpinnerComponent,
 		LoginComponent,
 		NotFoundPageComponent,
-		DashboardComponent,
-		LoadingSpinnerComponent,
-		DepositCardComponent,
-		ShowDepositDialogComponent,
 		DeleteDepositDialogComponent,
+		ShowDepositDialogComponent,
 		AmountPipe
 	],
 	imports: [
