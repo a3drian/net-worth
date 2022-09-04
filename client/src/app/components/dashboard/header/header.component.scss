@@ -1,5 +1,8 @@
 @import '../../../styles/common.scss';
 
+// this offset will cover the deposits when the page is fully scrolled down
+$offset-inline: 10px;
+
 div#title {
 	background-color: $background-clr;
 	display: grid;
@@ -7,7 +10,8 @@ div#title {
 	padding-block: 20px;
 	margin-inline: auto;
 	width: 100%;
-	max-width: 600px;
+	max-width: calc(600px + $offset-inline);
+	padding-inline: calc($offset-inline / 2);
 	position: sticky;
 	top: 0px;
 
