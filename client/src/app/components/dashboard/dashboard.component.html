@@ -21,7 +21,7 @@
 
 		<div>
 			<p *ngIf="totalAmount === 0">Nothing spent in {{ today | date: 'MMMM' }} yet.</p>
-			<p *ngIf="totalAmount !== 0">Spending report for {{ today | date: 'MMMM' }} - <b>{{ totalAmount }} RON</b></p>
+			<p *ngIf="totalAmount !== 0">Spending report for {{ today | date: 'MMMM' }} - <b>{{ totalAmount | amount:3 }} RON</b></p>
 			<button (click)="openShowDepositDialog('spend')">Spend</button>
 		</div>
 
