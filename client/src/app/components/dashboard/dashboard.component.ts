@@ -41,8 +41,7 @@ export class DashboardComponent implements OnInit {
 		private depositsService: DepositsService,
 		private informationService: InformationService,
 		public showDepositDialog: MatDialog,
-		private authService: AuthService,
-		private router: Router
+		private authService: AuthService
 	) {
 		this.owner = this.informationService.owner.value;
 		this.user = this.authService.user.value;
@@ -97,18 +96,5 @@ export class DashboardComponent implements OnInit {
 		this.depositsService
 			.postDeposit(deposit)
 			.subscribe(() => { });
-	}
-
-	logout(): void {
-		this.isLoading = true;
-		this.authService
-			.logout()
-			.then(() => setTimeout(
-				() => {
-					this.isLoading = false;
-					this.router.navigate([Constants.appEndpoints.LOGIN_URL]);
-				},
-				Constants.updateTimeout)
-			);
 	}
 }

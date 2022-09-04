@@ -72,6 +72,7 @@ body {
 	margin: 0;
 	font-family: $font-main;
 	padding: 1rem;
+	padding-block-start: 0;
 	background-color: $background-clr;
 	color: $foreground-clr;
 }
