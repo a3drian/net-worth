@@ -15,4 +15,6 @@ class Constants {
 
 	static PRODUCTION_MODE: string = 'production';
 	static DEVELOPMENT_MODE: string = 'development';
+
+	static CLIENT_PATH: string = 'build';
 }

@@ -1,7 +1,8 @@
 // Heroku:
 import mongoose from 'mongoose';
 import cors from 'cors';
-import sslRedirect from 'heroku-ssl-redirect';
+// Deploy:
+const path = require('path');
 // Express:
 import express from 'express';
 import { Application, Router, Request, Response, NextFunction } from 'express';
@@ -25,22 +26,18 @@ async function makeApp(): Promise<Application> {
 	app = express();
 	app.use(cors());
 
-	app.use(sslRedirect());
-
 	// only when deploying app
-	/*
-	app.use(express.static('build'));
+	app.use(express.static(env.CLIENT_PATH));
 	app.get(
 		'/*',
 		function (_req: Request, res: Response) {
 			const frontendPath = path.join(__dirname, '../');
-			// log('app.ts', makeApp.name, 'frontendPath:', frontendPath);
-			const indexPath: string = path.join(frontendPath + '/build/index.html');
-			// log('app.ts', makeApp.name, 'indexPath:', indexPath);
+			log('app.ts', makeApp.name, 'frontendPath:', frontendPath);
+			const indexPath: string = path.join(frontendPath + `/${env.CLIENT_PATH}/index.html`);
+			log('app.ts', makeApp.name, 'indexPath:', indexPath);
 			res.sendFile(indexPath);
 		}
 	);
-	*/
 
 	const url = `${env.MONGO_URL}${env.TEST_DB_NAME}?retryWrites=true&w=majority`;
 	const db = await mongoose.connect(url);

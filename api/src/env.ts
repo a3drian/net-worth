@@ -27,6 +27,8 @@ export const env = Object.freeze(
 		DB_NAME: 'NetWorthDb',
 		TEST_DB_NAME: 'NetWorthDbTest',
 
+		CLIENT_PATH: Constants.CLIENT_PATH,
+
 		SAVE_ROUTE: Constants.APIEndpoints.SAVE_URL,
 		SPEND_ROUTE: Constants.APIEndpoints.SPEND_URL,
 
