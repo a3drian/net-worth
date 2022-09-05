@@ -1,9 +1,10 @@
 // Shared:
 import { CATEGORY } from './constants/Categories';
 import { CURRENCY } from './constants/Currencies';
+import { environment as env } from 'src/environments/environment';
 
 export const Constants = Object.freeze({
-	IN_DEBUG_MODE: true,
+	IN_DEBUG_MODE: env.IN_DEBUG_MODE,
 
 	appEndpoints: Object.freeze({
 		LOGIN_URL: 'login',
