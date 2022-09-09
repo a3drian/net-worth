@@ -40,6 +40,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	formPlaceholders = Constants.formPlaceholders;
 
 	categories: CATEGORY[] = [];
+	currencies: string[] = ['L', '€', '£'];
 
 	today: Date = new Date();
 
@@ -161,11 +162,12 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	private initializeDepositForm(
-		initial: IDeposit | { amount: number, details: string, category: CATEGORY, location: string, city: string },
+		initial: IDeposit | { amount: number, currency: string, details: string, category: CATEGORY, location: string, city: string },
 		initialDate: Date
 	): void {
 
 		const amount = new FormControl(initial.amount, [Validators.required, Validators.min(0), positiveNumberValidator()]);
+		const currency = new FormControl(initial.currency, [Validators.required]);
 		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(20)]);
 		const createdAt = new FormControl(initialDate.toISOString().split('T')[0], [Validators.required]);
 		const category = new FormControl(initial.category, [Validators.required]);
@@ -176,6 +178,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			.group(
 				{
 					amount: amount,
+					currency: currency,
 					details: details,
 					createdAt: createdAt,
 					category: category,

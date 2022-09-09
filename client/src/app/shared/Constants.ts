@@ -21,6 +21,7 @@ export const Constants = Object.freeze({
 
 	formDefaults: Object.freeze({
 		amount: 10,
+		currency: 'L',
 		details: 'Groceries',
 		category: CATEGORY.GROCERIES,
 		location: 'Selgros',

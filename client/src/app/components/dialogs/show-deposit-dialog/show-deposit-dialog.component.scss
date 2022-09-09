@@ -113,3 +113,45 @@ fieldset p {
 fieldset p:not(#error) {
 	font-size: 0.8rem;
 }
+
+#amount {
+	width: 100px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-right-width: 1px;
+	// border-right: none;
+	border-right-width: 2px;
+	width: 80px;
+	// border-radius: 2px;
+	margin-right: 6px;
+}
+
+#currency-select {
+	width: 50px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	border-left-width: 1px;
+	// border-left: none;
+	border-left-width: 2px;
+	margin-left: 6px;
+	padding-left: 10px;
+}
+
+.currency {
+	margin-inline-end: 0px;
+	padding-inline-end: 15px;
+	width: 20px;
+	border-radius: 0px;
+}
+
+#currency-container {
+	display: grid;
+	grid-template-rows: repeat(2, 1fr);
+	grid-template-columns: repeat(3, 25px);
+}
+
+#currency-container {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: 100px;
+}

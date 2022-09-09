@@ -25,7 +25,7 @@ import { log } from 'src/app/shared/Logger';
 export class DashboardComponent implements OnInit {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
-	isLoading: boolean = true;
+	isLoading: boolean = false;
 
 	errorResponse: HttpErrorResponse | null = null;
 	today: Date = new Date();
