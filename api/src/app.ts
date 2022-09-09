@@ -1,7 +1,6 @@
-// Heroku:
 import mongoose from 'mongoose';
-import cors from 'cors';
 // Deploy:
+import cors from 'cors';
 const path = require('path');
 // Express:
 import express from 'express';
@@ -30,11 +29,11 @@ async function makeApp(): Promise<Application> {
 	app.use(express.static(env.CLIENT_PATH));
 	app.get(
 		'/*',
-		function (_req: Request, res: Response) {
-			const frontendPath = path.join(__dirname, '../');
-			log('app.ts', makeApp.name, 'frontendPath:', frontendPath);
-			const indexPath: string = path.join(frontendPath + `/${env.CLIENT_PATH}/index.html`);
-			log('app.ts', makeApp.name, 'indexPath:', indexPath);
+		(res: Response) => {
+			const frontendPath = path.join(__dirname, `../${env.CLIENT_PATH}`);
+			// log('app.ts', makeApp.name, 'frontendPath:', frontendPath);
+			const indexPath: string = path.join(frontendPath + '/index.html');
+			// log('app.ts', makeApp.name, 'indexPath:', indexPath);
 			res.sendFile(indexPath);
 		}
 	);

@@ -9,8 +9,8 @@
     "scripts": {
         "build": "node build",
         "compile": "node node_modules/typescript/bin/tsc --project tsconfig.json --outDir bin",
-        "compile:rd": "rd bin /s /q && node node_modules/typescript/bin/tsc --project tsconfig.json --outDir bin",
-        "compile:rm": "rm -rf bin/* && node node_modules/typescript/bin/tsc --project tsconfig.json --outDir bin",
+        "compile:rd": "rd bin /s /q && npm run compile",
+        "compile:rm": "rm -rf bin/* && npm run compile",
         "start": "npm run compile -- --watch",
 		"copy:tgz": "copy \"bin/net-worth-shared.tgz\" \"../Deploy/shared/bin/net-worth-shared.tgz\" /y",
 		"deploy": "npm run compile && npm run build && npm run copy:tgz"
