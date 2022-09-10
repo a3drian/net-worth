@@ -131,6 +131,7 @@ select {
 
 input[type='text'],
 input[type='number'] {
+	caret-color: $focus-clr;
 	padding-left: 5px;
 }
 

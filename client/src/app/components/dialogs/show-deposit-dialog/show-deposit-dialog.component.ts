@@ -10,12 +10,14 @@ import { DepositDifferences, DepositDTO, DepositProperties, DepositValues } from
 import { BehaviorSubject } from 'rxjs';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
+import { CurrenciesService } from 'src/app/services/currencies.service';
 import { InformationService } from 'src/app/services/information.service';
 // Validators:
 import { positiveNumberValidator } from 'src/app/shared/validators/positiveNumberValidator';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
 import { CATEGORY } from 'src/app/shared/constants/Categories';
+import { CURRENCY } from 'src/app/shared/constants/Currencies';
 import { log } from 'src/app/shared/Logger';
 
 @Component({
@@ -40,7 +42,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	formPlaceholders = Constants.formPlaceholders;
 
 	categories: CATEGORY[] = [];
-	currencies: string[] = ['L', '€', '£'];
+	currencies: CURRENCY[] = [];
 
 	today: Date = new Date();
 
@@ -50,8 +52,6 @@ export class ShowDepositDialogComponent implements OnInit {
 	detailsErrors = Constants.detailsErrors;
 	amountErrorMessage: string = Constants.amountErrors.empty;
 	detailsErrorMessage: string = Constants.detailsErrors.empty;
-	locationErrorMessage: string = '';
-	cityErrorMessage: string = '';
 
 	depositChanged = new BehaviorSubject<boolean>(false);
 
@@ -60,9 +60,11 @@ export class ShowDepositDialogComponent implements OnInit {
 		public dialogReference: MatDialogRef<ShowDepositDialogComponent>,
 		private formBuilder: FormBuilder,
 		private informationService: InformationService,
-		private categoriesService: CategoriesService
+		private categoriesService: CategoriesService,
+		private currenciesService: CurrenciesService
 	) {
 		this.categories = this.categoriesService.getCategories();
+		this.currencies = this.currenciesService.getCurrencies();
 	}
 
 	ngOnInit(): void {
@@ -114,28 +116,6 @@ export class ShowDepositDialogComponent implements OnInit {
 		return control.valid;
 	}
 
-	isLocationValid(): boolean {
-		const control = this.depositForm.controls['location'];
-		const errors = control.errors;
-		if (!errors) { return true; }
-		const required = errors['required'];
-		if (required) { this.locationErrorMessage = 'Please add a location'; }
-		const tooLong = errors['maxlength'];
-		if (tooLong) { this.locationErrorMessage = this.detailsErrors.tooLong; }
-		return control.valid;
-	}
-
-	isCityValid(): boolean {
-		const control = this.depositForm.controls['city'];
-		const errors = control.errors;
-		if (!errors) { return true; }
-		const required = errors['required'];
-		if (required) { this.cityErrorMessage = 'Please add a city'; }
-		const tooLong = errors['maxlength'];
-		if (tooLong) { this.cityErrorMessage = this.detailsErrors.tooLong; }
-		return control.valid;
-	}
-
 	hasDepositChanged(): boolean {
 		if (this.isFormValid()) {
 			if (this.depositChanged.getValue() === true) {
@@ -162,7 +142,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	private initializeDepositForm(
-		initial: IDeposit | { amount: number, currency: string, details: string, category: CATEGORY, location: string, city: string },
+		initial: IDeposit | { amount: number, currency: CURRENCY, details: string, category: CATEGORY },
 		initialDate: Date
 	): void {
 
@@ -171,8 +151,6 @@ export class ShowDepositDialogComponent implements OnInit {
 		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(20)]);
 		const createdAt = new FormControl(initialDate.toISOString().split('T')[0], [Validators.required]);
 		const category = new FormControl(initial.category, [Validators.required]);
-		const location = new FormControl(initial.location, [Validators.required, Validators.maxLength(20)]);
-		const city = new FormControl(initial.city, [Validators.required, Validators.maxLength(20)]);
 
 		this.depositForm = this.formBuilder
 			.group(
@@ -181,9 +159,7 @@ export class ShowDepositDialogComponent implements OnInit {
 					currency: currency,
 					details: details,
 					createdAt: createdAt,
-					category: category,
-					location: location,
-					city: city
+					category: category
 				}
 			);
 	}
@@ -296,28 +272,27 @@ export class ShowDepositDialogComponent implements OnInit {
 			_id: this.deposit._id,	// after "Save", DELETE request fails because "id" is "undefined"
 			owner: deposit.owner ? deposit.owner : this.deposit.owner,
 			amount: deposit.amount ? deposit.amount : this.deposit.amount,
+			currency: deposit.currency ? deposit.currency : this.deposit.currency,
 			details: deposit.details ? deposit.details : this.deposit.details,
 			createdAt: deposit.createdAt ? deposit.createdAt : this.deposit.createdAt,
-			category: deposit.category ? deposit.category : this.deposit.category,
-			location: deposit.location ? deposit.location : this.deposit.location,
-			city: deposit.city ? deposit.city : this.deposit.city,
+			category: deposit.category ? deposit.category : this.deposit.category
 		};
 		return updatedDeposit;
 	}
 
 	private getFormContents(deposit: IDeposit | null): IDeposit {
+
+		const depositDifferences = deposit ? this.getFormDifferences(deposit) : this.getFormDifferences(null);
+		const depositFromForm: DepositDTO = depositDifferences as DepositDTO;
+
 		if (deposit) {
 
-			const depositDifferences = this.getFormDifferences(deposit);
-			const depositFromForm: DepositDTO = depositDifferences as DepositDTO;
 			const updatedDeposit = this.getUpdatedDeposit(depositFromForm);
 
 			log(this.CLASS_NAME, this.getFormContents.name, 'updated depositFromForm:', updatedDeposit);
 			return updatedDeposit;
 		} else {
 
-			const depositDifferences = this.getFormDifferences(null);
-			const depositFromForm: DepositDTO = depositDifferences as DepositDTO;
 			const newDeposit = depositFromForm as IDeposit;
 
 			log(this.CLASS_NAME, this.getFormContents.name, 'new depositFromForm:', newDeposit);

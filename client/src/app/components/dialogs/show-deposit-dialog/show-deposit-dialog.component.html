@@ -48,21 +48,12 @@
 			<p>Choose a category for easier filtering</p>
 		</fieldset>
 
+		<!--
 		<fieldset>
-			<label for="location">Location:</label>
-			<input matInput id="location" [ngClass]="!isInputValid('location') ? 'input-error' : ''" type="text"
-				name="location" formControlName="location" placeholder="{{ formPlaceholders.location }}" required>
-			<p *ngIf="isInputValid('location')">Where did you spend it?</p>
-			<p class="error" *ngIf="!isLocationValid()">{{ locationErrorMessage }}</p>
+			<label for="refundable">Refundable:</label>
+			<input type="checkbox" name="refundable">
 		</fieldset>
-
-		<fieldset>
-			<label for="city">City:</label>
-			<input matInput id="city" [ngClass]="!isInputValid('city') ? 'input-error' : ''" type="text" name="city"
-				formControlName="city" placeholder="{{ formPlaceholders.city }}" required>
-			<p *ngIf="isInputValid('city')">In what city did you spend it?</p>
-			<p class="error" *ngIf="!isCityValid()">{{ cityErrorMessage }}</p>
-		</fieldset>
+		-->
 
 	</form>
 

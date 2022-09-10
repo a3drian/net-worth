@@ -3,15 +3,13 @@
 <main *ngIf="!deleted">
 
 	<p>
-		<b>{{ deposit.amount }} RON</b> for '{{ deposit.details }}' on {{ deposit.createdAt | date: 'MMM d' }}
+		<b>{{ deposit.amount }} {{ deposit.currency | currency }}</b> for '{{ deposit.details }}' on {{ deposit.createdAt | date: 'MMM d' }}
 	</p>
 
 	<!-- TODO: Use semantic HTML -->
 	<div style="font-size: 0.8rem;">
 		<p>
 			<i>{{ deposit.category }}</i>
-			<br>
-			{{ deposit.location }}, <b>{{ deposit.city }}</b>
 		</p>
 	</div>
 
