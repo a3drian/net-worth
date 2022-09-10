@@ -1,8 +1,11 @@
 export enum CATEGORY {
 	DINING = 'Dining',
 	FINANCES = 'Finances',
+	GIFT = 'Gift',
 	GOINGOUT = 'Going out',
 	GROCERIES = 'Groceries',
+	GYM = 'Gym',
+	LEISURE = 'Leisure',
 	HOUSEHOLD = 'Household',
 	MEDICAL = 'Medical',
 	SERVICES = 'Services',

@@ -11,7 +11,7 @@
 
 		<fieldset>
 			<label for="amount">Amount and currency:</label>
-			<div id="currency-container">
+			<div id="amount-currency-container">
 				<input matInput id="amount" [ngClass]="!isInputValid('amount') ? 'input-error' : ''" type="number" name="amount"
 					formControlName="amount" placeholder="{{ formPlaceholders.amount }}" required>
 				<select name="currency" id="currency-select" formControlName="currency" required>
@@ -49,15 +49,19 @@
 		</fieldset>
 
 		<fieldset>
-			<label for="refundable">Refundable:</label>
-			<input id="refundable" type="checkbox" name="refundable" formControlName="refundable">
-			<p>Is the amount meant to be repaid back?</p>
-		</fieldset>
+			<div id="refundable-refunded-container">
+				<label class="refundable">
+					<input type="checkbox" formControlName="refundable">
+					Reimbursable amount?
+				</label>
 
-		<fieldset *ngIf="depositForm.value.refundable">
-			<label for="refunded">Refunded:</label>
-			<input id="refunded" type="checkbox" name="refunded" formControlName="refunded">
-			<p>Has the amount been repaid?</p>
+				<div *ngIf="depositForm.value.refundable">
+					<label class="refundable">
+						<input type="checkbox" formControlName="refunded">
+						Amount reimbursed?
+					</label>
+				</div>
+			</div>
 		</fieldset>
 
 	</form>
