@@ -142,7 +142,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	private initializeDepositForm(
-		initial: IDeposit | { amount: number, currency: CURRENCY, details: string, category: CATEGORY },
+		initial: IDeposit | { amount: number, currency: CURRENCY, details: string, category: CATEGORY, refundable: boolean, refunded: boolean },
 		initialDate: Date
 	): void {
 
@@ -151,6 +151,8 @@ export class ShowDepositDialogComponent implements OnInit {
 		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(20)]);
 		const createdAt = new FormControl(initialDate.toISOString().split('T')[0], [Validators.required]);
 		const category = new FormControl(initial.category, [Validators.required]);
+		const refundable = new FormControl(initial.refundable);
+		const refunded = new FormControl(initial.refunded);
 
 		this.depositForm = this.formBuilder
 			.group(
@@ -159,7 +161,9 @@ export class ShowDepositDialogComponent implements OnInit {
 					currency: currency,
 					details: details,
 					createdAt: createdAt,
-					category: category
+					category: category,
+					refundable: refundable,
+					refunded: refunded
 				}
 			);
 	}
@@ -270,12 +274,14 @@ export class ShowDepositDialogComponent implements OnInit {
 	private getUpdatedDeposit(deposit: DepositDTO): IDeposit {
 		const updatedDeposit = <IDeposit>{
 			_id: this.deposit._id,	// after "Save", DELETE request fails because "id" is "undefined"
-			owner: deposit.owner ? deposit.owner : this.deposit.owner,
-			amount: deposit.amount ? deposit.amount : this.deposit.amount,
-			currency: deposit.currency ? deposit.currency : this.deposit.currency,
-			details: deposit.details ? deposit.details : this.deposit.details,
-			createdAt: deposit.createdAt ? deposit.createdAt : this.deposit.createdAt,
-			category: deposit.category ? deposit.category : this.deposit.category
+			owner: deposit.owner ?? this.deposit.owner,
+			amount: deposit.amount ?? this.deposit.amount,
+			currency: deposit.currency ?? this.deposit.currency,
+			details: deposit.details ?? this.deposit.details,
+			createdAt: deposit.createdAt ?? this.deposit.createdAt,
+			category: deposit.category ?? this.deposit.category,
+			refundable: deposit.refundable ?? this.deposit.refundable,
+			refunded: deposit.refunded ?? this.deposit.refunded
 		};
 		return updatedDeposit;
 	}

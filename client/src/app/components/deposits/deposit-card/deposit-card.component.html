@@ -4,6 +4,8 @@
 
 	<p>
 		<b>{{ deposit.amount }} {{ deposit.currency | currency }}</b> for '{{ deposit.details }}' on {{ deposit.createdAt | date: 'MMM d' }}
+		<b *ngIf="deposit.refundable && !deposit.refunded">REFUNDABLE</b>
+		<b *ngIf="deposit.refunded">REFUNDED</b>
 	</p>
 
 	<!-- TODO: Use semantic HTML -->

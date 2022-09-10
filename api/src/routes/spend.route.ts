@@ -91,7 +91,8 @@ async function postDeposit(
 			details: body.details,
 			createdAt: body.createdAt,
 			category: body.category,
-			refundable: body.refundable
+			refundable: body.refundable,
+			refunded: body.refunded
 		}
 	);
 
@@ -130,7 +131,8 @@ async function putDeposit(
 			details: body.details,
 			createdAt: body.createdAt,
 			category: body.category,
-			refundable: body.refundable
+			refundable: body.refundable,
+			refunded: body.refunded
 		}
 	);
 

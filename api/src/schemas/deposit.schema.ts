@@ -14,7 +14,9 @@ const depositSchema = new Schema<IDeposit>(
 		createdAt: { type: Date, required: true },
 
 		category: { type: String, required: true },
-		refundable: { type: Boolean, required: false }
+
+		refundable: { type: Boolean, required: false },
+		refunded: { type: Boolean, required: false }
 	},
 	{
 		collection: 'Deposits',

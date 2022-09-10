@@ -10,5 +10,7 @@ export interface IDeposit {
 	createdAt: Date;
 
 	category: string;
+
 	refundable?: boolean;
+	refunded?: boolean;
 }

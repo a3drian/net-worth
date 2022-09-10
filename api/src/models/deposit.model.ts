@@ -12,7 +12,9 @@ export class Deposit implements IDeposit {
 	createdAt!: Date;
 
 	category!: string;
+
 	refundable?: boolean;
+	refunded?: boolean;
 
 	public constructor(partial?: Partial<Deposit>) {
 		Object.assign(this, partial);

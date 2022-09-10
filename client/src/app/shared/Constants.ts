@@ -24,7 +24,9 @@ export const Constants = Object.freeze({
 		amount: 10,
 		currency: CURRENCY.LEI,
 		details: 'Groceries',
-		category: CATEGORY.GROCERIES
+		category: CATEGORY.GROCERIES,
+		refundable: false,
+		refunded: false
 	}),
 
 	formPlaceholders: Object.freeze({

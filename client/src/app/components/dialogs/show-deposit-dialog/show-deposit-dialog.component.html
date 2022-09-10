@@ -48,12 +48,17 @@
 			<p>Choose a category for easier filtering</p>
 		</fieldset>
 
-		<!--
 		<fieldset>
 			<label for="refundable">Refundable:</label>
-			<input type="checkbox" name="refundable">
+			<input id="refundable" type="checkbox" name="refundable" formControlName="refundable">
+			<p>Is the amount meant to be repaid back?</p>
 		</fieldset>
-		-->
+
+		<fieldset *ngIf="depositForm.value.refundable">
+			<label for="refunded">Refunded:</label>
+			<input id="refunded" type="checkbox" name="refunded" formControlName="refunded">
+			<p>Has the amount been repaid?</p>
+		</fieldset>
 
 	</form>
 

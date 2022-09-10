@@ -22,8 +22,10 @@ export function validDeposit(deposit: Partial<IDeposit>): boolean {
 		typeof deposit !== 'object' ||
 		!deposit.owner ||
 		!deposit.amount ||
+		!deposit.currency ||
 		!deposit.details ||
-		!deposit.createdAt
+		!deposit.createdAt ||
+		!deposit.category
 	) {
 		log(CLASS_NAME, validDeposit.name, 'partial deposit is not valid!');
 		return false;
