@@ -40,6 +40,7 @@ $netWorth-theme: mat.define-light-theme(
 @import './app/styles/colors.scss';
 @import './app/styles/reset.scss';
 @import './app/styles/variables.scss';
+@import './app/styles/mixins/selection.scss';
 
 //
 
@@ -75,6 +76,10 @@ body {
 	padding-block-start: 0;
 	background-color: $background-clr;
 	color: $foreground-clr;
+}
+
+*::selection {
+	@include selection();
 }
 
 .mat-dialog-actions,
@@ -118,12 +123,35 @@ select {
 	border: $border-sz solid $foreground-clr;
 	border-radius: 3px;
 	color: $foreground-clr;
+
+	&::selection {
+		@include selection();
+	}
 }
+
+input[type='text'],
+input[type='number'] {
+	padding-left: 5px;
+}
+
+::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-day-field,
+::-webkit-datetime-edit-year-field {
+	&:active,
+	&:focus {
+		@include selection();
+	}
+}
+::-webkit-datetime-edit {
+	padding: 3px;
+}
+
 button {
 	margin-inline-end: 0.5rem;
 	padding-top: 4px;
 	transition: all 200ms ease;
 	transition-property: background-color, border;
+	user-select: none;
 	width: 80px;
 }
 button {

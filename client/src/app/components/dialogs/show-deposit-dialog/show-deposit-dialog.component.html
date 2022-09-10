@@ -9,26 +9,16 @@
 
 	<form [formGroup]="depositForm" *ngIf="isFormReady">
 
-		<!-- <fieldset id="currency-container">
-			<label for="currency">Currency:</label>
-			<button class="currency" [disabled]="!isFormValid()">L</button>
-			<button class="currency" [disabled]="!isFormValid()">€</button>
-			<button class="currency" [disabled]="!isFormValid()">£</button>
-		</fieldset> -->
-
 		<fieldset>
 			<label for="amount">Amount and currency:</label>
-			<div>
+			<div id="currency-container">
 				<input matInput id="amount" [ngClass]="!isInputValid('amount') ? 'input-error' : ''" type="number" name="amount"
 					formControlName="amount" placeholder="{{ formPlaceholders.amount }}" required>
-				<!-- <select name="currency" id="currency-select" formControlName="currency" required>
+				<select name="currency" id="currency-select" formControlName="currency" required>
 					<option *ngFor="let c of currencies" [value]="c">
 						{{ c }}
 					</option>
-				</select> -->
-				<button class="currency" [disabled]="!isFormValid()">L</button>
-				<button class="currency" [disabled]="isFormValid()">€</button>
-				<button class="currency" [disabled]="isFormValid()">£</button>
+				</select>
 			</div>
 			<p *ngIf="isInputValid('amount')">How much did you spend?</p>
 			<p class="error" *ngIf="!isAmountValid()">{{ amountErrorMessage }}</p>
