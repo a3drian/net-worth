@@ -5,10 +5,10 @@
 	<div id="header-container">
 		<h4>{{ deposit.amount }} {{ deposit.currency | currency }} <span>–</span> {{ deposit.details }} <span>on</span> {{ deposit.createdAt | date: 'MMM d' }}</h4>
 		<div id="refundable" *ngIf="deposit.refundable && !deposit.refunded">
-			<img src="../../../assets/icons/deposit/refund-refundable.png" alt="This amount is refundable">
+			<img src="../../../assets/icons/deposit/refund-refundable.png" alt="This amount is refundable" title="This amount is refundable">
 		</div>
 		<div id="refunded" *ngIf="deposit.refunded">
-			<img src="../../../assets/icons/deposit/refund-refunded.png" alt="This amount has been refunded">
+			<img src="../../../assets/icons/deposit/refund-refunded.png" alt="This amount has been refunded" title="This amount has been refunded">
 		</div>
 	</div>
 

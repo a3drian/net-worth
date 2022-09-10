@@ -5,7 +5,7 @@ $offset-inline: 10px;
 
 div#title {
 	background-color: $background-clr;
-	border-bottom: 2px solid white;
+	border-bottom: 2px solid $foreground-clr;
 	display: grid;
 	grid-template-columns: auto 1fr;
 	margin-inline: auto;

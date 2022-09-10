@@ -11,4 +11,14 @@ main {
 	max-width: 600px;
 	margin-inline-start: auto;
 	margin-inline-end: auto;
+
+	#report {
+		display: grid;
+		grid-template-rows: 32px;
+		padding-block: 10px;
+
+		p > span {
+			font-weight: bold;
+		}
+	}
 }

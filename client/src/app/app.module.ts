@@ -33,8 +33,9 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { AuthGuard } from './guards/auth.guard';
 import { LoginGuard } from './guards/login.guard';
 // Pipes:
-import { AmountPipe } from './shared/pipes/amountPipe';
-import { CurrencyPipe } from './shared/pipes/currencyPipe';
+import { AmountPipe } from './shared/pipes/amount.pipe';
+import { CurrencyPipe } from './shared/pipes/currency.pipe';
+import { UserDisplayNamePipe } from './shared/pipes/userDisplayName.pipe';
 // Shared:
 import { appRoutes } from './app.routes';
 import { environment } from '../environments/environment';
@@ -51,7 +52,8 @@ import { environment } from '../environments/environment';
 		DeleteDepositDialogComponent,
 		ShowDepositDialogComponent,
 		AmountPipe,
-		CurrencyPipe
+		CurrencyPipe,
+		UserDisplayNamePipe
 	],
 	imports: [
 		BrowserModule,

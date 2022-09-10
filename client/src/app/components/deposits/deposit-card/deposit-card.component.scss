@@ -15,6 +15,10 @@ main {
 		h4 span {
 			font-weight: normal;
 		}
+
+		img {
+			user-select: none;
+		}
 	}
 
 	#category-container {
