@@ -1,9 +1,10 @@
 @import '../../../styles/common.scss';
 
 main {
-	border-bottom: 2px solid $dark-purple;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	border: 2px solid $dark-purple;
+	border-radius: 3px;
+	margin-block: 10px;
+	padding: 10px;
 
 	#header-container {
 		align-items: center;
@@ -18,12 +19,5 @@ main {
 
 	#category-container {
 		margin-bottom: 10px;
-	}
-
-	#refunded {
-		img {
-			filter: invert(79%) sepia(19%) saturate(1694%) hue-rotate(109deg) brightness(102%) contrast(88%);
-			filter: invert(77%) sepia(48%) saturate(562%) hue-rotate(2deg) brightness(107%) contrast(102%);
-		}
 	}
 }
