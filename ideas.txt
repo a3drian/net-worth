@@ -14,8 +14,16 @@ client:
 	*adds 10 euro*
 ...will not immediately show:
 	20 lei | 10 euro | 40 lire
+-fix UI not immediately showing the deposit after adding one
 
 -fix header still going over when "<body>" tag finishes in the HTML
+
+-colour deposits differently based on currency
+
+[NO]-ai cazul cand un deposit se transforma in cu totul alt depozit, 5 lire se fac 5 euro
+[NO].prin extensie, 5 lire se face 15 euro, aka e cazul in care valoarea noua este mai mare sau egala cu valoare veche, aka 5 euro >= 5 lire si 15 euro >= 5 lire
+[NO]-ai cazul cand un deposit nu se transforma in cu totul alt depozit, aka valoarea noua e mai mica decat valoarea veche
+[NO].aka, 17 lire se fac 12 euro, ramai cu 5 lire si te faci cu 12 euro
 
 -----
 
