@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 // Interfaces:
-import { IControl } from 'src/app/models/Control';
+import { IControl } from 'src/app/interfaces/IControl';
 import { IDeposit } from 'net-worth-shared';
 // Models:
 import { DepositDifferences, DepositDTO, DepositProperties, DepositValues } from 'src/app/models/Deposit';
@@ -78,14 +78,14 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	save(): void {
 		const updatedDeposit: IDeposit = this.getFormContents(this.deposit);
-		this.updateTotalAmount(this.deposit.amount.toString(), updatedDeposit.amount.toString());
+		this.updateTotalAmount(this.deposit.amount.toString(), updatedDeposit.amount.toString(), (updatedDeposit.currency as CURRENCY));
 		const changed = this.depositChanged.getValue();
 		if (changed) { this.saveDeposit(updatedDeposit); }
 	}
 
 	add(): void {
 		const newDeposit: IDeposit = this.getFormContents(null);
-		this.updateTotalAmount('0', newDeposit.amount.toString());
+		this.updateTotalAmount('0', newDeposit.amount.toString(), (newDeposit.currency as CURRENCY));
 		this.saveDeposit(newDeposit);
 	}
 
@@ -178,10 +178,22 @@ export class ShowDepositDialogComponent implements OnInit {
 		log(this.CLASS_NAME, this.initializeEditableForm.name, 'initialized editable form:', this.depositForm.value);
 	}
 
-	private updateTotalAmount(oldValue: string, newValue: string): void {
+	private updateTotalAmount(oldValue: string, newValue: string, currency: CURRENCY): void {
 		if (!oldValue || !newValue) { return; }
 		let totalAmount = this.informationService.totalAmount.getValue();
-		totalAmount = (totalAmount - Number(oldValue)) + Number(newValue);
+		switch (currency) {
+			case CURRENCY.EUR: {
+				totalAmount.EUR = (totalAmount.EUR - Number(oldValue)) + Number(newValue);
+				break;
+			}
+			case CURRENCY.GBP: {
+				totalAmount.GBP = (totalAmount.GBP - Number(oldValue)) + Number(newValue);
+				break;
+			}
+			default: {
+				totalAmount.LEI = (totalAmount.LEI - Number(oldValue)) + Number(newValue);
+			}
+		}
 		setTimeout(() => { this.informationService.totalAmount.next(totalAmount); }, Constants.updateTimeout);
 	}
 

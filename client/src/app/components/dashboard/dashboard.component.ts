@@ -6,7 +6,9 @@ import { Router } from '@angular/router';
 import { ShowDepositDialogComponent } from '../dialogs/show-deposit-dialog/show-deposit-dialog.component';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
-import { IUser } from 'src/app/models/User';
+import { IUser } from 'src/app/interfaces/IUser';
+// Models:
+import { Currency } from 'src/app/models/Currency';
 // rxjs:
 import { Subscription } from 'rxjs';
 // Services:
@@ -15,6 +17,7 @@ import { DepositsService } from 'src/app/services/deposits.service';
 import { InformationService } from 'src/app/services/information.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
+import { CURRENCY } from 'src/app/shared/constants/Currencies';
 import { log } from 'src/app/shared/Logger';
 
 @Component({
@@ -31,7 +34,8 @@ export class DashboardComponent implements OnInit {
 	today: Date = new Date();
 
 	deposits: IDeposit[] = [];
-	totalAmount: number = 0;
+	totalAmount: Currency = { LEI: 0, EUR: 0, GBP: 0 };
+	anyMoneySpent: boolean = false;
 
 	owner: string = '';
 	user: IUser | null = null;
@@ -53,9 +57,15 @@ export class DashboardComponent implements OnInit {
 			.subscribe(
 				(deposits: IDeposit[]) => {
 					this.deposits = deposits;
-					this.totalAmount = this.depositsService.getTotalAmount(this.deposits);
+					this.totalAmount.LEI = this.depositsService.getTotalAmount(this.deposits);
+					this.totalAmount.EUR = this.depositsService.getTotalAmount(this.deposits, CURRENCY.EUR);
+					this.totalAmount.GBP = this.depositsService.getTotalAmount(this.deposits, CURRENCY.GBP);
+					this.anyMoneySpent =
+						this.totalAmount.LEI !== 0 ||
+						this.totalAmount.EUR !== 0 ||
+						this.totalAmount.GBP !== 0;
 					this.informationService.totalAmount.next(this.totalAmount);
-					this.informationService.totalAmount.subscribe((totalAmount: number) => this.totalAmount = totalAmount);
+					this.informationService.totalAmount.subscribe(totalAmount => this.totalAmount = totalAmount);
 					this.isLoading = false;
 				}
 			);

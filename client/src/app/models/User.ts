@@ -1,8 +1,5 @@
-export interface IUser {
-	email: string;
-	displayName: string;
-	uid: string;
-}
+// Interfaces:
+import { IUser } from '../interfaces/IUser';
 
 export class GoogleUser implements IUser {
 	providerId?: string;

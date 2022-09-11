@@ -8,6 +8,7 @@ import { SearchOption } from '../models/SearchOption';
 import { Observable, tap } from 'rxjs';
 // Shared:
 import { Constants } from '../shared/Constants';
+import { CURRENCY } from '../shared/constants/Currencies';
 import { log } from '../shared/Logger';
 
 @Injectable({
@@ -101,10 +102,16 @@ export class DepositsService {
 		return request;
 	}
 
-	getTotalAmount(deposits: IDeposit[]): number {
+	getTotalAmount(deposits: IDeposit[], currency: CURRENCY = CURRENCY.LEI): number {
 		let total = 0;
-		deposits.forEach((deposit: IDeposit) => { total += deposit.amount; });
+		const result = this.getDepositsByCurrency(deposits, currency);
+		result.forEach((deposit: IDeposit) => { total += deposit.amount; });
 		return total;
+	}
+
+	private getDepositsByCurrency(deposits: IDeposit[], currency: CURRENCY = CURRENCY.LEI): IDeposit[] {
+		const result = deposits.filter(d => d.currency === currency);
+		return result;
 	}
 
 }
