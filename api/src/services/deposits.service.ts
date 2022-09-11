@@ -3,9 +3,9 @@ import { validDeposit, validId, validSearchQuery, validOldDeposit } from '../hel
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
 import { IExpressError } from 'net-worth-shared';
-import { ISearchOption } from 'net-worth-shared';
 // Models:
 import { DepositModel } from '../schemas/deposit.schema';
+import { SearchQuerySort, SortOption, SORT_OPTION } from '../models/search.model';
 // Shared:
 import { log } from '../shared/Logger';
 import { STATUS_CODES } from 'net-worth-shared';
@@ -19,6 +19,20 @@ export {
 	putDeposit,
 	deleteDeposit
 };
+
+function sort(deposits: IDeposit[], sort: SortOption): IDeposit[] {
+	deposits.sort((a: IDeposit, b: IDeposit) => {
+		const date1 = new Date(a.createdAt).getDate();
+		const date2 = new Date(b.createdAt).getDate();
+		return date1 - date2;
+	});
+
+	if (sort === SORT_OPTION.DESC) {
+		deposits.reverse();
+	}
+
+	return deposits;
+}
 
 async function getDepositById(
 	id: string
@@ -45,7 +59,7 @@ async function getDepositById(
 }
 
 async function getDepositsByOwner(
-	searchQuery: ISearchOption
+	searchQuery: SearchQuerySort
 ): Promise<Error | IDeposit[]> {
 
 	log(CLASS_NAME, getDepositsByOwner.name, '');
@@ -55,6 +69,7 @@ async function getDepositsByOwner(
 	try {
 
 		const deposits: IDeposit[] = await DepositModel.find({ owner: searchQuery.owner });
+		sort(deposits, searchQuery.sort);
 
 		log(CLASS_NAME, getDepositsByOwner.name, 'deposits:', deposits);
 		log(CLASS_NAME, `${getDepositsByOwner.name}^`, '');
