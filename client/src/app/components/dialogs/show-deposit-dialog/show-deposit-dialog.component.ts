@@ -78,14 +78,25 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	save(): void {
 		const updatedDeposit: IDeposit = this.getFormContents(this.deposit);
-		this.updateTotalAmount(this.deposit.amount.toString(), updatedDeposit.amount.toString(), (updatedDeposit.currency as CURRENCY));
+		this.updateTotalAmount(
+			this.deposit.amount.toString(),
+			updatedDeposit.amount.toString(),
+			this.deposit.currency as CURRENCY,
+			updatedDeposit.currency as CURRENCY
+		);
 		const changed = this.depositChanged.getValue();
 		if (changed) { this.saveDeposit(updatedDeposit); }
 	}
 
 	add(): void {
 		const newDeposit: IDeposit = this.getFormContents(null);
-		this.updateTotalAmount('0', newDeposit.amount.toString(), (newDeposit.currency as CURRENCY));
+		const initialValuesNewDeposit = { amount: 0, currency: CURRENCY.LEI };
+		this.updateTotalAmount(
+			initialValuesNewDeposit.amount.toString(),
+			newDeposit.amount.toString(),
+			initialValuesNewDeposit.currency,
+			newDeposit.currency as CURRENCY
+		);
 		this.saveDeposit(newDeposit);
 	}
 
@@ -178,22 +189,69 @@ export class ShowDepositDialogComponent implements OnInit {
 		log(this.CLASS_NAME, this.initializeEditableForm.name, 'initialized editable form:', this.depositForm.value);
 	}
 
-	private updateTotalAmount(oldValue: string, newValue: string, currency: CURRENCY): void {
-		if (!oldValue || !newValue) { return; }
+
+	private updateTotalAmount(oldAmount: string, newAmount: string, oldCurrency: CURRENCY, newCurrency: CURRENCY): void {
+		if (!oldAmount || !newAmount) { return; }
 		let totalAmount = this.informationService.totalAmount.getValue();
-		switch (currency) {
-			case CURRENCY.EUR: {
-				totalAmount.EUR = (totalAmount.EUR - Number(oldValue)) + Number(newValue);
-				break;
+
+		const oAmount = Number(oldAmount);
+		const nAmount = Number(newAmount);
+
+		if (oldCurrency === newCurrency) {
+			switch (oldCurrency) {
+				case CURRENCY.EUR: {
+					totalAmount.EUR = (totalAmount.EUR - oAmount) + nAmount;
+					break;
+				}
+				case CURRENCY.GBP: {
+					totalAmount.GBP = (totalAmount.GBP - oAmount) + nAmount;
+					break;
+				}
+				default: {
+					totalAmount.LEI = (totalAmount.LEI - oAmount) + nAmount;
+				}
 			}
-			case CURRENCY.GBP: {
-				totalAmount.GBP = (totalAmount.GBP - Number(oldValue)) + Number(newValue);
-				break;
+		} else {
+			// first, substract from INITIAL value and INITIAL currency
+			// second, add new value to new currency
+			// cases where you only have 2 deposits, one in £ and one in €
+			// eg, (£58, 0€) => £10 to 10€ => 58 - 10 = £48, 0 + 10 = 10€
+			// eg, (£48, 10€) => 10€ to £10 => 10 - 10 = €0, 48 + 10 = £58
+			// eg, (£58, 0€) => £10 to 100€ => 58 - 10 = £48, 0 + 100 = 100€
+			// eg, (£48, 10€) => 10€ to £100 => 10 - 10 = 0€, 48 + 100 = £158
+			// eg, (£53, 0€) => £3 to 1€ => 53 - 3 = £50, 0 + 1 = 1€
+			// cases where one deposits is made up of many smaller £ deposits
+			// eg, (£70 = £53 + £17, 0€) => £17 to 12€ => 17 - 17 = £0, 0 + 12 = 12€ => (£53 = £53 + £0, 12€)
+
+			switch (oldCurrency) {
+				case CURRENCY.EUR: {
+					totalAmount.EUR = totalAmount.EUR - oAmount;
+					break;
+				}
+				case CURRENCY.GBP: {
+					totalAmount.GBP = totalAmount.GBP - oAmount;
+					break;
+				}
+				default: {
+					totalAmount.LEI = totalAmount.LEI - oAmount;
+				}
 			}
-			default: {
-				totalAmount.LEI = (totalAmount.LEI - Number(oldValue)) + Number(newValue);
+
+			switch (newCurrency) {
+				case CURRENCY.EUR: {
+					totalAmount.EUR = totalAmount.EUR + nAmount;
+					break;
+				}
+				case CURRENCY.GBP: {
+					totalAmount.GBP = totalAmount.GBP + nAmount;
+					break;
+				}
+				default: {
+					totalAmount.LEI = totalAmount.LEI + nAmount;
+				}
 			}
 		}
+
 		setTimeout(() => { this.informationService.totalAmount.next(totalAmount); }, Constants.updateTimeout);
 	}
 

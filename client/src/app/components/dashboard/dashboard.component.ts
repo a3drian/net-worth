@@ -29,6 +29,7 @@ export class DashboardComponent implements OnInit {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 	isLoading: boolean = false;
+	isDepositsLoading: boolean = false;
 
 	errorResponse: HttpErrorResponse | null = null;
 	today: Date = new Date();
@@ -67,6 +68,7 @@ export class DashboardComponent implements OnInit {
 					this.informationService.totalAmount.next(this.totalAmount);
 					this.informationService.totalAmount.subscribe(totalAmount => this.totalAmount = totalAmount);
 					this.isLoading = false;
+					this.isDepositsLoading = false;
 				}
 			);
 	}

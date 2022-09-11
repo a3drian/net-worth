@@ -20,5 +20,10 @@ main {
 		p > span {
 			font-weight: bold;
 		}
+
+		.light {
+			font-weight: normal;
+			margin-inline: 5px;
+		}
 	}
 }
