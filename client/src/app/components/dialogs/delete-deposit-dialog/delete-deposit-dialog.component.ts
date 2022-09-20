@@ -6,6 +6,7 @@ import { IDeposit } from 'net-worth-shared';
 import { InformationService } from 'src/app/services/information.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
+import { CURRENCY } from 'src/app/shared/constants/Currencies';
 
 @Component({
 	selector: 'app-delete-deposit-dialog',
@@ -31,7 +32,23 @@ export class DeleteDepositDialogComponent implements OnInit {
 
 	private updateTotalAmount(): boolean {
 		let totalAmount = this.informationService.totalAmount.getValue();
-		totalAmount = totalAmount - this.deposit.amount;
+		switch (this.deposit.currency) {
+			case CURRENCY.EUR: {
+				totalAmount.EUR = totalAmount.EUR - this.deposit.amount;
+				break;
+			}
+			case CURRENCY.GBP: {
+				totalAmount.GBP = totalAmount.GBP - this.deposit.amount;
+				break;
+			}
+			case CURRENCY.USD: {
+				totalAmount.USD = totalAmount.USD - this.deposit.amount;
+				break;
+			}
+			default: {
+				totalAmount.LEI = totalAmount.LEI - this.deposit.amount;
+			}
+		}
 		setTimeout(() => { this.informationService.totalAmount.next(totalAmount); }, Constants.updateTimeout);
 		return true;
 	}

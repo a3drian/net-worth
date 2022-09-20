@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 // Interfaces:
-import { IControl } from 'src/app/models/Control';
+import { IControl } from 'src/app/interfaces/IControl';
 import { IDeposit } from 'net-worth-shared';
 // Models:
 import { DepositDifferences, DepositDTO, DepositProperties, DepositValues } from 'src/app/models/Deposit';
@@ -10,12 +10,14 @@ import { DepositDifferences, DepositDTO, DepositProperties, DepositValues } from
 import { BehaviorSubject } from 'rxjs';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
+import { CurrenciesService } from 'src/app/services/currencies.service';
 import { InformationService } from 'src/app/services/information.service';
 // Validators:
 import { positiveNumberValidator } from 'src/app/shared/validators/positiveNumberValidator';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
 import { CATEGORY } from 'src/app/shared/constants/Categories';
+import { CURRENCY } from 'src/app/shared/constants/Currencies';
 import { log } from 'src/app/shared/Logger';
 
 @Component({
@@ -40,6 +42,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	formPlaceholders = Constants.formPlaceholders;
 
 	categories: CATEGORY[] = [];
+	currencies: CURRENCY[] = [];
 
 	today: Date = new Date();
 
@@ -49,8 +52,6 @@ export class ShowDepositDialogComponent implements OnInit {
 	detailsErrors = Constants.detailsErrors;
 	amountErrorMessage: string = Constants.amountErrors.empty;
 	detailsErrorMessage: string = Constants.detailsErrors.empty;
-	locationErrorMessage: string = '';
-	cityErrorMessage: string = '';
 
 	depositChanged = new BehaviorSubject<boolean>(false);
 
@@ -59,9 +60,11 @@ export class ShowDepositDialogComponent implements OnInit {
 		public dialogReference: MatDialogRef<ShowDepositDialogComponent>,
 		private formBuilder: FormBuilder,
 		private informationService: InformationService,
-		private categoriesService: CategoriesService
+		private categoriesService: CategoriesService,
+		private currenciesService: CurrenciesService
 	) {
 		this.categories = this.categoriesService.getCategories();
+		this.currencies = this.currenciesService.getCurrencies();
 	}
 
 	ngOnInit(): void {
@@ -75,14 +78,25 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	save(): void {
 		const updatedDeposit: IDeposit = this.getFormContents(this.deposit);
-		this.updateTotalAmount(this.deposit.amount.toString(), updatedDeposit.amount.toString());
+		this.updateTotalAmount(
+			this.deposit.amount.toString(),
+			updatedDeposit.amount.toString(),
+			this.deposit.currency as CURRENCY,
+			updatedDeposit.currency as CURRENCY
+		);
 		const changed = this.depositChanged.getValue();
 		if (changed) { this.saveDeposit(updatedDeposit); }
 	}
 
 	add(): void {
 		const newDeposit: IDeposit = this.getFormContents(null);
-		this.updateTotalAmount('0', newDeposit.amount.toString());
+		const initialValuesNewDeposit = { amount: 0, currency: CURRENCY.LEI };
+		this.updateTotalAmount(
+			initialValuesNewDeposit.amount.toString(),
+			newDeposit.amount.toString(),
+			initialValuesNewDeposit.currency,
+			newDeposit.currency as CURRENCY
+		);
 		this.saveDeposit(newDeposit);
 	}
 
@@ -113,28 +127,6 @@ export class ShowDepositDialogComponent implements OnInit {
 		return control.valid;
 	}
 
-	isLocationValid(): boolean {
-		const control = this.depositForm.controls['location'];
-		const errors = control.errors;
-		if (!errors) { return true; }
-		const required = errors['required'];
-		if (required) { this.locationErrorMessage = 'Please add a location'; }
-		const tooLong = errors['maxlength'];
-		if (tooLong) { this.locationErrorMessage = this.detailsErrors.tooLong; }
-		return control.valid;
-	}
-
-	isCityValid(): boolean {
-		const control = this.depositForm.controls['city'];
-		const errors = control.errors;
-		if (!errors) { return true; }
-		const required = errors['required'];
-		if (required) { this.cityErrorMessage = 'Please add a city'; }
-		const tooLong = errors['maxlength'];
-		if (tooLong) { this.cityErrorMessage = this.detailsErrors.tooLong; }
-		return control.valid;
-	}
-
 	hasDepositChanged(): boolean {
 		if (this.isFormValid()) {
 			if (this.depositChanged.getValue() === true) {
@@ -161,26 +153,28 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	private initializeDepositForm(
-		initial: IDeposit | { amount: number, details: string, category: CATEGORY, location: string, city: string },
+		initial: IDeposit | { amount: number, currency: CURRENCY, details: string, category: CATEGORY, refundable: boolean, refunded: boolean },
 		initialDate: Date
 	): void {
 
 		const amount = new FormControl(initial.amount, [Validators.required, Validators.min(0), positiveNumberValidator()]);
+		const currency = new FormControl(initial.currency, [Validators.required]);
 		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(20)]);
 		const createdAt = new FormControl(initialDate.toISOString().split('T')[0], [Validators.required]);
 		const category = new FormControl(initial.category, [Validators.required]);
-		const location = new FormControl(initial.location, [Validators.required, Validators.maxLength(20)]);
-		const city = new FormControl(initial.city, [Validators.required, Validators.maxLength(20)]);
+		const refundable = new FormControl(initial.refundable);
+		const refunded = new FormControl(initial.refunded);
 
 		this.depositForm = this.formBuilder
 			.group(
 				{
 					amount: amount,
+					currency: currency,
 					details: details,
 					createdAt: createdAt,
 					category: category,
-					location: location,
-					city: city
+					refundable: refundable,
+					refunded: refunded
 				}
 			);
 	}
@@ -195,10 +189,81 @@ export class ShowDepositDialogComponent implements OnInit {
 		log(this.CLASS_NAME, this.initializeEditableForm.name, 'initialized editable form:', this.depositForm.value);
 	}
 
-	private updateTotalAmount(oldValue: string, newValue: string): void {
-		if (!oldValue || !newValue) { return; }
+
+	private updateTotalAmount(oldAmount: string, newAmount: string, oldCurrency: CURRENCY, newCurrency: CURRENCY): void {
+		if (!oldAmount || !newAmount) { return; }
 		let totalAmount = this.informationService.totalAmount.getValue();
-		totalAmount = (totalAmount - Number(oldValue)) + Number(newValue);
+
+		const oAmount = Number(oldAmount);
+		const nAmount = Number(newAmount);
+
+		if (oldCurrency === newCurrency) {
+			switch (oldCurrency) {
+				case CURRENCY.EUR: {
+					totalAmount.EUR = (totalAmount.EUR - oAmount) + nAmount;
+					break;
+				}
+				case CURRENCY.GBP: {
+					totalAmount.GBP = (totalAmount.GBP - oAmount) + nAmount;
+					break;
+				}
+				case CURRENCY.USD: {
+					totalAmount.USD = (totalAmount.USD - oAmount) + nAmount;
+					break;
+				}
+				default: {
+					totalAmount.LEI = (totalAmount.LEI - oAmount) + nAmount;
+				}
+			}
+		} else {
+			// first, substract from INITIAL value and INITIAL currency
+			// second, add new value to new currency
+			// cases where you only have 2 deposits, one in £ and one in €
+			// eg, (£58, 0€) => £10 to 10€ => 58 - 10 = £48, 0 + 10 = 10€
+			// eg, (£48, 10€) => 10€ to £10 => 10 - 10 = €0, 48 + 10 = £58
+			// eg, (£58, 0€) => £10 to 100€ => 58 - 10 = £48, 0 + 100 = 100€
+			// eg, (£48, 10€) => 10€ to £100 => 10 - 10 = 0€, 48 + 100 = £158
+			// eg, (£53, 0€) => £3 to 1€ => 53 - 3 = £50, 0 + 1 = 1€
+			// cases where one deposits is made up of many smaller £ deposits
+			// eg, (£70 = £53 + £17, 0€) => £17 to 12€ => 17 - 17 = £0, 0 + 12 = 12€ => (£53 = £53 + £0, 12€)
+
+			switch (oldCurrency) {
+				case CURRENCY.EUR: {
+					totalAmount.EUR = totalAmount.EUR - oAmount;
+					break;
+				}
+				case CURRENCY.GBP: {
+					totalAmount.GBP = totalAmount.GBP - oAmount;
+					break;
+				}
+				case CURRENCY.USD: {
+					totalAmount.USD = totalAmount.USD - oAmount;
+					break;
+				}
+				default: {
+					totalAmount.LEI = totalAmount.LEI - oAmount;
+				}
+			}
+
+			switch (newCurrency) {
+				case CURRENCY.EUR: {
+					totalAmount.EUR = totalAmount.EUR + nAmount;
+					break;
+				}
+				case CURRENCY.GBP: {
+					totalAmount.GBP = totalAmount.GBP + nAmount;
+					break;
+				}
+				case CURRENCY.USD: {
+					totalAmount.USD = totalAmount.USD + nAmount;
+					break;
+				}
+				default: {
+					totalAmount.LEI = totalAmount.LEI + nAmount;
+				}
+			}
+		}
+
 		setTimeout(() => { this.informationService.totalAmount.next(totalAmount); }, Constants.updateTimeout);
 	}
 
@@ -291,30 +356,31 @@ export class ShowDepositDialogComponent implements OnInit {
 	private getUpdatedDeposit(deposit: DepositDTO): IDeposit {
 		const updatedDeposit = <IDeposit>{
 			_id: this.deposit._id,	// after "Save", DELETE request fails because "id" is "undefined"
-			owner: deposit.owner ? deposit.owner : this.deposit.owner,
-			amount: deposit.amount ? deposit.amount : this.deposit.amount,
-			details: deposit.details ? deposit.details : this.deposit.details,
-			createdAt: deposit.createdAt ? deposit.createdAt : this.deposit.createdAt,
-			category: deposit.category ? deposit.category : this.deposit.category,
-			location: deposit.location ? deposit.location : this.deposit.location,
-			city: deposit.city ? deposit.city : this.deposit.city,
+			owner: deposit.owner ?? this.deposit.owner,
+			amount: deposit.amount ?? this.deposit.amount,
+			currency: deposit.currency ?? this.deposit.currency,
+			details: deposit.details ?? this.deposit.details,
+			createdAt: deposit.createdAt ?? this.deposit.createdAt,
+			category: deposit.category ?? this.deposit.category,
+			refundable: deposit.refundable ?? this.deposit.refundable,
+			refunded: deposit.refunded ?? this.deposit.refunded
 		};
 		return updatedDeposit;
 	}
 
 	private getFormContents(deposit: IDeposit | null): IDeposit {
+
+		const depositDifferences = deposit ? this.getFormDifferences(deposit) : this.getFormDifferences(null);
+		const depositFromForm: DepositDTO = depositDifferences as DepositDTO;
+
 		if (deposit) {
 
-			const depositDifferences = this.getFormDifferences(deposit);
-			const depositFromForm: DepositDTO = depositDifferences as DepositDTO;
 			const updatedDeposit = this.getUpdatedDeposit(depositFromForm);
 
 			log(this.CLASS_NAME, this.getFormContents.name, 'updated depositFromForm:', updatedDeposit);
 			return updatedDeposit;
 		} else {
 
-			const depositDifferences = this.getFormDifferences(null);
-			const depositFromForm: DepositDTO = depositDifferences as DepositDTO;
 			const newDeposit = depositFromForm as IDeposit;
 
 			log(this.CLASS_NAME, this.getFormContents.name, 'new depositFromForm:', newDeposit);

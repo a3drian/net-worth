@@ -3,5 +3,5 @@
 <div id="title">
 	<h1>Spendit</h1>
 	<button (click)="logout()">Log out</button>
-	<h4>Welcome, {{ user?.displayName }}!</h4>
+	<h4>Welcome, {{ user?.displayName | userDisplayName }}!</h4>
 </div>

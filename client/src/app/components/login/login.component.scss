@@ -42,6 +42,7 @@ div#buttons {
 	display: grid;
 	grid-template-columns: $image-size 1fr;
 	background-color: white;
+	border-radius: 2px;
 
 	&--disabled {
 		background-color: $dark-purple;

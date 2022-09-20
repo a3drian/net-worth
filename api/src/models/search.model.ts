@@ -1,9 +1,35 @@
-import { ISearchOption } from 'net-worth-shared';
+import { ISearchOption, ISearchOptionDateRange } from 'net-worth-shared';
 
-export class SearchOption implements ISearchOption {
+export type SortOption = 'asc' | 'desc';
+
+export const SORT_OPTION: { ASC: SortOption, DESC: SortOption } = {
+	ASC: 'asc',
+	DESC: 'desc'
+};
+
+export class SearchQuery implements ISearchOption {
 	owner!: string;
 
 	public constructor(partial?: Partial<ISearchOption>) {
+		Object.assign(this, partial);
+	}
+}
+
+export class SearchQuerySort implements ISearchOption {
+	owner!: string;
+	sort: SortOption = SORT_OPTION.ASC;
+
+	public constructor(partial?: Partial<SearchQuerySort>) {
+		Object.assign(this, partial);
+	}
+}
+
+export class SearchQueryDateRange implements ISearchOptionDateRange {
+	owner!: string;
+	from!: Date;
+	to!: Date;
+
+	public constructor(partial?: Partial<ISearchOptionDateRange>) {
 		Object.assign(this, partial);
 	}
 }

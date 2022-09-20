@@ -1,5 +1,6 @@
 // Shared:
 import { CATEGORY } from './constants/Categories';
+import { CURRENCY } from './constants/Currencies';
 
 export const Constants = Object.freeze({
 	IN_DEBUG_MODE: true,
@@ -21,18 +22,18 @@ export const Constants = Object.freeze({
 
 	formDefaults: Object.freeze({
 		amount: 10,
+		currency: CURRENCY.LEI,
 		details: 'Groceries',
 		category: CATEGORY.GROCERIES,
-		location: 'Selgros',
-		city: 'Brașov'
+		refundable: false,
+		refunded: false
 	}),
 
 	formPlaceholders: Object.freeze({
 		amount: 10,
+		currency: CURRENCY.LEI,
 		details: 'Groceries...',
-		category: CATEGORY.GROCERIES,
-		location: 'Selgros...',
-		city: 'Brașov...'
+		category: CATEGORY.GROCERIES
 	}),
 
 	dialogDimensions: Object.freeze({

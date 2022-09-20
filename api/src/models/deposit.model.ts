@@ -2,19 +2,19 @@ import { IDeposit } from 'net-worth-shared';
 
 export class Deposit implements IDeposit {
 	_id!: string;
+
 	owner!: string;
+
 	amount!: number;
+	currency!: string;
+
 	details!: string;
 	createdAt!: Date;
 
-	category?: string;
-	location?: string;
-	city?: string;
+	category!: string;
 
-	recurrent?: boolean;
-	frequency?: string;
-	currency?: string;
-	exchangeRate?: number;
+	refundable?: boolean;
+	refunded?: boolean;
 
 	public constructor(partial?: Partial<Deposit>) {
 		Object.assign(this, partial);

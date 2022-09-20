@@ -1,0 +1,31 @@
+api:
+-get deposits for the month you are currently in, so only the ones for "September" (at first)
+[DONE].sort these deposits by date automatically and in reverse, 12 Sep, 11 Sep, ... 1 Sep, etc.
+[DONE]-get deposits by currency so that you can show "Spending report" for each currency
+
+client:
+-consume above api calls
+
+-fix "Spending report" so that it actually shows based on the month you are currently in, aka. if you are in Sep and you have deposits only in Aug, show the deposits in Aug (and say "Spending report for Aug" instead of "Sep", even if you are in "Sep")
+
+-fix "Nothing spent in {{ today | date: 'MMMM' }} yet." showing for a second, when loading the "dashboard"
+-fix UI not updating after changing "currency" or adding a currency which was not there originally, aka...
+	20 lei | 40 lire
+	*adds 10 euro*
+...will not immediately show:
+	20 lei | 10 euro | 40 lire
+-fix UI not immediately showing the deposit after adding one
+
+[DONE]-fix header still going over when "<body>" tag finishes in the HTML
+
+-colour deposits differently based on currency
+
+[NO]-ai cazul cand un deposit se transforma in cu totul alt depozit, 5 lire se fac 5 euro
+[NO].prin extensie, 5 lire se face 15 euro, aka e cazul in care valoarea noua este mai mare sau egala cu valoare veche, aka 5 euro >= 5 lire si 15 euro >= 5 lire
+[NO]-ai cazul cand un deposit nu se transforma in cu totul alt depozit, aka valoarea noua e mai mica decat valoarea veche
+[NO].aka, 17 lire se fac 12 euro, ramai cu 5 lire si te faci cu 12 euro
+
+-----
+
+const result = deposits.map(d => new Date(d.createdAt).getDate());
+log(CLASS_NAME, getDepositsByOwner.name, 'deposits:', result);

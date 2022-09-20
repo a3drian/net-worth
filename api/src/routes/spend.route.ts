@@ -2,7 +2,7 @@ import { Router, Response, Request, NextFunction } from 'express';
 // Models:
 import { IDeposit } from 'net-worth-shared';
 import { Deposit } from '../models/deposit.model';
-import { SearchOption } from '../models/search.model';
+import { SearchQuerySort, SORT_OPTION } from '../models/search.model';
 // Services:
 import * as depositService from '../services/deposits.service';
 // Shared:
@@ -56,7 +56,12 @@ async function getDepositsByOwner(
 	const body = req.body;
 	log(CLASS_NAME, getDepositsByOwner.name, 'body:', body);
 
-	const searchQuery = new SearchOption({ owner: body.owner });
+	const searchQuery = new SearchQuerySort(
+		{
+			owner: body.owner,
+			sort: body.sort ?? SORT_OPTION.DESC
+		}
+	);
 
 	let response: Error | IDeposit[];
 	try {
@@ -87,15 +92,12 @@ async function postDeposit(
 		{
 			owner: body.owner,
 			amount: body.amount,
+			currency: body.currency,
 			details: body.details,
 			createdAt: body.createdAt,
 			category: body.category,
-			location: body.location,
-			city: body.city,
-			recurrent: body.recurrent,
-			frequency: body.frequency,
-			currency: body.currency,
-			exchangeRate: body.exchangeRate
+			refundable: body.refundable,
+			refunded: body.refunded
 		}
 	);
 
@@ -130,15 +132,12 @@ async function putDeposit(
 		{
 			owner: body.owner,
 			amount: body.amount,
+			currency: body.currency,
 			details: body.details,
 			createdAt: body.createdAt,
 			category: body.category,
-			location: body.location,
-			city: body.city,
-			recurrent: body.recurrent,
-			frequency: body.frequency,
-			currency: body.currency,
-			exchangeRate: body.exchangeRate
+			refundable: body.refundable,
+			refunded: body.refunded
 		}
 	);
 

@@ -6,8 +6,10 @@ import {
 	signOut,
 	UserCredential
 } from '@angular/fire/auth';
+// Interfaces:
+import { IUser } from '../interfaces/IUser';
 // Models:
-import { GoogleUser, IUser } from 'src/app/models/User';
+import { GoogleUser } from 'src/app/models/User';
 // rxjs:
 import { BehaviorSubject, map, Observable, of } from 'rxjs';
 // Shared:

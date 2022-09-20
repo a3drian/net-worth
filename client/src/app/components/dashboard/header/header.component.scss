@@ -5,17 +5,20 @@ $offset-inline: 10px;
 
 div#title {
 	background-color: $background-clr;
+	border-bottom: 2px solid $foreground-clr;
 	display: grid;
 	grid-template-columns: auto 1fr;
-	padding-block: 20px;
 	margin-inline: auto;
-	width: 100%;
+	margin-bottom: 10px;
 	max-width: calc(600px + $offset-inline);
+	padding-block: 20px;
 	padding-inline: calc($offset-inline / 2);
 	position: sticky;
 	top: 0px;
+	width: 100%;
 
 	button {
+		align-self: center;
 		justify-self: end;
 		margin-inline-end: 1rem;
 	}

@@ -10,9 +10,16 @@
 	<form [formGroup]="depositForm" *ngIf="isFormReady">
 
 		<fieldset>
-			<label for="amount">Amount:</label>
-			<input matInput id="amount" [ngClass]="!isInputValid('amount') ? 'input-error' : ''" type="number" name="amount"
-				formControlName="amount" placeholder="{{ formPlaceholders.amount }}" required>
+			<label for="amount">Amount and currency:</label>
+			<div id="amount-currency-container">
+				<input matInput id="amount" [ngClass]="!isInputValid('amount') ? 'input-error' : ''" type="number" name="amount"
+					formControlName="amount" placeholder="{{ formPlaceholders.amount }}" required>
+				<select name="currency" id="currency-select" formControlName="currency" required>
+					<option *ngFor="let c of currencies" [value]="c">
+						{{ c }}
+					</option>
+				</select>
+			</div>
 			<p *ngIf="isInputValid('amount')">How much did you spend?</p>
 			<p class="error" *ngIf="!isAmountValid()">{{ amountErrorMessage }}</p>
 		</fieldset>
@@ -42,19 +49,19 @@
 		</fieldset>
 
 		<fieldset>
-			<label for="location">Location:</label>
-			<input matInput id="location" [ngClass]="!isInputValid('location') ? 'input-error' : ''" type="text"
-				name="location" formControlName="location" placeholder="{{ formPlaceholders.location }}" required>
-			<p *ngIf="isInputValid('location')">Where did you spend it?</p>
-			<p class="error" *ngIf="!isLocationValid()">{{ locationErrorMessage }}</p>
-		</fieldset>
+			<div id="refundable-refunded-container">
+				<label class="refundable">
+					<input type="checkbox" formControlName="refundable">
+					Reimbursable amount?
+				</label>
 
-		<fieldset>
-			<label for="city">City:</label>
-			<input matInput id="city" [ngClass]="!isInputValid('city') ? 'input-error' : ''" type="text" name="city"
-				formControlName="city" placeholder="{{ formPlaceholders.city }}" required>
-			<p *ngIf="isInputValid('city')">In what city did you spend it?</p>
-			<p class="error" *ngIf="!isCityValid()">{{ cityErrorMessage }}</p>
+				<div *ngIf="depositForm.value.refundable">
+					<label class="refundable">
+						<input type="checkbox" formControlName="refunded">
+						Amount reimbursed?
+					</label>
+				</div>
+			</div>
 		</fieldset>
 
 	</form>
