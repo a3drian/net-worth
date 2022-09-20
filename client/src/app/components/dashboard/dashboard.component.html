@@ -18,9 +18,10 @@
 	<div id="report">
 		<p *ngIf="!anyMoneySpent">Nothing spent in {{ today | date: 'MMMM' }} yet.</p>
 		<p *ngIf="anyMoneySpent">Spending report for <span>{{ today | date: 'MMMM' }}</span> –
-			<span *ngIf="totalAmount.LEI !== 0">{{ totalAmount.LEI | amount:3 }} lei<span class="light">|</span></span>
-			<span *ngIf="totalAmount.EUR !== 0">{{ totalAmount.EUR | amount:3 }}€<span class="light">|</span></span>
-			<span *ngIf="totalAmount.GBP !== 0">£{{ totalAmount.GBP | amount:3 }}</span>
+			<span *ngIf="totalAmount.LEI !== 0">{{ totalAmount.LEI | amount:3 }} lei</span>
+			<span *ngIf="totalAmount.EUR !== 0"><span class="light">|</span>{{ totalAmount.EUR | amount:3 }}€</span>
+			<span *ngIf="totalAmount.GBP !== 0"><span class="light">|</span>£{{ totalAmount.GBP | amount:3 }}</span>
+			<span *ngIf="totalAmount.USD !== 0"><span class="light">|</span>${{ totalAmount.USD | amount:3 }}</span>
 		</p>
 		<button (click)="openShowDepositDialog('spend')">Spend</button>
 	</div>

@@ -16,7 +16,7 @@ client:
 	20 lei | 10 euro | 40 lire
 -fix UI not immediately showing the deposit after adding one
 
--fix header still going over when "<body>" tag finishes in the HTML
+[DONE]-fix header still going over when "<body>" tag finishes in the HTML
 
 -colour deposits differently based on currency
 

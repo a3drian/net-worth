@@ -1,5 +1,6 @@
 export enum CURRENCY {
 	LEI = 'L',
 	EUR = '€',
-	GBP = '£'
+	GBP = '£',
+	USD = '$'
 };

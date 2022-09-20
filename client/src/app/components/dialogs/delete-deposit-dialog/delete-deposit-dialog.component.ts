@@ -41,6 +41,10 @@ export class DeleteDepositDialogComponent implements OnInit {
 				totalAmount.GBP = totalAmount.GBP - this.deposit.amount;
 				break;
 			}
+			case CURRENCY.USD: {
+				totalAmount.USD = totalAmount.USD - this.deposit.amount;
+				break;
+			}
 			default: {
 				totalAmount.LEI = totalAmount.LEI - this.deposit.amount;
 			}

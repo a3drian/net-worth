@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 // Components:
 import { ShowDepositDialogComponent } from '../dialogs/show-deposit-dialog/show-deposit-dialog.component';
 // Interfaces:
@@ -35,7 +34,7 @@ export class DashboardComponent implements OnInit {
 	today: Date = new Date();
 
 	deposits: IDeposit[] = [];
-	totalAmount: Currency = { LEI: 0, EUR: 0, GBP: 0 };
+	totalAmount: Currency = { LEI: 0, EUR: 0, GBP: 0, USD: 0 };
 	anyMoneySpent: boolean = false;
 
 	owner: string = '';
@@ -61,10 +60,12 @@ export class DashboardComponent implements OnInit {
 					this.totalAmount.LEI = this.depositsService.getTotalAmount(this.deposits);
 					this.totalAmount.EUR = this.depositsService.getTotalAmount(this.deposits, CURRENCY.EUR);
 					this.totalAmount.GBP = this.depositsService.getTotalAmount(this.deposits, CURRENCY.GBP);
+					this.totalAmount.USD = this.depositsService.getTotalAmount(this.deposits, CURRENCY.USD);
 					this.anyMoneySpent =
 						this.totalAmount.LEI !== 0 ||
 						this.totalAmount.EUR !== 0 ||
-						this.totalAmount.GBP !== 0;
+						this.totalAmount.GBP !== 0 ||
+						this.totalAmount.USD !== 0;
 					this.informationService.totalAmount.next(this.totalAmount);
 					this.informationService.totalAmount.subscribe(totalAmount => this.totalAmount = totalAmount);
 					this.isLoading = false;

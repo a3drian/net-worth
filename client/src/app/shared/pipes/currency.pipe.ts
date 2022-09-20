@@ -13,6 +13,9 @@ export class CurrencyPipe implements PipeTransform {
 			case CURRENCY.GBP: {
 				return 'lire';
 			}
+			case CURRENCY.USD: {
+				return 'dolari';
+			}
 			default: {
 				return 'lei';
 			}

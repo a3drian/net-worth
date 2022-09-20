@@ -207,6 +207,10 @@ export class ShowDepositDialogComponent implements OnInit {
 					totalAmount.GBP = (totalAmount.GBP - oAmount) + nAmount;
 					break;
 				}
+				case CURRENCY.USD: {
+					totalAmount.USD = (totalAmount.USD - oAmount) + nAmount;
+					break;
+				}
 				default: {
 					totalAmount.LEI = (totalAmount.LEI - oAmount) + nAmount;
 				}
@@ -232,6 +236,10 @@ export class ShowDepositDialogComponent implements OnInit {
 					totalAmount.GBP = totalAmount.GBP - oAmount;
 					break;
 				}
+				case CURRENCY.USD: {
+					totalAmount.USD = totalAmount.USD - oAmount;
+					break;
+				}
 				default: {
 					totalAmount.LEI = totalAmount.LEI - oAmount;
 				}
@@ -244,6 +252,10 @@ export class ShowDepositDialogComponent implements OnInit {
 				}
 				case CURRENCY.GBP: {
 					totalAmount.GBP = totalAmount.GBP + nAmount;
+					break;
+				}
+				case CURRENCY.USD: {
+					totalAmount.USD = totalAmount.USD + nAmount;
 					break;
 				}
 				default: {
