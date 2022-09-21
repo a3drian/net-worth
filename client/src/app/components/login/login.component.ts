@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 // Services:
 import { AuthService } from 'src/app/services/auth.service';
@@ -11,7 +11,7 @@ import { log } from 'src/app/shared/Logger';
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
@@ -19,8 +19,17 @@ export class LoginComponent implements OnInit {
 
 	constructor(
 		private authService: AuthService,
+		private renderer: Renderer2,
 		private router: Router
 	) { }
+
+	ngAfterViewInit(): void {
+		this.renderer.setStyle(document.body, 'overflowY', 'hidden');
+	}
+
+	ngOnDestroy(): void {
+		this.renderer.removeStyle(document.body, 'overflowY');
+	}
 
 	ngOnInit(): void {
 		const userAuthenticated = this.authService.isAuthenticated();

@@ -14,7 +14,6 @@ main {
 
 	#report {
 		display: grid;
-		grid-template-rows: 32px;
 		padding-block: 10px;
 
 		p > span {
@@ -25,5 +24,17 @@ main {
 			font-weight: normal;
 			margin-inline: 5px;
 		}
+	}
+}
+
+@media screen and (min-width: 481px) {
+	#report {
+		grid-template-rows: 32px;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	#report {
+		grid-template-rows: 64px 32px;
 	}
 }
