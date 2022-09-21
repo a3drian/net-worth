@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 // Deploy:
 import cors from 'cors';
-const path = require('path');
 // Express:
 import express from 'express';
 import { Application, Router, Request, Response, NextFunction } from 'express';
@@ -10,6 +9,7 @@ import { env } from './env';
 // Interfaces:
 import { IExpressError } from 'net-worth-shared';
 // Routes:
+import { setClientRoute } from './routes/client.route';
 import { setHealthCheckRoute } from './routes/health-check.route';
 import { setSpendRoute } from './routes/spend.route';
 // Shared:
@@ -27,16 +27,6 @@ async function makeApp(): Promise<Application> {
 
 	// only when deploying app
 	app.use(express.static(env.CLIENT_PATH));
-	app.get(
-		'/*',
-		(res: Response) => {
-			const frontendPath = path.join(__dirname, `../${env.CLIENT_PATH}`);
-			// log('app.ts', makeApp.name, 'frontendPath:', frontendPath);
-			const indexPath: string = path.join(frontendPath + '/index.html');
-			// log('app.ts', makeApp.name, 'indexPath:', indexPath);
-			res.sendFile(indexPath);
-		}
-	);
 
 	const url = `${env.MONGO_URL}${env.TEST_DB_NAME}?retryWrites=true&w=majority`;
 	const db = await mongoose.connect(url);
@@ -49,6 +39,7 @@ async function makeApp(): Promise<Application> {
 
 	// routes
 	app.use(env.HEALTH_CHECK_ROUTE, setHealthCheckRoute(Router()));
+	app.use(env.CLIENT_ROUTE, setClientRoute(Router()));
 	app.use(env.SPEND_ROUTE, setSpendRoute(Router()));
 
 	// 404

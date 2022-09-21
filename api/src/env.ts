@@ -32,6 +32,7 @@ export const env = Object.freeze(
 		SAVE_ROUTE: Constants.APIEndpoints.SAVE_URL,
 		SPEND_ROUTE: Constants.APIEndpoints.SPEND_URL,
 
+		CLIENT_ROUTE: Constants.APIEndpoints.CLIENT_URL,
 		HEALTH_CHECK_ROUTE: Constants.APIEndpoints.HEALTH_CHECK_URL
 	}
 );

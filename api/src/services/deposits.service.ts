@@ -20,14 +20,14 @@ export {
 	deleteDeposit
 };
 
-function sort(deposits: IDeposit[], sort: SortOption): IDeposit[] {
+function sort(deposits: IDeposit[], sortOption: SortOption): IDeposit[] {
 	deposits.sort((a: IDeposit, b: IDeposit) => {
 		const date1 = new Date(a.createdAt).getDate();
 		const date2 = new Date(b.createdAt).getDate();
 		return date1 - date2;
 	});
 
-	if (sort === SORT_OPTION.DESC) {
+	if (sortOption === SORT_OPTION.DESC) {
 		deposits.reverse();
 	}
 
