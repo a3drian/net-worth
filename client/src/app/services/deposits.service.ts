@@ -17,7 +17,8 @@ import { log } from '../shared/Logger';
 export class DepositsService {
 
 	private readonly BASE_URL: string = Constants.apiEndpoints.SPEND_BASE_URL;
-	private readonly SEARCH_URL: string = this.BASE_URL + Constants.apiEndpoints.SEARCH_URL;
+	private readonly SEARCH_BY_OWNER_URL: string = this.BASE_URL + Constants.apiEndpoints.SEARCH_BY_OWNER_URL;
+	private readonly SEARCH_BY_OWNER_AND_MONTH_URL: string = this.BASE_URL + Constants.apiEndpoints.SEARCH_BY_OWNER_AND_MONTH_URL;
 
 	private readonly CLASS_NAME = 'deposits.service.ts';
 
@@ -49,8 +50,25 @@ export class DepositsService {
 
 		const request = this.http
 			.post<IDeposit[]>(
-				this.SEARCH_URL,
+				this.SEARCH_BY_OWNER_URL,
 				new SearchOption({ owner: email })
+			)
+			.pipe(tap(() => { }));
+
+		return request;
+	}
+
+	getDepositsByOwnerAndCurrentMonth(
+		email: string,
+		currentMonth: number
+	): Observable<IDeposit[]> {
+		log(this.CLASS_NAME, this.getDepositsByOwner.name, 'email:', email);
+		log(this.CLASS_NAME, this.getDepositsByOwner.name, 'currentMonth:', currentMonth);
+
+		const request = this.http
+			.post<IDeposit[]>(
+				this.SEARCH_BY_OWNER_AND_MONTH_URL,
+				new SearchOption({ owner: email, currentMonth: currentMonth })
 			)
 			.pipe(tap(() => { }));
 

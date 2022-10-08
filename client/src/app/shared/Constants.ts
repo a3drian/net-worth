@@ -15,7 +15,8 @@ export const Constants = Object.freeze({
 	apiEndpoints: Object.freeze({
 		SAVE_BASE_URL: '/api/save',
 		SPEND_BASE_URL: '/api/spend',
-		SEARCH_URL: '/owner'
+		SEARCH_BY_OWNER_URL: '/owner',
+		SEARCH_BY_OWNER_AND_MONTH_URL: '/owner/month'
 	}),
 
 	defaultOwner: 'adi@foodspy3.com',

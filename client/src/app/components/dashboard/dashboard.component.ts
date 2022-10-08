@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.depositsService
-			.getDepositsByOwner(this.owner)
+			.getDepositsByOwnerAndCurrentMonth(this.owner, this.today.getMonth())
 			.subscribe(
 				(deposits: IDeposit[]) => {
 					this.deposits = deposits;
