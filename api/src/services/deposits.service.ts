@@ -5,7 +5,7 @@ import { IDeposit } from 'net-worth-shared';
 import { IExpressError } from 'net-worth-shared';
 // Models:
 import { DepositModel } from '../schemas/deposit.schema';
-import { SearchQuerySort, SortOption, SORT_OPTION } from '../models/search.model';
+import { SearchQuerySort, SearchQueryMonthSort, SortOption, SORT_OPTION } from '../models/search.model';
 // Shared:
 import { log } from '../shared/Logger';
 import { STATUS_CODES } from 'net-worth-shared';
@@ -15,6 +15,7 @@ const CLASS_NAME = 'deposits.service.ts';
 export {
 	getDepositById,
 	getDepositsByOwner,
+	getDepositsByOwnerAndCurrentMonth,
 	postDeposit,
 	putDeposit,
 	deleteDeposit
@@ -73,6 +74,27 @@ async function getDepositsByOwner(
 
 		log(CLASS_NAME, getDepositsByOwner.name, 'deposits:', deposits);
 		log(CLASS_NAME, `${getDepositsByOwner.name}^`, '');
+
+		return deposits;
+
+	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+}
+
+async function getDepositsByOwnerAndCurrentMonth(
+	searchQuery: SearchQueryMonthSort
+): Promise<Error | IDeposit[]> {
+
+	log(CLASS_NAME, getDepositsByOwnerAndCurrentMonth.name, '');
+
+	if (!validSearchQuery(searchQuery)) { return throwError(getDepositsByOwnerAndCurrentMonth.name, 'Invalid POST/:owner parameters!', STATUS_CODES.BAD_REQUEST); }
+
+	try {
+
+		const deposits: IDeposit[] = (await DepositModel.find({ owner: searchQuery.owner })).filter(d => d.createdAt.getMonth() === searchQuery.currentMonth);
+		sort(deposits, searchQuery.sort);
+
+		log(CLASS_NAME, getDepositsByOwnerAndCurrentMonth.name, 'deposits:', deposits);
+		log(CLASS_NAME, `${getDepositsByOwnerAndCurrentMonth.name}^`, '');
 
 		return deposits;
 
