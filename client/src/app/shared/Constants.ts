@@ -16,7 +16,9 @@ export const Constants = Object.freeze({
 		SAVE_BASE_URL: '/api/save',
 		SPEND_BASE_URL: '/api/spend',
 		SEARCH_BY_OWNER_URL: '/owner',
-		SEARCH_BY_OWNER_AND_MONTH_URL: '/owner/month'
+		SEARCH_BY_OWNER_MONTH_URL: '/owner/month',
+		SEARCH_BY_OWNER_YEAR_MONTH_URL: '/owner/yearmonth',
+		SPENDING_URL: '/owner/spending'
 	}),
 
 	defaultOwner: 'adi@foodspy3.com',

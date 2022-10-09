@@ -8,3 +8,13 @@ export class SearchOption implements ISearchOption {
 		Object.assign(this, partial);
 	}
 }
+
+export class SearchOptionYearMonth implements ISearchOption {
+	owner!: string;
+	year!: number;
+	month!: number;
+
+	public constructor(partial?: Partial<SearchOptionYearMonth>) {
+		Object.assign(this, partial);
+	}
+}
