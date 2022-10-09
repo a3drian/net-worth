@@ -34,6 +34,17 @@ export class SearchQueryMonthSort implements ISearchOption {
 	}
 }
 
+export class SearchQueryYearMonthSort implements ISearchOption {
+	owner!: string;
+	year!: number;
+	month!: number;
+	sort: SortOption = SORT_OPTION.ASC;
+
+	public constructor(partial?: Partial<SearchQueryYearMonthSort>) {
+		Object.assign(this, partial);
+	}
+}
+
 export class SearchQueryDateRange implements ISearchOptionDateRange {
 	owner!: string;
 	from!: Date;
