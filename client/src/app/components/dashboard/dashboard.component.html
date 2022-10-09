@@ -23,29 +23,31 @@
 			<span *ngIf="totalAmount.GBP !== 0"><span class="light">|</span>£{{ totalAmount.GBP | amount:3 }}</span>
 			<span *ngIf="totalAmount.USD !== 0"><span class="light">|</span>${{ totalAmount.USD | amount:3 }}</span>
 		</p>
-		<button (click)="openFilters()">Filter</button>
+
+		<div id="filters">
+			<button (click)="openFilters()">Filter</button>
+			<form [formGroup]="spendingForm" *ngIf="showFilters" (change)="onFilterChange()">
+				<fieldset>
+					<label for="year">Year:</label>
+					<select name="year" id="year-select" formControlName="years">
+						<option *ngFor="let y of years" [value]="y">
+							{{ y }}
+						</option>
+					</select>
+				</fieldset>
+				<fieldset>
+					<label for="month">Month:</label>
+					<select name="month" id="month-select" formControlName="months">
+						<option *ngFor="let m of months" [value]="m">
+							{{ m }}
+						</option>
+					</select>
+				</fieldset>
+			</form>
+		</div>
 	</div>
 
 	<button (click)="openShowDepositDialog('spend')">Spend</button>
-
-	<form [formGroup]="spendingForm" *ngIf="showFilters" (change)="onFilterChange()">
-		<fieldset>
-			<label for="year">Year:</label>
-			<select name="year" id="year-select" formControlName="years">
-				<option *ngFor="let y of years" [value]="y">
-					{{ y }}
-				</option>
-			</select>
-		</fieldset>
-		<fieldset>
-			<label for="month">Month:</label>
-			<select name="month" id="month-select" formControlName="months">
-				<option *ngFor="let m of months" [value]="m">
-					{{ m }}
-				</option>
-			</select>
-		</fieldset>
-	</form>
 
 	<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
 	</app-deposit-card>

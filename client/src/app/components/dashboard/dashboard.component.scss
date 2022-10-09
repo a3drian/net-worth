@@ -1,5 +1,6 @@
 @import '../../styles/common.scss';
-@import '../dialogs/show-deposit-dialog/show-deposit-dialog.component.scss';
+
+$input-max-width: 150px;
 
 .loading-spinner {
 	grid-column: 2;
@@ -24,6 +25,42 @@ main {
 		.light {
 			font-weight: normal;
 			margin-inline: 5px;
+		}
+	}
+
+	#filters {
+		align-items: center;
+		display: flex;
+		height: 36px;
+
+		form {
+			display: grid;
+			grid-template-columns: max-content max-content;
+			margin-block-start: 4px;
+
+			fieldset {
+				border: none;
+				display: inline-block;
+
+				label {
+					margin-inline-end: 0.5rem;
+				}
+			}
+
+			select {
+				height: 30px;
+				width: $input-max-width;
+
+				&:active,
+				&:focus-within {
+					outline: $outline-sz solid $focus-clr;
+					outline-offset: 2px;
+				}
+
+				& > option {
+					font-family: $font-main;
+				}
+			}
 		}
 	}
 }
