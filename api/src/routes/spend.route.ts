@@ -85,7 +85,7 @@ async function getSpending(
 	req: Request,
 	res: Response,
 	next: NextFunction
-): Promise<{ years: number[]; months: number[]; } | void | any> {
+): Promise<{ years: number[], months: number[] } | void | any> {
 	console.log('');
 
 	const body = req.body;
@@ -93,7 +93,7 @@ async function getSpending(
 
 	const searchQuery = new SearchQuery({ owner: body.owner });
 
-	let response: Error | { years: number[]; months: number[]; };
+	let response: Error | { years: number[], months: number[] };
 	try {
 		response = await depositService.getSpending(searchQuery);
 	} catch (ex) {

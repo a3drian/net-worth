@@ -132,7 +132,7 @@ async function getDepositsByOwnerYearMonth(
 
 async function getSpending(
 	searchQuery: SearchQuery
-): Promise<Error | { years: number[]; months: number[]; }> {
+): Promise<Error | { years: number[], months: number[] }> {
 
 	log(CLASS_NAME, getSpending.name, '');
 
@@ -142,8 +142,8 @@ async function getSpending(
 
 		const deposits: IDeposit[] = await DepositModel.find({ owner: searchQuery.owner });
 
-		let years: number[] = [];
-		let months: number[] = [];
+		const years: number[] = [];
+		const months: number[] = [];
 
 		deposits.forEach(d => {
 			const year = d.createdAt.getFullYear();
