@@ -68,9 +68,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		// setTimeout(() => {
 		this.deposit === null ? this.intializeAddPage() : this.initializeEditPage();
-		// }, 750);
 		this.formValueChanged();
 	}
 
