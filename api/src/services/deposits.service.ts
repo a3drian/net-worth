@@ -5,7 +5,7 @@ import { IDeposit } from 'net-worth-shared';
 import { IExpressError } from 'net-worth-shared';
 // Models:
 import { DepositModel } from '../schemas/deposit.schema';
-import { SearchQuerySort, SearchQueryMonthSort, SortOption, SORT_OPTION } from '../models/search.model';
+import { SearchQuery, SearchQueryMonthSort, SearchQuerySort, SortOption, SORT_OPTION } from '../models/search.model';
 // Shared:
 import { log } from '../shared/Logger';
 import { STATUS_CODES } from 'net-worth-shared';
@@ -16,6 +16,7 @@ export {
 	getDepositById,
 	getDepositsByOwner,
 	getDepositsByOwnerAndCurrentMonth,
+	getSpending,
 	postDeposit,
 	putDeposit,
 	deleteDeposit
@@ -56,7 +57,7 @@ async function getDepositById(
 
 		return deposit;
 
-	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+	} catch (ex: any) { return throwError(getDepositById.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 async function getDepositsByOwner(
@@ -77,7 +78,7 @@ async function getDepositsByOwner(
 
 		return deposits;
 
-	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+	} catch (ex: any) { return throwError(getDepositsByOwner.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 async function getDepositsByOwnerAndCurrentMonth(
@@ -98,7 +99,41 @@ async function getDepositsByOwnerAndCurrentMonth(
 
 		return deposits;
 
-	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+	} catch (ex: any) { return throwError(getDepositsByOwnerAndCurrentMonth.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+}
+
+async function getSpending(
+	searchQuery: SearchQuery
+): Promise<Error | { years: number[]; months: number[]; }> {
+
+	log(CLASS_NAME, getSpending.name, '');
+
+	if (!validSearchQuery(searchQuery)) { return throwError(getSpending.name, 'Invalid POST/:owner parameters!', STATUS_CODES.BAD_REQUEST); }
+
+	try {
+
+		const deposits: IDeposit[] = await DepositModel.find({ owner: searchQuery.owner });
+
+		let years: number[] = [];
+		let months: number[] = [];
+
+		deposits.forEach(d => {
+			const year = d.createdAt.getFullYear();
+			const month = d.createdAt.getMonth();
+			if (years.indexOf(year) === -1) { years.push(year); }
+			if (months.indexOf(month) === -1) { months.push(month); }
+		});
+
+		log(CLASS_NAME, getSpending.name, 'spending (years):', years);
+		log(CLASS_NAME, getSpending.name, 'spending (months):', months);
+		log(CLASS_NAME, `${getSpending.name}^`, '');
+
+		return {
+			years: years,
+			months: months
+		};
+
+	} catch (ex: any) { return throwError(getSpending.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 async function postDeposit(
@@ -119,7 +154,7 @@ async function postDeposit(
 		await newDeposit.save();
 		return newDeposit;
 
-	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+	} catch (ex: any) { return throwError(postDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 async function putDeposit(
@@ -171,7 +206,7 @@ async function deleteDeposit(
 
 		return deposit;
 
-	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+	} catch (ex: any) { return throwError(deleteDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 function throwError(origin: string, message: string, statusCode: STATUS_CODES) {
