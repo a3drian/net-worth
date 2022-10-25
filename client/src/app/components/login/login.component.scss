@@ -38,32 +38,33 @@ div#buttons {
 
 .login-button {
 	display: grid;
+	align-items: center;
 	grid-template-columns: $image-size 1fr;
 	background-color: $foreground-clr;
 	border-radius: $border-radius;
+	margin-inline: 0px;
+	width: 108px;
+	padding: unset;
 
 	&--disabled {
 		background-color: $dark-purple;
 	}
 
-	&__img {
-		display: inline-block;
-		--size: 20px;
-		width: var(--size);
-		height: var(--size);
-		align-self: center;
-		justify-self: center;
-		margin-left: 2px;
+	&__img-container {
+		background-color: $foreground-clr;
+		display: grid;
+		height: 100%;
+		place-items: center;
 
-		&--disabled {
-			visibility: hidden;
+		&__img {
+			display: inline-block;
+			--size: 20px;
+			width: var(--size);
+			height: var(--size);
+
+			&--disabled {
+				visibility: hidden;
+			}
 		}
-	}
-
-	&__button {
-		margin-inline-end: 0.5rem;
-		width: 100%;
-
-		&--disabled {}
 	}
 }
