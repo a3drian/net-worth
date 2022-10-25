@@ -54,7 +54,7 @@ main {
 				&:active,
 				&:focus-within {
 					outline: $outline-sz solid $focus-clr;
-					outline-offset: 2px;
+					outline-offset: $outline-offset;
 				}
 
 				& > option {

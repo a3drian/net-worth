@@ -99,27 +99,30 @@ body {
 }
 
 input::placeholder {
-	color: $foreground-clr !important;
-	background: $dark-purple;
+	color: $invalid-clr !important;
+	// removed background because of inconsistencies in Chrome
 	font-style: italic;
-	// opacity: 1;
+	// fix Firefox making the text a bit transparent
+	opacity: 1;
 }
 
 // removes spinners from "<input type="number">"
 input[type='number']::-webkit-outer-spin-button,
 input[type='number']::-webkit-inner-spin-button {
 	-webkit-appearance: none;
+	appearance: none;
 	margin: 0;
 }
 input[type='number'] {
 	-moz-appearance: textfield;
+	appearance: textfield;
 }
 
 input,
 select {
 	background-color: $background-clr;
 	border: $border-sz solid $foreground-clr;
-	border-radius: 3px;
+	border-radius: $border-radius;
 	color: $foreground-clr;
 
 	&::selection {
@@ -156,7 +159,7 @@ button {
 button {
 	background: $foreground-clr;
 	border: $border-sz solid $foreground-clr;
-	border-radius: 3px;
+	border-radius: $border-radius;
 	color: $background-clr;
 }
 button:hover:not(:disabled) {
@@ -178,6 +181,6 @@ button:disabled {
 
 button:focus {
 	outline: $outline-sz solid $focus-clr;
-	outline-offset: 2px;
+	outline-offset: $outline-offset;
 	transition: none;
 }

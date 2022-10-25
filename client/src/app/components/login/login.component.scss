@@ -39,8 +39,8 @@ div#buttons {
 .login-button {
 	display: grid;
 	grid-template-columns: $image-size 1fr;
-	background-color: white;
-	border-radius: 2px;
+	background-color: $foreground-clr;
+	border-radius: $border-radius;
 
 	&--disabled {
 		background-color: $dark-purple;
