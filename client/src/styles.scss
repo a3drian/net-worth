@@ -137,8 +137,10 @@ input {
 		// fix Firefox making the text a bit transparent
 		opacity: 1;
 	}
-	&:invalid:focus-within {
+	&:invalid {
 		border: $border-sz solid $invalid-clr;
+	}
+	&:invalid:focus-within {
 		color: $foreground-clr;
 		outline: $outline-sz solid $focus-clr;
 	}

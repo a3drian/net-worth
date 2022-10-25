@@ -12,7 +12,7 @@
 		<fieldset>
 			<label for="amount">Amount and currency:</label>
 			<div id="amount-currency-container">
-				<input matInput id="amount" [ngClass]="!isInputValid('amount') ? 'input-error' : ''" type="number" step="any" name="amount"
+				<input matInput id="amount" type="number" step="any" name="amount"
 					formControlName="amount" placeholder="{{ formPlaceholders.amount }}" required>
 				<select name="currency" id="currency-select" formControlName="currency" required>
 					<option *ngFor="let c of currencies" [value]="c">
@@ -26,7 +26,7 @@
 
 		<fieldset>
 			<label for="details">Details:</label>
-			<input matInput id="details" [ngClass]="!isInputValid('details') ? 'input-error' : ''" type="text" name="details"
+			<input matInput id="details" type="text" name="details"
 				formControlName="details" placeholder="{{ formPlaceholders.details }}" required>
 			<p *ngIf="isInputValid('details')">What did you spend it on?</p>
 			<p class="error" *ngIf="!isDetailsValid()">{{ detailsErrorMessage }}</p>
