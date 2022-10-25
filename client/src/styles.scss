@@ -125,7 +125,7 @@ select:active,
 input:focus-within,
 select:focus-within {
 	outline: $outline-sz solid $focus-clr;
-	outline-offset: $outline-offset;
+	outline-offset: 0px;
 	// border: 1px solid $focus-clr; // only works if the base state also has "border"
 }
 

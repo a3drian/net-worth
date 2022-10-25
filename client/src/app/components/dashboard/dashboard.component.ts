@@ -72,7 +72,7 @@ export class DashboardComponent implements OnInit {
 			.getSpending(this.owner)
 			.subscribe(
 				(spending: { years: number[]; months: number[]; }) => {
-					console.log('spending', spending)
+					log('dashboard.ts', this.ngOnInit.name, 'Spending:', spending);
 					this.years = spending.years;
 					this.months = spending.months.map(m => m + 1).map(m => this.toMonthName(m));
 				}
