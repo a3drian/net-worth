@@ -65,7 +65,7 @@ main {
 	}
 
 	button {
-		margin-inline-start: calc($outline-sz + $outline-offset - 1px);
+		margin-inline-start: calc($outline-sz + $outline-offset);
 	}
 }
 
@@ -78,5 +78,39 @@ main {
 @media screen and (max-width: 480px) {
 	#report {
 		grid-template-rows: 64px 32px;
+	}
+}
+
+.fabs {
+	inset-block: auto 1.95rem;
+	inset-inline: auto 1.75rem;
+	position: fixed;
+	z-index: 1;
+}
+
+button.fab {
+	--shadow-color: 220 3% 15%;
+	--shadow-strength: 1%;
+	--shadow-2: 0 3px 5px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
+		0 7px 14px -5px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%));
+	--shadow-4: 0 -2px 5px 0 hsl(var(--shadow-color) / calc(var(--shadow-strength) + 2%)),
+		0 1px 1px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
+		0 2px 2px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
+		0 5px 5px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 4%)),
+		0 9px 9px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%)),
+		0 16px 16px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 6%));
+
+	box-shadow: var(--shadow-4);
+	font-size: 4rem !important;
+
+	--size: 72px;
+	width: var(--size);
+	height: var(--size);
+	line-height: var(--size);
+
+	-webkit-tap-highlight-color: transparent;
+
+	&:active {
+		box-shadow: var(--shadow-2);
 	}
 }

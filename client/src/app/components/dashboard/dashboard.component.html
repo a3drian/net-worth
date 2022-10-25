@@ -47,10 +47,14 @@
 		</div>
 	</div>
 
-	<button (click)="openShowDepositDialog('spend')">Spend</button>
-
 	<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
 	</app-deposit-card>
 
 	<!-- <button>Last month</button> <button>This year</button> -->
+
+	<div class="fabs" role="group" aria-label="Floating action buttons">
+		<button class="fab" (click)="openShowDepositDialog('spend')" title="Add new action" aria-label="Add new action">
+			+
+		</button>
+	</div>
 </main>
