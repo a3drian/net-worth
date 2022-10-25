@@ -1,7 +1,6 @@
 @import '../common.scss';
 
 button {
-	margin-inline-end: 0.5rem;
 	padding-top: 4px;
 	transition: all 200ms ease;
 	transition-property: background-color, border;
@@ -11,7 +10,7 @@ button {
 }
 
 button {
-	background: $foreground-clr;
+	background-color: $foreground-clr;
 	border: $border-sz solid $foreground-clr;
 	border-radius: $border-radius;
 	color: $background-clr;
@@ -27,19 +26,28 @@ button {
 
 	&:hover:not(:disabled) {
 		background-color: $background-clr;
-		border: $border-sz solid $foreground-clr;
 		// box-shadow: 0 2px 0 $focus-clr;
 		color: $foreground-clr;
-
 		text-shadow: none;
 	}
 
 	&:disabled {
-		background: $background-clr;
+		background-color: $background-clr;
 		border: $border-sz solid $dark-purple;
 		color: $dark-purple;
-		// text-decoration: line-through;
 		outline-color: $dark-purple;
 		transition: none;
+		text-decoration: line-through;
+	}
+}
+
+button.secondary {
+	background-color: $background-clr;
+	color: $foreground-clr;
+
+	&:hover:not(:disabled) {
+		background-color: $foreground-clr;
+		color: $background-clr;
+		text-shadow: none;
 	}
 }
