@@ -106,34 +106,71 @@ input::placeholder {
 	opacity: 1;
 }
 
-// removes spinners from "<input type="number">"
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
-	-webkit-appearance: none;
-	appearance: none;
-	margin: 0;
-}
-input[type='number'] {
-	-moz-appearance: textfield;
-	appearance: textfield;
-}
-
 input,
 select {
 	background-color: $background-clr;
 	border: $border-sz solid $foreground-clr;
 	border-radius: $border-radius;
 	color: $foreground-clr;
+	height: 30px;
+	max-width: $input-max-width;
 
 	&::selection {
 		@include selection();
 	}
 }
 
+input:active,
+select:active,
+input:focus-within,
+select:focus-within {
+	outline: $outline-sz solid $focus-clr;
+	outline-offset: $outline-offset;
+	// border: 1px solid $focus-clr; // only works if the base state also has "border"
+}
+
+input {
+	&::placeholder {
+		color: $invalid-clr !important;
+		// removed background because of inconsistencies in Chrome
+		font-style: italic;
+		// fix Firefox making the text a bit transparent
+		opacity: 1;
+	}
+	&:invalid:focus-within {
+		border: $border-sz solid $invalid-clr;
+		color: $foreground-clr;
+		outline: $outline-sz solid $focus-clr;
+	}
+}
+
+select > option {
+	// known bug that Firefox does not load font here because it is rendered in a separate process
+	// should work if the font is installed on the system though
+	font-family: $font-main;
+}
+
 input[type='text'],
 input[type='number'] {
 	caret-color: $focus-clr;
 	padding-left: 5px;
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
+	appearance: textfield;
+
+	// removes spinners from "<input type="number">"
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		appearance: none;
+		margin: 0;
+	}
+}
+
+input[type='date'] {
+	font-family: $font-main;
 }
 
 ::-webkit-datetime-edit-month-field,
@@ -143,6 +180,9 @@ input[type='number'] {
 	&:focus {
 		@include selection();
 	}
+}
+::-webkit-calendar-picker-indicator {
+	filter: invert(1);
 }
 ::-webkit-datetime-edit {
 	padding: 3px;
@@ -161,26 +201,31 @@ button {
 	border: $border-sz solid $foreground-clr;
 	border-radius: $border-radius;
 	color: $background-clr;
-}
-button:hover:not(:disabled) {
-	background-color: $background-clr;
-	border: $border-sz solid $foreground-clr;
-	// box-shadow: 0 2px 0 $focus-clr;
-	color: $foreground-clr;
-
-	text-shadow: none;
-}
-
-button:disabled {
-	background: $background-clr;
-	border: $border-sz solid $dark-purple;
-	color: $dark-purple;
-	// text-decoration: line-through;
-	transition: none;
-}
-
-button:focus {
-	outline: $outline-sz solid $focus-clr;
+	font-size: 1rem !important;
+	outline: calc($outline-sz / 2) solid $foreground-clr;
 	outline-offset: $outline-offset;
-	transition: none;
+
+	&:focus {
+		outline: $outline-sz solid $focus-clr;
+		outline-offset: $outline-offset;
+		transition: none;
+	}
+
+	&:hover:not(:disabled) {
+		background-color: $background-clr;
+		border: $border-sz solid $foreground-clr;
+		// box-shadow: 0 2px 0 $focus-clr;
+		color: $foreground-clr;
+
+		text-shadow: none;
+	}
+
+	&:disabled {
+		background: $background-clr;
+		border: $border-sz solid $dark-purple;
+		color: $dark-purple;
+		// text-decoration: line-through;
+		outline-color: $dark-purple;
+		transition: none;
+	}
 }

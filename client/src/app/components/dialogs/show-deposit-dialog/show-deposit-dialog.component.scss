@@ -1,24 +1,5 @@
 @import '../../../styles/common.scss';
 
-$input-max-width: 150px;
-
-input:active,
-select:active,
-input:focus-within,
-select:focus-within {
-	outline: $outline-sz solid $focus-clr;
-	outline-offset: $outline-offset;
-	// border: 1px solid $focus-clr; // only works if the base state also has "border"
-}
-
-select > option {
-	font-family: $font-main;
-}
-
-input[type='date'] {
-	font-family: $font-main;
-}
-
 .dialog-title {
 	display: flex;
 	align-items: center;
@@ -44,26 +25,6 @@ input[type='date'] {
 
 fieldset input {
 	box-sizing: border-box;
-}
-
-input,
-select {
-	height: 30px;
-}
-
-input,
-select {
-	max-width: $input-max-width;
-}
-
-input:invalid:focus-within {
-	border: $border-sz solid $invalid-clr;
-	color: $foreground-clr;
-	outline: $outline-sz solid $focus-clr;
-}
-
-::-webkit-calendar-picker-indicator {
-	filter: invert(1);
 }
 
 fieldset {
