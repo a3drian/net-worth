@@ -1,0 +1,78 @@
+@import '../common.scss';
+
+input::placeholder {
+	color: $invalid-clr !important;
+	// removed background because of inconsistencies in Chrome
+	font-style: italic;
+	// fix Firefox making the text a bit transparent
+	opacity: 1;
+}
+
+input,
+select {
+	background-color: $background-clr;
+	border: $border-sz solid $foreground-clr;
+	border-radius: $border-radius;
+	color: $foreground-clr;
+	height: 30px;
+	max-width: $input-max-width;
+
+	&::selection {
+		@include selection();
+	}
+}
+
+input:active,
+select:active,
+input:focus-within,
+select:focus-within {
+	outline: $outline-sz solid $focus-clr;
+	outline-offset: 0px;
+	// border: 1px solid $focus-clr; // only works if the base state also has "border"
+}
+
+input {
+	&::placeholder {
+		color: $invalid-clr !important;
+		// removed background because of inconsistencies in Chrome
+		font-style: italic;
+		// fix Firefox making the text a bit transparent
+		opacity: 1;
+	}
+	&:invalid {
+		border: $border-sz solid $invalid-clr;
+	}
+	&:invalid:focus-within {
+		color: $foreground-clr;
+		outline: $outline-sz solid $focus-clr;
+	}
+}
+
+select > option {
+	// known bug that Firefox does not load font here because it is rendered in a separate process
+	// should work if the font is installed on the system though
+	font-family: $font-main;
+}
+
+input[type='number'],
+input[type='text'] {
+	caret-color: $focus-clr;
+	padding-left: 5px;
+}
+
+input[type='date'] {
+	font-family: $font-main;
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
+	appearance: textfield;
+
+	// removes spinners from "<input type="number">"
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		appearance: none;
+		margin: 0;
+	}
+}

@@ -40,6 +40,10 @@ $netWorth-theme: mat.define-light-theme(
 @import './app/styles/colors.scss';
 @import './app/styles/reset.scss';
 @import './app/styles/variables.scss';
+// Components:
+@import './app/styles/components/button.scss';
+@import './app/styles/components/input-fields.scss';
+// Mixins:
 @import './app/styles/mixins/selection.scss';
 
 //
@@ -65,6 +69,10 @@ $netWorth-theme: mat.define-light-theme(
 	border: 3px solid $background-clr;
 }
 
+*::selection {
+	@include selection();
+}
+
 body {
 	margin: 0;
 	font-family: $font-main;
@@ -72,10 +80,6 @@ body {
 	padding-block-start: 0;
 	background-color: $background-clr;
 	color: $foreground-clr;
-}
-
-*::selection {
-	@include selection();
 }
 
 .mat-dialog-actions,
@@ -98,83 +102,6 @@ body {
 	padding-block: 26px;
 }
 
-input::placeholder {
-	color: $invalid-clr !important;
-	// removed background because of inconsistencies in Chrome
-	font-style: italic;
-	// fix Firefox making the text a bit transparent
-	opacity: 1;
-}
-
-input,
-select {
-	background-color: $background-clr;
-	border: $border-sz solid $foreground-clr;
-	border-radius: $border-radius;
-	color: $foreground-clr;
-	height: 30px;
-	max-width: $input-max-width;
-
-	&::selection {
-		@include selection();
-	}
-}
-
-input:active,
-select:active,
-input:focus-within,
-select:focus-within {
-	outline: $outline-sz solid $focus-clr;
-	outline-offset: 0px;
-	// border: 1px solid $focus-clr; // only works if the base state also has "border"
-}
-
-input {
-	&::placeholder {
-		color: $invalid-clr !important;
-		// removed background because of inconsistencies in Chrome
-		font-style: italic;
-		// fix Firefox making the text a bit transparent
-		opacity: 1;
-	}
-	&:invalid {
-		border: $border-sz solid $invalid-clr;
-	}
-	&:invalid:focus-within {
-		color: $foreground-clr;
-		outline: $outline-sz solid $focus-clr;
-	}
-}
-
-select > option {
-	// known bug that Firefox does not load font here because it is rendered in a separate process
-	// should work if the font is installed on the system though
-	font-family: $font-main;
-}
-
-input[type='text'],
-input[type='number'] {
-	caret-color: $focus-clr;
-	padding-left: 5px;
-}
-
-input[type='number'] {
-	-moz-appearance: textfield;
-	appearance: textfield;
-
-	// removes spinners from "<input type="number">"
-	&::-webkit-outer-spin-button,
-	&::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		appearance: none;
-		margin: 0;
-	}
-}
-
-input[type='date'] {
-	font-family: $font-main;
-}
-
 ::-webkit-datetime-edit-month-field,
 ::-webkit-datetime-edit-day-field,
 ::-webkit-datetime-edit-year-field {
@@ -188,46 +115,4 @@ input[type='date'] {
 }
 ::-webkit-datetime-edit {
 	padding: 3px;
-}
-
-button {
-	margin-inline-end: 0.5rem;
-	padding-top: 4px;
-	transition: all 200ms ease;
-	transition-property: background-color, border;
-	user-select: none;
-	width: 80px;
-}
-button {
-	background: $foreground-clr;
-	border: $border-sz solid $foreground-clr;
-	border-radius: $border-radius;
-	color: $background-clr;
-	font-size: 1rem !important;
-	outline: calc($outline-sz / 2) solid $foreground-clr;
-	outline-offset: $outline-offset;
-
-	&:focus {
-		outline: $outline-sz solid $focus-clr;
-		outline-offset: $outline-offset;
-		transition: none;
-	}
-
-	&:hover:not(:disabled) {
-		background-color: $background-clr;
-		border: $border-sz solid $foreground-clr;
-		// box-shadow: 0 2px 0 $focus-clr;
-		color: $foreground-clr;
-
-		text-shadow: none;
-	}
-
-	&:disabled {
-		background: $background-clr;
-		border: $border-sz solid $dark-purple;
-		color: $dark-purple;
-		// text-decoration: line-through;
-		outline-color: $dark-purple;
-		transition: none;
-	}
 }

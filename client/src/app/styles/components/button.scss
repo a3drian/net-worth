@@ -1,0 +1,44 @@
+@import '../common.scss';
+
+button {
+	margin-inline-end: 0.5rem;
+	padding-top: 4px;
+	transition: all 200ms ease;
+	transition-property: background-color, border;
+	user-select: none;
+	width: 80px;
+}
+
+button {
+	background: $foreground-clr;
+	border: $border-sz solid $foreground-clr;
+	border-radius: $border-radius;
+	color: $background-clr;
+	font-size: 1rem !important;
+	outline: calc($outline-sz / 2) solid $foreground-clr;
+	outline-offset: $outline-offset;
+
+	&:focus {
+		outline: $outline-sz solid $focus-clr;
+		outline-offset: $outline-offset;
+		transition: none;
+	}
+
+	&:hover:not(:disabled) {
+		background-color: $background-clr;
+		border: $border-sz solid $foreground-clr;
+		// box-shadow: 0 2px 0 $focus-clr;
+		color: $foreground-clr;
+
+		text-shadow: none;
+	}
+
+	&:disabled {
+		background: $background-clr;
+		border: $border-sz solid $dark-purple;
+		color: $dark-purple;
+		// text-decoration: line-through;
+		outline-color: $dark-purple;
+		transition: none;
+	}
+}
