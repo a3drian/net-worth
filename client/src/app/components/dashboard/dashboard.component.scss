@@ -15,8 +15,9 @@ main {
 	margin-inline-end: auto;
 
 	#report {
+		align-items: center;
 		display: grid;
-		padding-block: 10px;
+		padding-block-start: 10px;
 
 		p > span {
 			font-weight: bold;
@@ -30,35 +31,32 @@ main {
 
 	#filters {
 		align-items: center;
-		display: flex;
-		height: 36px;
+		display: grid;
+		grid-template-rows: 81px min-content;
 
 		form {
-			display: grid;
-			grid-template-columns: max-content max-content;
-			margin-block-start: 4px;
-
 			fieldset {
+				align-items: baseline;
 				border: none;
-				display: inline-block;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				margin: 0px;
+				padding-block: 5px;
 
-				label {
-					margin-inline-end: 0.5rem;
-				}
-			}
+				select {
+					height: 30px;
+					justify-self: end;
+					width: $input-max-width;
 
-			select {
-				height: 30px;
-				width: $input-max-width;
+					&:active,
+					&:focus-within {
+						outline: $outline-sz solid $focus-clr;
+						outline-offset: $outline-offset;
+					}
 
-				&:active,
-				&:focus-within {
-					outline: $outline-sz solid $focus-clr;
-					outline-offset: $outline-offset;
-				}
-
-				& > option {
-					font-family: $font-main;
+					& > option {
+						font-family: $font-main;
+					}
 				}
 			}
 		}
@@ -71,21 +69,38 @@ main {
 
 @media screen and (min-width: 481px) {
 	#report {
-		grid-template-rows: 32px;
+		grid-template-rows: 48px;
+	}
+
+	#filters {
+		grid-template-columns: 1fr 1fr;
 	}
 }
 
 @media screen and (max-width: 480px) {
 	#report {
-		grid-template-rows: 64px 32px;
+		grid-template-rows: 48px 81px;
+	}
+
+	#filters {
+		grid-template-columns: 108px 1fr;
 	}
 }
 
 .fabs {
-	inset-block: auto 1.95rem;
+	inset-block: auto 2.45rem;
 	inset-inline: auto 1.75rem;
 	position: fixed;
 	z-index: 1;
+
+	--shadow-color: 220 3% 15%;
+	--computed-shadow-color: hsl(var(--shadow-color) / calc(var(--shadow-strength) + 2%));
+	--shadow-strength: 51%;
+	--shadow-4: -5px 0px 15px 0px var(--computed-shadow-color);
+
+	box-shadow: var(--shadow-4);
+	background-color: $background-clr;
+	border-radius: 40px;
 }
 
 button.fab {
