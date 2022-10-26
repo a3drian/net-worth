@@ -94,6 +94,14 @@ body {
 	// padding: 5px;
 }
 
+// fix "Update" button being covered by Safari address bar
+@media screen and (max-width: 480px) {
+	.custom-view-deposit-dialog-container mat-dialog-content,
+	.custom-delete-deposit-dialog-container mat-dialog-content {
+		max-height: 60vh;
+	}
+}
+
 .custom-view-deposit-dialog-container mat-dialog-actions,
 .custom-delete-deposit-dialog-container mat-dialog-actions {
 	// margin-block-start: 0.5rem;
