@@ -190,7 +190,7 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	private updateTotalAmount(oldAmount: string, newAmount: string, oldCurrency: CURRENCY, newCurrency: CURRENCY): void {
 		if (!oldAmount || !newAmount) { return; }
-		let totalAmount = this.informationService.totalAmount$.getValue();
+		const totalAmount = this.informationService.totalAmount$.getValue();
 
 		const oAmount = Number(oldAmount);
 		const nAmount = Number(newAmount);

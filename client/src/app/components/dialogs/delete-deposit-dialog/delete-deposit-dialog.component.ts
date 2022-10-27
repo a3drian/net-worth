@@ -31,7 +31,7 @@ export class DeleteDepositDialogComponent implements OnInit {
 	}
 
 	private updateTotalAmount(): boolean {
-		let totalAmount = this.informationService.totalAmount$.getValue();
+		const totalAmount = this.informationService.totalAmount$.getValue();
 		switch (this.deposit.currency) {
 			case CURRENCY.EUR: {
 				totalAmount.EUR = totalAmount.EUR - this.deposit.amount;
