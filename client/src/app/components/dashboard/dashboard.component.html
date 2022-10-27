@@ -1,8 +1,10 @@
 <pre class="debug" *ngIf="isInDebugMode"><b>dashboard</b> works!</pre>
 
-<div *ngIf="isLoading" class="loading-spinner">
-	<app-loading-spinner></app-loading-spinner>
-</div>
+<main *ngIf="isLoading" class="isLoading">
+	<div class="loading-spinner">
+		<app-loading-spinner></app-loading-spinner>
+	</div>
+</main>
 
 <app-header *ngIf="!isLoading"></app-header>
 
@@ -47,8 +49,16 @@
 		</div>
 	</div>
 
-	<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
-	</app-deposit-card>
+	<section *ngIf="isDepositsLoading" class="isLoading">
+		<div class="loading-spinner">
+			<app-loading-spinner></app-loading-spinner>
+		</div>
+	</section>
+
+	<section *ngIf="!isDepositsLoading">
+		<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
+		</app-deposit-card>
+	</section>
 
 	<!-- <button>Last month</button> <button>This year</button> -->
 

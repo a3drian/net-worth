@@ -3,8 +3,8 @@
 $input-max-width: 150px;
 
 .loading-spinner {
-	grid-column: 2;
-	grid-row: 2;
+	align-self: end;
+	margin-bottom: -5vh;
 }
 
 main {
@@ -33,15 +33,19 @@ main {
 		align-items: center;
 		display: grid;
 		grid-template-rows: 81px min-content;
+		margin-inline-end: $outline-offset;
 
 		form {
 			fieldset {
 				align-items: baseline;
 				border: none;
 				display: grid;
+				gap: 10px;
 				grid-template-columns: 1fr 1fr;
+				justify-items: end;
 				margin: 0px;
 				padding-block: 5px;
+				padding: 5px 0px;
 
 				select {
 					height: 30px;
@@ -64,6 +68,21 @@ main {
 
 	button {
 		margin-inline-start: calc($outline-sz + $outline-offset);
+	}
+}
+
+main.isLoading,
+section.isLoading {
+	display: grid;
+	// a value of "50" is enough here
+	// however, because the scrollbar appears after the deposits are loaded, the layout shifts
+	// used a value of "80" to not shift the layout at all (but it does mean that the scrollbar is always visible)
+	// "80" because this class is also shared with the main loading spinner
+	height: 80vh;
+
+	.loading-spinner {
+		align-self: center;
+		margin-bottom: 0px;
 	}
 }
 

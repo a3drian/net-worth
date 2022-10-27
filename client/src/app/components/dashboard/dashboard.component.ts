@@ -10,7 +10,7 @@ import { IUser } from 'src/app/interfaces/IUser';
 // Models:
 import { Currency } from 'src/app/models/Currency';
 // rxjs:
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, merge, Subscription, switchMap } from 'rxjs';
 // Services:
 import { AuthService } from 'src/app/services/auth.service';
 import { DepositsService } from 'src/app/services/deposits.service';
@@ -50,6 +50,14 @@ export class DashboardComponent implements OnInit {
 	user: IUser | null = null;
 	showDepositDialogSub: Subscription = new Subscription();
 
+	refreshDeposits$ = new BehaviorSubject(false);
+	get refreshDeposits(): boolean {
+		return this.refreshDeposits$.value;
+	}
+	set refreshDeposits(value: boolean) {
+		this.refreshDeposits$.next(value);
+	}
+
 	constructor(
 		private depositsService: DepositsService,
 		private formBuilder: FormBuilder,
@@ -57,10 +65,10 @@ export class DashboardComponent implements OnInit {
 		public showDepositDialog: MatDialog,
 		private authService: AuthService
 	) {
-		this.owner = this.informationService.owner.value;
+		this.owner = this.informationService.owner$.value;
 		this.selectedYear = Number(this.today.getFullYear().toString().substring(2));
 		this.selectedMonth = this.toMonthName(this.today.getMonth() + 1);
-		this.user = this.authService.user.value;
+		this.user = this.authService.user$.value;
 
 		const years = new FormControl(this.today.getFullYear(), [Validators.required]);
 		const months = new FormControl(this.toMonthName(this.today.getMonth() + 1), [Validators.required]);
@@ -78,8 +86,11 @@ export class DashboardComponent implements OnInit {
 				}
 			);
 
-		this.depositsService
-			.getDepositsByOwnerCurrentMonth(this.owner, this.today.getMonth())
+		merge(this.refreshDeposits$)
+			.pipe(switchMap(() => {
+				this.isDepositsLoading = true;
+				return this.depositsService.getDepositsByOwnerCurrentMonth(this.owner, this.today.getMonth());
+			}))
 			.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
 	}
 
@@ -117,7 +128,7 @@ export class DashboardComponent implements OnInit {
 
 		this.depositsService
 			.postDeposit(deposit)
-			.subscribe(() => { });
+			.subscribe(() => this.refreshDeposits = true);
 	}
 
 	openFilters(): void {
@@ -138,7 +149,10 @@ export class DashboardComponent implements OnInit {
 
 		this.depositsService
 			.getDepositsByOwnerYearMonth(this.owner, year, month)
-			.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
+			.subscribe((deposits: IDeposit[]) => {
+				this.loadDeposits(deposits);
+				this.refreshDeposits = true;
+			});
 	}
 
 	private loadDeposits(deposits: IDeposit[]): void {
@@ -152,10 +166,15 @@ export class DashboardComponent implements OnInit {
 			this.totalAmount.EUR !== 0 ||
 			this.totalAmount.GBP !== 0 ||
 			this.totalAmount.USD !== 0;
-		this.informationService.totalAmount.next(this.totalAmount);
-		this.informationService.totalAmount.subscribe(totalAmount => this.totalAmount = totalAmount);
-		this.isLoading = false;
-		this.isDepositsLoading = false;
+
+		this.updateInformationService();
+
+		setTimeout(() => { this.isDepositsLoading = false; }, Constants.updateTimeout);
+	}
+
+	private updateInformationService(): void {
+		this.informationService.totalAmount$.next(this.totalAmount);
+		this.informationService.totalAmount$.subscribe(totalAmount => this.totalAmount = totalAmount);
 	}
 
 	private toMonthIndex(month: string) {
