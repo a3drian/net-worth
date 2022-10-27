@@ -1,8 +1,10 @@
 <pre class="debug" *ngIf="isInDebugMode"><b>login</b> works!</pre>
 
-<div *ngIf="isLoading" class="loading-spinner">
-	<app-loading-spinner></app-loading-spinner>
-</div>
+<main *ngIf="isLoading" class="isLoading">
+	<div class="loading-spinner">
+		<app-loading-spinner></app-loading-spinner>
+	</div>
+</main>
 
 <main *ngIf="!isLoading">
 

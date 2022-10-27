@@ -77,13 +77,16 @@ section.isLoading {
 	// a value of "50" is enough here
 	// however, because the scrollbar appears after the deposits are loaded, the layout shifts
 	// used a value of "80" to not shift the layout at all (but it does mean that the scrollbar is always visible)
-	// "80" because this class is also shared with the main loading spinner
-	height: 80vh;
+	height: 100vh;
 
 	.loading-spinner {
 		align-self: center;
 		margin-bottom: 0px;
 	}
+}
+
+section.isLoading {
+	height: 50vh;
 }
 
 @media screen and (min-width: 481px) {

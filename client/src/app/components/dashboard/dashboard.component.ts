@@ -28,7 +28,7 @@ import { log } from 'src/app/shared/Logger';
 export class DashboardComponent implements OnInit {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
-	isLoading: boolean = false;
+	isLoading: boolean = true;
 	isDepositsLoading: boolean = false;
 
 	errorResponse: HttpErrorResponse | null = null;
@@ -51,10 +51,10 @@ export class DashboardComponent implements OnInit {
 	showDepositDialogSub: Subscription = new Subscription();
 
 	refreshDeposits$ = new BehaviorSubject(false);
-	get refreshDeposits(): boolean {
+	private get refreshDeposits(): boolean {
 		return this.refreshDeposits$.value;
 	}
-	set refreshDeposits(value: boolean) {
+	private set refreshDeposits(value: boolean) {
 		this.refreshDeposits$.next(value);
 	}
 
@@ -79,10 +79,11 @@ export class DashboardComponent implements OnInit {
 		this.depositsService
 			.getSpending(this.owner)
 			.subscribe(
-				(spending: { years: number[]; months: number[]; }) => {
+				(spending: { years: number[], months: number[] }) => {
 					log('dashboard.ts', this.ngOnInit.name, 'Spending:', spending);
 					this.years = spending.years;
 					this.months = spending.months.map(m => m + 1).map(m => this.toMonthName(m));
+					this.isLoading = false;
 				}
 			);
 
@@ -147,12 +148,12 @@ export class DashboardComponent implements OnInit {
 		log('dashboard.ts', this.saveDeposit.name, 'year', yearValue);
 		log('dashboard.ts', this.saveDeposit.name, 'month', monthValue);
 
-		this.depositsService
-			.getDepositsByOwnerYearMonth(this.owner, year, month)
-			.subscribe((deposits: IDeposit[]) => {
-				this.loadDeposits(deposits);
-				this.refreshDeposits = true;
-			});
+		merge(this.refreshDeposits$)
+			.pipe(switchMap(() => {
+				this.isDepositsLoading = true;
+				return this.depositsService.getDepositsByOwnerYearMonth(this.owner, year, month);
+			}))
+			.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
 	}
 
 	private loadDeposits(deposits: IDeposit[]): void {

@@ -14,8 +14,7 @@ import { log } from 'src/app/shared/Logger';
 export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
-
-	isLoading = true;
+	isLoading: boolean = true;
 
 	constructor(
 		private authService: AuthService,

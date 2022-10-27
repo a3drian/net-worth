@@ -52,7 +52,6 @@ button.secondary {
 	&:hover:not(:disabled) {
 		background-color: $foreground-clr;
 		color: $background-clr;
-		text-shadow: none;
 	}
 }
 
