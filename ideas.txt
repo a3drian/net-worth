@@ -14,9 +14,13 @@ client:
 	*adds 10 euro*
 ...will not immediately show:
 	20 lei | 10 euro | 40 lire
--fix UI not immediately showing the deposit after adding one
+[DONE]-fix UI not immediately showing the deposit after adding one
 
 [DONE]-fix header still going over when "<body>" tag finishes in the HTML
+
+[DONE]-fix login screen no longer being centered
+[DONE]-fix "GET" to ":4200/dashboard" returning error on deployed API
+[DONE].this happens because of the first "GET" middleware with path "/*"
 
 -colour deposits differently based on currency
 
