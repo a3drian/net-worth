@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit {
 		merge(this.refreshDeposits$)
 			.pipe(switchMap(() => {
 				this.isDepositsLoading = true;
-				return this.depositsService.getDepositsByOwnerCurrentMonth(this.owner, this.today.getMonth());
+				return this.depositsService.getDepositsByOwnerYearMonth(this.owner, this.today.getFullYear(), this.today.getMonth());
 			}))
 			.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
 	}
