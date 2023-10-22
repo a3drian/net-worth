@@ -55,6 +55,11 @@ export class AuthService {
 			});
 	}
 
+	acquireToken(): Observable<string | null> {
+		const token = sessionStorage.getItem(this.TOKEN_KEY);
+		return of(token);
+	}
+
 	async logout(): Promise<void> {
 		await signOut(this.auth)
 			.catch(e => log('auth.service', this.logout.name, 'Exception while signing out:', e))

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 // Angular Material:
 import { FormsModule } from '@angular/forms';
@@ -33,6 +33,8 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 // Guards:
 import { AuthGuard } from './guards/auth.guard';
 import { LoginGuard } from './guards/login.guard';
+// Interceptors:
+import { TokenInterceptor } from './interceptors/token.interceptor';
 // Pipes:
 import { AmountPipe } from './shared/pipes/amount.pipe';
 import { CurrencyPipe } from './shared/pipes/currency.pipe';
@@ -88,7 +90,7 @@ import { environment } from '../environments/environment';
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideAuth(() => getAuth())
 	],
-	providers: [],
+	providers: [{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }
