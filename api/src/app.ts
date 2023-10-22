@@ -12,6 +12,8 @@ import { IExpressError } from 'net-worth-shared';
 import { setClientRoute } from './routes/client.route';
 import { setHealthCheckRoute } from './routes/health-check.route';
 import { setSpendRoute } from './routes/spend.route';
+// Services:
+import { verifyJWT } from './services/auth.service';
 // Shared:
 import { Constants } from './shared/Constants';
 import { ERROR_MESSAGES, STATUS_CODES } from 'net-worth-shared';
@@ -40,6 +42,8 @@ async function makeApp(): Promise<Application> {
 	// routes
 	app.use(env.HEALTH_CHECK_ROUTE, setHealthCheckRoute(Router()));
 	app.use(env.CLIENT_ROUTE, setClientRoute(Router()));
+
+	app.use(verifyJWT);
 	app.use(env.SPEND_ROUTE, setSpendRoute(Router()));
 
 	// 404

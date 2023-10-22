@@ -74,7 +74,7 @@ async function getDepositsByOwner(
 		const deposits: IDeposit[] = await DepositModel.find({ owner: searchQuery.owner });
 		sort(deposits, searchQuery.sort);
 
-		log(CLASS_NAME, getDepositsByOwner.name, 'deposits:', deposits);
+		// log(CLASS_NAME, getDepositsByOwner.name, 'deposits:', deposits);
 		log(CLASS_NAME, `${getDepositsByOwner.name}^`, '');
 
 		return deposits;
