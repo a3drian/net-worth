@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 // Components:
 import { ShowDepositDialogComponent } from '../dialogs/show-deposit-dialog/show-deposit-dialog.component';
@@ -9,7 +10,7 @@ import { IUser } from 'src/app/interfaces/IUser';
 // Models:
 import { Currency } from 'src/app/models/Currency';
 // rxjs:
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, merge, Subscription, switchMap } from 'rxjs';
 // Services:
 import { AuthService } from 'src/app/services/auth.service';
 import { DepositsService } from 'src/app/services/deposits.service';
@@ -27,11 +28,19 @@ import { log } from 'src/app/shared/Logger';
 export class DashboardComponent implements OnInit {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
-	isLoading: boolean = false;
+	isLoading: boolean = true;
 	isDepositsLoading: boolean = false;
 
 	errorResponse: HttpErrorResponse | null = null;
 	today: Date = new Date();
+
+	spendingForm: FormGroup = new FormGroup({});
+	years!: number[];
+	months!: string[];
+	showFilters = false;
+
+	selectedYear!: number;
+	selectedMonth!: string;
 
 	deposits: IDeposit[] = [];
 	totalAmount: Currency = { LEI: 0, EUR: 0, GBP: 0, USD: 0 };
@@ -41,37 +50,49 @@ export class DashboardComponent implements OnInit {
 	user: IUser | null = null;
 	showDepositDialogSub: Subscription = new Subscription();
 
+	refreshDeposits$ = new BehaviorSubject(false);
+	private get refreshDeposits(): boolean {
+		return this.refreshDeposits$.value;
+	}
+	private set refreshDeposits(value: boolean) {
+		this.refreshDeposits$.next(value);
+	}
+
 	constructor(
 		private depositsService: DepositsService,
+		private formBuilder: FormBuilder,
 		private informationService: InformationService,
 		public showDepositDialog: MatDialog,
 		private authService: AuthService
 	) {
-		this.owner = this.informationService.owner.value;
-		this.user = this.authService.user.value;
+		this.owner = this.informationService.owner$.value;
+		this.selectedYear = Number(this.today.getFullYear().toString().substring(2));
+		this.selectedMonth = this.toMonthName(this.today.getMonth() + 1);
+		this.user = this.authService.user$.value;
+
+		const years = new FormControl(this.today.getFullYear(), [Validators.required]);
+		const months = new FormControl(this.toMonthName(this.today.getMonth() + 1), [Validators.required]);
+		this.spendingForm = this.formBuilder.group({ years: years, months: months });
 	}
 
 	ngOnInit(): void {
 		this.depositsService
-			.getDepositsByOwner(this.owner)
+			.getSpending(this.owner)
 			.subscribe(
-				(deposits: IDeposit[]) => {
-					this.deposits = deposits;
-					this.totalAmount.LEI = this.depositsService.getTotalAmount(this.deposits);
-					this.totalAmount.EUR = this.depositsService.getTotalAmount(this.deposits, CURRENCY.EUR);
-					this.totalAmount.GBP = this.depositsService.getTotalAmount(this.deposits, CURRENCY.GBP);
-					this.totalAmount.USD = this.depositsService.getTotalAmount(this.deposits, CURRENCY.USD);
-					this.anyMoneySpent =
-						this.totalAmount.LEI !== 0 ||
-						this.totalAmount.EUR !== 0 ||
-						this.totalAmount.GBP !== 0 ||
-						this.totalAmount.USD !== 0;
-					this.informationService.totalAmount.next(this.totalAmount);
-					this.informationService.totalAmount.subscribe(totalAmount => this.totalAmount = totalAmount);
+				(spending: { years: number[], months: number[] }) => {
+					log('dashboard.ts', this.ngOnInit.name, 'Spending:', spending);
+					this.years = spending.years;
+					this.months = spending.months.map(m => m + 1).map(m => this.toMonthName(m));
 					this.isLoading = false;
-					this.isDepositsLoading = false;
 				}
 			);
+
+		merge(this.refreshDeposits$)
+			.pipe(switchMap(() => {
+				this.isDepositsLoading = true;
+				return this.depositsService.getDepositsByOwnerYearMonth(this.owner, this.today.getFullYear(), this.today.getMonth());
+			}))
+			.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
 	}
 
 	ngOnDestroy() { if (this.showDepositDialogSub) { this.showDepositDialogSub.unsubscribe(); } }
@@ -108,6 +129,76 @@ export class DashboardComponent implements OnInit {
 
 		this.depositsService
 			.postDeposit(deposit)
-			.subscribe(() => { });
+			.subscribe(() => this.refreshDeposits = true);
+	}
+
+	openFilters(): void {
+		this.showFilters = !this.showFilters;
+	}
+
+	onFilterChange(): void {
+		const yearValue = this.spendingForm.controls['years'].value;
+		const monthValue = this.spendingForm.controls['months'].value;
+		const year = Number(yearValue);
+		const month = this.toMonthIndex(monthValue);
+
+		this.selectedYear = Number(yearValue.toString().substring(2));
+		this.selectedMonth = monthValue;
+
+		log('dashboard.ts', this.saveDeposit.name, 'year', yearValue);
+		log('dashboard.ts', this.saveDeposit.name, 'month', monthValue);
+
+		merge(this.refreshDeposits$)
+			.pipe(switchMap(() => {
+				this.isDepositsLoading = true;
+				return this.depositsService.getDepositsByOwnerYearMonth(this.owner, year, month);
+			}))
+			.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
+	}
+
+	private loadDeposits(deposits: IDeposit[]): void {
+		this.deposits = deposits;
+		this.totalAmount.LEI = this.depositsService.getTotalAmount(this.deposits);
+		this.totalAmount.EUR = this.depositsService.getTotalAmount(this.deposits, CURRENCY.EUR);
+		this.totalAmount.GBP = this.depositsService.getTotalAmount(this.deposits, CURRENCY.GBP);
+		this.totalAmount.USD = this.depositsService.getTotalAmount(this.deposits, CURRENCY.USD);
+		this.anyMoneySpent =
+			this.totalAmount.LEI !== 0 ||
+			this.totalAmount.EUR !== 0 ||
+			this.totalAmount.GBP !== 0 ||
+			this.totalAmount.USD !== 0;
+
+		this.updateInformationService();
+
+		setTimeout(() => { this.isDepositsLoading = false; }, Constants.updateTimeout);
+	}
+
+	private updateInformationService(): void {
+		this.informationService.totalAmount$.next(this.totalAmount);
+		this.informationService.totalAmount$.subscribe(totalAmount => this.totalAmount = totalAmount);
+	}
+
+	private toMonthIndex(month: string) {
+		return (
+			['January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December'
+			].indexOf(month));
+	}
+
+	private toMonthName(month: number) {
+		const date = new Date();
+		date.setMonth(month - 1);
+
+		return date.toLocaleString('en-UK', { month: 'long' });
 	}
 }

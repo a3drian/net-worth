@@ -2,7 +2,7 @@
 
 main {
 	border: 2px solid $dark-purple;
-	border-radius: 3px;
+	border-radius: $border-radius;
 	margin-block: 10px;
 	padding: 10px;
 
@@ -23,5 +23,9 @@ main {
 
 	#category-container {
 		margin-bottom: 10px;
+	}
+
+	button {
+		margin-inline-end: 10px;
 	}
 }

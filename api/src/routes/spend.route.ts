@@ -2,7 +2,7 @@ import { Router, Response, Request, NextFunction } from 'express';
 // Models:
 import { IDeposit } from 'net-worth-shared';
 import { Deposit } from '../models/deposit.model';
-import { SearchQuerySort, SORT_OPTION } from '../models/search.model';
+import { SearchQuery, SearchQueryMonthSort, SearchQuerySort, SearchQueryYearMonthSort, SORT_OPTION } from '../models/search.model';
 // Services:
 import * as depositService from '../services/deposits.service';
 // Shared:
@@ -16,6 +16,9 @@ export { setSpendRoute };
 function setSpendRoute(router: Router): Router {
 	router.get('/:id', getDepositById);
 	router.post('/owner/', getDepositsByOwner);
+	router.post('/owner/month/', getDepositsByOwnerCurrentMonth);
+	router.post('/owner/yearmonth/', getDepositsByOwnerYearMonth);
+	router.post('/owner/spending/', getSpending);
 	router.post('/', postDeposit);
 	router.put('/:id', putDeposit);
 	router.delete('/:id', deleteDeposit);
@@ -66,6 +69,100 @@ async function getDepositsByOwner(
 	let response: Error | IDeposit[];
 	try {
 		response = await depositService.getDepositsByOwner(searchQuery);
+	} catch (ex) {
+		return next(ex);
+	}
+
+	if (response instanceof Error) { return next(response); }
+
+	return res
+		.status(STATUS_CODES.OK)
+		.json(response)
+		.end();
+}
+
+async function getSpending(
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<{ years: number[], months: number[] } | void | any> {
+	console.log('');
+
+	const body = req.body;
+	log(CLASS_NAME, getSpending.name, 'body:', body);
+
+	const searchQuery = new SearchQuery({ owner: body.owner });
+
+	let response: Error | { years: number[], months: number[] };
+	try {
+		response = await depositService.getSpending(searchQuery);
+	} catch (ex) {
+		return next(ex);
+	}
+
+	if (response instanceof Error) { return next(response); }
+
+	return res
+		.status(STATUS_CODES.OK)
+		.json(response)
+		.end();
+}
+
+async function getDepositsByOwnerCurrentMonth(
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<IDeposit[] | void | any> {
+	console.log('');
+
+	const body = req.body;
+	log(CLASS_NAME, getDepositsByOwnerCurrentMonth.name, 'body:', body);
+
+	const searchQuery = new SearchQueryMonthSort(
+		{
+			owner: body.owner,
+			currentMonth: body.currentMonth ?? 0,
+			sort: body.sort ?? SORT_OPTION.DESC
+		}
+	);
+
+	let response: Error | IDeposit[];
+	try {
+		response = await depositService.getDepositsByOwnerCurrentMonth(searchQuery);
+	} catch (ex) {
+		return next(ex);
+	}
+
+	if (response instanceof Error) { return next(response); }
+
+	return res
+		.status(STATUS_CODES.OK)
+		.json(response)
+		.end();
+}
+
+async function getDepositsByOwnerYearMonth(
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<IDeposit[] | void | any> {
+	console.log('');
+
+	const body = req.body;
+	log(CLASS_NAME, getDepositsByOwnerYearMonth.name, 'body:', body);
+
+	const searchQuery = new SearchQueryYearMonthSort(
+		{
+			owner: body.owner,
+			year: body.year ?? 1970,
+			month: body.month ?? 0,
+			sort: body.sort ?? SORT_OPTION.DESC
+		}
+	);
+
+	let response: Error | IDeposit[];
+	try {
+		response = await depositService.getDepositsByOwnerYearMonth(searchQuery);
 	} catch (ex) {
 		return next(ex);
 	}

@@ -1,8 +1,10 @@
 @import '../../styles/common.scss';
 
+$input-max-width: 150px;
+
 .loading-spinner {
-	grid-column: 2;
-	grid-row: 2;
+	align-self: end;
+	margin-bottom: -5vh;
 }
 
 main {
@@ -13,9 +15,9 @@ main {
 	margin-inline-end: auto;
 
 	#report {
+		align-items: center;
 		display: grid;
-		grid-template-rows: 32px;
-		padding-block: 10px;
+		padding-block-start: 10px;
 
 		p > span {
 			font-weight: bold;
@@ -25,5 +27,127 @@ main {
 			font-weight: normal;
 			margin-inline: 5px;
 		}
+	}
+
+	#filters {
+		align-items: center;
+		display: grid;
+		grid-template-rows: 81px min-content;
+		margin-inline-end: $outline-offset;
+
+		form {
+			fieldset {
+				align-items: baseline;
+				border: none;
+				display: grid;
+				gap: 10px;
+				grid-template-columns: 1fr 1fr;
+				justify-items: end;
+				margin: 0px;
+				padding-block: 5px;
+				padding: 5px 0px;
+
+				select {
+					height: 30px;
+					justify-self: end;
+					width: $input-max-width;
+
+					&:active,
+					&:focus-within {
+						outline: $outline-sz solid $focus-clr;
+						outline-offset: $outline-offset;
+					}
+
+					& > option {
+						font-family: $font-main;
+					}
+				}
+			}
+		}
+	}
+
+	button {
+		margin-inline-start: calc($outline-sz + $outline-offset);
+	}
+}
+
+main.isLoading,
+section.isLoading {
+	display: grid;
+	// a value of "50" is enough here
+	// however, because the scrollbar appears after the deposits are loaded, the layout shifts
+	height: 100vh;
+
+	.loading-spinner {
+		align-self: center;
+		margin-bottom: 0px;
+	}
+}
+
+section.isLoading {
+	// used a value of "80" to not shift the layout at all (but it does mean that the scrollbar is always visible)
+	height: 80vh;
+}
+
+@media screen and (min-width: 481px) {
+	#report {
+		grid-template-rows: 48px;
+	}
+
+	#filters {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	#report {
+		grid-template-rows: 48px 81px;
+	}
+
+	#filters {
+		grid-template-columns: 108px 1fr;
+	}
+}
+
+.fabs {
+	inset-block: auto 2.45rem;
+	inset-inline: auto 1.75rem;
+	position: fixed;
+	z-index: 1;
+
+	--shadow-color: 220 3% 15%;
+	--shadow-strength: 51%;
+	--computed-shadow-color: hsl(var(--shadow-color) / calc(var(--shadow-strength) + 2%));
+	--shadow-4: -5px 0px 15px 0px var(--computed-shadow-color);
+
+	box-shadow: var(--shadow-4);
+	background-color: $background-clr;
+	border-radius: 40px;
+}
+
+button.fab {
+	--shadow-color: 220 3% 15%;
+	--shadow-strength: 21%;
+	--shadow-2: 0 3px 5px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
+		0 7px 14px -5px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%));
+	--shadow-4: 0 -2px 5px 0 hsl(var(--shadow-color) / calc(var(--shadow-strength) + 2%)),
+		0 1px 1px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
+		0 2px 2px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
+		0 5px 5px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 4%)),
+		0 9px 9px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%)),
+		0 16px 16px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 6%));
+
+	box-shadow: var(--shadow-4);
+	font-size: 4rem !important;
+
+	--size: 72px;
+	width: var(--size);
+	height: var(--size);
+	line-height: var(--size);
+
+	-webkit-tap-highlight-color: transparent;
+
+	&:active {
+		box-shadow: var(--shadow-2);
 	}
 }

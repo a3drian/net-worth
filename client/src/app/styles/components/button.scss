@@ -1,0 +1,60 @@
+@import '../common.scss';
+
+@mixin button($size: 36px) {
+	border-radius: calc($size / 2);
+}
+
+button {
+	padding-top: 4px;
+	transition: all 200ms ease;
+	transition-property: background-color, border;
+	user-select: none;
+	width: 80px;
+	height: 36px;
+}
+
+button {
+	background-color: $foreground-clr;
+	border: $border-sz solid $foreground-clr;
+	border-radius: $border-radius;
+	color: $background-clr;
+	font-size: 1rem !important;
+	outline: calc($outline-sz / 2) solid $foreground-clr;
+	outline-offset: $outline-offset;
+
+	&:focus {
+		outline: $outline-sz solid $focus-clr;
+		outline-offset: $outline-offset;
+		transition: none;
+	}
+
+	&:hover:not(:disabled) {
+		background-color: $background-clr;
+		// box-shadow: 0 2px 0 $focus-clr;
+		color: $foreground-clr;
+		text-shadow: none;
+	}
+
+	&:disabled {
+		background-color: $background-clr;
+		border: $border-sz solid $dark-purple;
+		color: $dark-purple;
+		outline-color: $dark-purple;
+		transition: none;
+		text-decoration: line-through;
+	}
+}
+
+button.secondary {
+	background-color: $background-clr;
+	color: $foreground-clr;
+
+	&:hover:not(:disabled) {
+		background-color: $foreground-clr;
+		color: $background-clr;
+	}
+}
+
+button.round {
+	@include button(72px);
+}

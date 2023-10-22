@@ -53,7 +53,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	amountErrorMessage: string = Constants.amountErrors.empty;
 	detailsErrorMessage: string = Constants.detailsErrors.empty;
 
-	depositChanged = new BehaviorSubject<boolean>(false);
+	depositChanged$ = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public deposit: IDeposit,
@@ -68,9 +68,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		// setTimeout(() => {
 		this.deposit === null ? this.intializeAddPage() : this.initializeEditPage();
-		// }, 750);
 		this.formValueChanged();
 	}
 
@@ -84,7 +82,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			this.deposit.currency as CURRENCY,
 			updatedDeposit.currency as CURRENCY
 		);
-		const changed = this.depositChanged.getValue();
+		const changed = this.depositChanged$.getValue();
 		if (changed) { this.saveDeposit(updatedDeposit); }
 	}
 
@@ -129,7 +127,7 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	hasDepositChanged(): boolean {
 		if (this.isFormValid()) {
-			if (this.depositChanged.getValue() === true) {
+			if (this.depositChanged$.getValue() === true) {
 				return true;
 			}
 		}
@@ -159,7 +157,7 @@ export class ShowDepositDialogComponent implements OnInit {
 
 		const amount = new FormControl(initial.amount, [Validators.required, Validators.min(0), positiveNumberValidator()]);
 		const currency = new FormControl(initial.currency, [Validators.required]);
-		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(20)]);
+		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(30)]);
 		const createdAt = new FormControl(initialDate.toISOString().split('T')[0], [Validators.required]);
 		const category = new FormControl(initial.category, [Validators.required]);
 		const refundable = new FormControl(initial.refundable);
@@ -192,7 +190,7 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	private updateTotalAmount(oldAmount: string, newAmount: string, oldCurrency: CURRENCY, newCurrency: CURRENCY): void {
 		if (!oldAmount || !newAmount) { return; }
-		let totalAmount = this.informationService.totalAmount.getValue();
+		const totalAmount = this.informationService.totalAmount$.getValue();
 
 		const oAmount = Number(oldAmount);
 		const nAmount = Number(newAmount);
@@ -264,7 +262,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			}
 		}
 
-		setTimeout(() => { this.informationService.totalAmount.next(totalAmount); }, Constants.updateTimeout);
+		setTimeout(() => { this.informationService.totalAmount$.next(totalAmount); }, Constants.updateTimeout);
 	}
 
 	private getDifferences(deposit: IDeposit | null): DepositDifferences[] {
@@ -330,13 +328,13 @@ export class ShowDepositDialogComponent implements OnInit {
 	private getFormDifferences(deposit: IDeposit | null) {
 		const differences = this.getDifferences(deposit);
 		if (differences.length === 0) {
-			this.depositChanged.next(false);
+			this.depositChanged$.next(false);
 			return deposit;
 		}
 
 		log(this.CLASS_NAME, this.getFormDifferences.name, 'differences:', differences);
 
-		this.depositChanged.next(true);
+		this.depositChanged$.next(true);
 
 		// TODO: always check if types match with "IDeposit" types
 		const depositDifferences: { [key: string]: DepositValues } = {};
@@ -347,7 +345,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			depositDifferences[key] = value;
 		});
 
-		depositDifferences['owner'] = this.informationService.owner.value;
+		depositDifferences['owner'] = this.informationService.owner$.value;
 
 		log(this.CLASS_NAME, this.getFormDifferences.name, 'final differences:', depositDifferences);
 		return depositDifferences;
@@ -394,7 +392,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			.subscribe(
 				selectedValue => {
 					log(this.CLASS_NAME, this.formValueChanged.name, 'selectedValue:', selectedValue);
-					this.depositChanged.next(true);
+					this.depositChanged$.next(true);
 				}
 			);
 	}

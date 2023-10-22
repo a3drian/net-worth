@@ -23,6 +23,7 @@ import { HeaderComponent } from './components/dashboard/header/header.component'
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component';
+import { PolicyComponent } from './components/app/policy/policy.component';
 // Dialogs:
 import { DeleteDepositDialogComponent } from './components/dialogs/delete-deposit-dialog/delete-deposit-dialog.component';
 import { ShowDepositDialogComponent } from './components/dialogs/show-deposit-dialog/show-deposit-dialog.component';
@@ -49,6 +50,7 @@ import { environment } from '../environments/environment';
 		LoadingSpinnerComponent,
 		LoginComponent,
 		NotFoundPageComponent,
+		PolicyComponent,
 		DeleteDepositDialogComponent,
 		ShowDepositDialogComponent,
 		AmountPipe,
@@ -67,6 +69,7 @@ import { environment } from '../environments/environment';
 				path: appRoutes.login.path, component: LoginComponent,
 				canActivate: [LoginGuard]
 			},
+			{ path: appRoutes.policy.path, component: PolicyComponent },
 			{ path: '**', component: NotFoundPageComponent }
 		]),
 		HttpClientModule,

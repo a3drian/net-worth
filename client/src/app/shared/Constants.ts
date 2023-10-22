@@ -1,19 +1,24 @@
 // Shared:
 import { CATEGORY } from './constants/Categories';
 import { CURRENCY } from './constants/Currencies';
+import { environment as env } from 'src/environments/environment';
 
 export const Constants = Object.freeze({
-	IN_DEBUG_MODE: true,
+	IN_DEBUG_MODE: env.IN_DEBUG_MODE,
 
 	appEndpoints: Object.freeze({
 		LOGIN_URL: 'login',
-		DASHBOARD_URL: 'dashboard'
+		DASHBOARD_URL: 'dashboard',
+		POLICY_URL: 'policy'
 	}),
 
 	apiEndpoints: Object.freeze({
 		SAVE_BASE_URL: '/api/save',
 		SPEND_BASE_URL: '/api/spend',
-		SEARCH_URL: '/owner'
+		SEARCH_BY_OWNER_URL: '/owner',
+		SEARCH_BY_OWNER_MONTH_URL: '/owner/month',
+		SEARCH_BY_OWNER_YEAR_MONTH_URL: '/owner/yearmonth',
+		SPENDING_URL: '/owner/spending'
 	}),
 
 	defaultOwner: 'adi@foodspy3.com',

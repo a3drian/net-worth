@@ -1,4 +1,5 @@
 export enum CATEGORY {
+	AUTO = 'Auto',
 	DINING = 'Dining',
 	FINANCES = 'Finances',
 	GIFT = 'Gift',

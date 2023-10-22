@@ -5,7 +5,7 @@ import { IDeposit } from 'net-worth-shared';
 import { IExpressError } from 'net-worth-shared';
 // Models:
 import { DepositModel } from '../schemas/deposit.schema';
-import { SearchQuerySort, SortOption, SORT_OPTION } from '../models/search.model';
+import { SearchQuery, SearchQueryMonthSort, SearchQuerySort, SearchQueryYearMonthSort, SortOption, SORT_OPTION } from '../models/search.model';
 // Shared:
 import { log } from '../shared/Logger';
 import { STATUS_CODES } from 'net-worth-shared';
@@ -15,19 +15,22 @@ const CLASS_NAME = 'deposits.service.ts';
 export {
 	getDepositById,
 	getDepositsByOwner,
+	getDepositsByOwnerCurrentMonth,
+	getDepositsByOwnerYearMonth,
+	getSpending,
 	postDeposit,
 	putDeposit,
 	deleteDeposit
 };
 
-function sort(deposits: IDeposit[], sort: SortOption): IDeposit[] {
+function sort(deposits: IDeposit[], sortOption: SortOption): IDeposit[] {
 	deposits.sort((a: IDeposit, b: IDeposit) => {
-		const date1 = new Date(a.createdAt).getDate();
-		const date2 = new Date(b.createdAt).getDate();
+		const date1 = Number(new Date(a.createdAt));
+		const date2 = Number(new Date(b.createdAt));
 		return date1 - date2;
 	});
 
-	if (sort === SORT_OPTION.DESC) {
+	if (sortOption === SORT_OPTION.DESC) {
 		deposits.reverse();
 	}
 
@@ -55,7 +58,7 @@ async function getDepositById(
 
 		return deposit;
 
-	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+	} catch (ex: any) { return throwError(getDepositById.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 async function getDepositsByOwner(
@@ -76,7 +79,89 @@ async function getDepositsByOwner(
 
 		return deposits;
 
-	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+	} catch (ex: any) { return throwError(getDepositsByOwner.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+}
+
+async function getDepositsByOwnerCurrentMonth(
+	searchQuery: SearchQueryMonthSort
+): Promise<Error | IDeposit[]> {
+
+	log(CLASS_NAME, getDepositsByOwnerCurrentMonth.name, '');
+
+	if (!validSearchQuery(searchQuery)) { return throwError(getDepositsByOwnerCurrentMonth.name, 'Invalid POST/:owner parameters!', STATUS_CODES.BAD_REQUEST); }
+
+	try {
+
+		const deposits: IDeposit[] = (await DepositModel.find({ owner: searchQuery.owner })).filter(d => d.createdAt.getMonth() === searchQuery.currentMonth);
+		sort(deposits, searchQuery.sort);
+
+		log(CLASS_NAME, getDepositsByOwnerCurrentMonth.name, 'deposits:', deposits);
+		log(CLASS_NAME, `${getDepositsByOwnerCurrentMonth.name}^`, '');
+
+		return deposits;
+
+	} catch (ex: any) { return throwError(getDepositsByOwnerCurrentMonth.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+}
+
+async function getDepositsByOwnerYearMonth(
+	searchQuery: SearchQueryYearMonthSort
+): Promise<Error | IDeposit[]> {
+
+	log(CLASS_NAME, getDepositsByOwnerYearMonth.name, '');
+
+	if (!validSearchQuery(searchQuery)) { return throwError(getDepositsByOwnerYearMonth.name, 'Invalid POST/:owner parameters!', STATUS_CODES.BAD_REQUEST); }
+
+	try {
+
+		const deposits: IDeposit[] =
+			(await DepositModel
+				.find({ owner: searchQuery.owner }))
+				.filter(d =>
+					d.createdAt.getFullYear() === searchQuery.year &&
+					d.createdAt.getMonth() === searchQuery.month
+				);
+		sort(deposits, searchQuery.sort);
+
+		log(CLASS_NAME, getDepositsByOwnerYearMonth.name, 'deposits:', deposits);
+		log(CLASS_NAME, `${getDepositsByOwnerYearMonth.name}^`, '');
+
+		return deposits;
+
+	} catch (ex: any) { return throwError(getDepositsByOwnerYearMonth.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+}
+
+async function getSpending(
+	searchQuery: SearchQuery
+): Promise<Error | { years: number[], months: number[] }> {
+
+	log(CLASS_NAME, getSpending.name, '');
+
+	if (!validSearchQuery(searchQuery)) { return throwError(getSpending.name, 'Invalid POST/:owner parameters!', STATUS_CODES.BAD_REQUEST); }
+
+	try {
+
+		const deposits: IDeposit[] = await DepositModel.find({ owner: searchQuery.owner });
+
+		const years: number[] = [];
+		const months: number[] = [];
+
+		deposits.forEach(d => {
+			const year = d.createdAt.getFullYear();
+			const month = d.createdAt.getMonth();
+			if (years.indexOf(year) === -1) { years.push(year); }
+			if (months.indexOf(month) === -1) { months.push(month); }
+		});
+
+		log(CLASS_NAME, getSpending.name, 'spending (years):', years);
+		log(CLASS_NAME, getSpending.name, 'spending (months):', months);
+		log(CLASS_NAME, `${getSpending.name}^`, '');
+
+		return {
+			years: years,
+			months: months
+		};
+
+	} catch (ex: any) { return throwError(getSpending.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 async function postDeposit(
@@ -97,7 +182,7 @@ async function postDeposit(
 		await newDeposit.save();
 		return newDeposit;
 
-	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+	} catch (ex: any) { return throwError(postDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 async function putDeposit(
@@ -149,7 +234,7 @@ async function deleteDeposit(
 
 		return deposit;
 
-	} catch (ex: any) { return throwError(putDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
+	} catch (ex: any) { return throwError(deleteDeposit.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }
 
 function throwError(origin: string, message: string, statusCode: STATUS_CODES) {

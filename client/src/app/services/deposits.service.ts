@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
 // Models:
-import { SearchOption } from '../models/SearchOption';
+import { SearchOption, SearchOptionYearMonth } from '../models/SearchOption';
 // rxjs:
 import { Observable, tap } from 'rxjs';
 // Shared:
@@ -17,7 +17,10 @@ import { log } from '../shared/Logger';
 export class DepositsService {
 
 	private readonly BASE_URL: string = Constants.apiEndpoints.SPEND_BASE_URL;
-	private readonly SEARCH_URL: string = this.BASE_URL + Constants.apiEndpoints.SEARCH_URL;
+	private readonly SEARCH_BY_OWNER_URL: string = this.BASE_URL + Constants.apiEndpoints.SEARCH_BY_OWNER_URL;
+	private readonly SEARCH_BY_OWNER_MONTH_URL: string = this.BASE_URL + Constants.apiEndpoints.SEARCH_BY_OWNER_MONTH_URL;
+	private readonly SEARCH_BY_OWNER_YEAR_MONTH_URL: string = this.BASE_URL + Constants.apiEndpoints.SEARCH_BY_OWNER_YEAR_MONTH_URL;
+	private readonly SPENDING_URL: string = this.BASE_URL + Constants.apiEndpoints.SPENDING_URL;
 
 	private readonly CLASS_NAME = 'deposits.service.ts';
 
@@ -49,7 +52,64 @@ export class DepositsService {
 
 		const request = this.http
 			.post<IDeposit[]>(
-				this.SEARCH_URL,
+				this.SEARCH_BY_OWNER_URL,
+				new SearchOption({ owner: email })
+			)
+			.pipe(tap(() => { }));
+
+		return request;
+	}
+
+	getDepositsByOwnerCurrentMonth(
+		email: string,
+		currentMonth: number
+	): Observable<IDeposit[]> {
+		log(this.CLASS_NAME, this.getDepositsByOwnerCurrentMonth.name, 'email:', email);
+		log(this.CLASS_NAME, this.getDepositsByOwnerCurrentMonth.name, 'currentMonth:', currentMonth);
+
+		const request = this.http
+			.post<IDeposit[]>(
+				this.SEARCH_BY_OWNER_MONTH_URL,
+				new SearchOption({ owner: email, currentMonth: currentMonth })
+			)
+			.pipe(tap(() => { }));
+
+		return request;
+	}
+
+	getDepositsByOwnerYearMonth(
+		email: string,
+		year: number,
+		month: number
+	): Observable<IDeposit[]> {
+		log(this.CLASS_NAME, this.getDepositsByOwnerYearMonth.name, 'email:', email);
+		log(this.CLASS_NAME, this.getDepositsByOwnerYearMonth.name, 'year:', year);
+		log(this.CLASS_NAME, this.getDepositsByOwnerYearMonth.name, 'month:', month);
+
+		const request = this.http
+			.post<IDeposit[]>(
+				this.SEARCH_BY_OWNER_YEAR_MONTH_URL,
+				new SearchOptionYearMonth(
+					{
+						owner: email,
+						year: year,
+						month: month
+					}
+				)
+			)
+			.pipe(tap(() => { }));
+
+		return request;
+	}
+
+	getSpending(
+		email: string
+	): Observable<{ years: number[], months: number[] }> {
+		log(this.CLASS_NAME, this.getSpending.name, 'email:', email);
+
+		const request = this.http
+			.post<{ years: number[], months: number[] }>(
+				this.SPENDING_URL,
 				new SearchOption({ owner: email })
 			)
 			.pipe(tap(() => { }));

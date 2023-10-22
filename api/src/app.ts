@@ -1,7 +1,6 @@
-// Heroku:
 import mongoose from 'mongoose';
+// Deploy:
 import cors from 'cors';
-import sslRedirect from 'heroku-ssl-redirect';
 // Express:
 import express from 'express';
 import { Application, Router, Request, Response, NextFunction } from 'express';
@@ -10,6 +9,8 @@ import { env } from './env';
 // Interfaces:
 import { IExpressError } from 'net-worth-shared';
 // Routes:
+import { setClientRoute } from './routes/client.route';
+import { setHealthCheckRoute } from './routes/health-check.route';
 import { setSpendRoute } from './routes/spend.route';
 // Shared:
 import { Constants } from './shared/Constants';
@@ -24,22 +25,8 @@ async function makeApp(): Promise<Application> {
 	app = express();
 	app.use(cors());
 
-	app.use(sslRedirect());
-
 	// only when deploying app
-	/*
-	app.use(express.static('build'));
-	app.get(
-		'/*',
-		function (_req: Request, res: Response) {
-			const frontendPath = path.join(__dirname, '../');
-			// log('app.ts', makeApp.name, 'frontendPath:', frontendPath);
-			const indexPath: string = path.join(frontendPath + '/build/index.html');
-			// log('app.ts', makeApp.name, 'indexPath:', indexPath);
-			res.sendFile(indexPath);
-		}
-	);
-	*/
+	app.use(express.static(env.CLIENT_PATH));
 
 	const url = `${env.MONGO_URL}${env.TEST_DB_NAME}?retryWrites=true&w=majority`;
 	const db = await mongoose.connect(url);
@@ -51,6 +38,8 @@ async function makeApp(): Promise<Application> {
 	app.use(express.json());
 
 	// routes
+	app.use(env.HEALTH_CHECK_ROUTE, setHealthCheckRoute(Router()));
+	app.use(env.CLIENT_ROUTE, setClientRoute(Router()));
 	app.use(env.SPEND_ROUTE, setSpendRoute(Router()));
 
 	// 404

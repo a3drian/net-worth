@@ -1,8 +1,10 @@
 <pre class="debug" *ngIf="isInDebugMode"><b>dashboard</b> works!</pre>
 
-<div *ngIf="isLoading" class="loading-spinner">
-	<app-loading-spinner></app-loading-spinner>
-</div>
+<main *ngIf="isLoading" class="isLoading">
+	<div class="loading-spinner">
+		<app-loading-spinner></app-loading-spinner>
+	</div>
+</main>
 
 <app-header *ngIf="!isLoading"></app-header>
 
@@ -16,18 +18,53 @@
 	-->
 
 	<div id="report">
-		<p *ngIf="!anyMoneySpent">Nothing spent in {{ today | date: 'MMMM' }} yet.</p>
-		<p *ngIf="anyMoneySpent">Spending report for <span>{{ today | date: 'MMMM' }}</span> –
+		<p *ngIf="!anyMoneySpent">Nothing spent in <span>{{ selectedMonth }} '{{ selectedYear }}</span> yet.</p>
+		<p *ngIf="anyMoneySpent">Spending report for <span>{{ selectedMonth }} '{{ selectedYear }}</span> –
 			<span *ngIf="totalAmount.LEI !== 0">{{ totalAmount.LEI | amount:3 }} lei</span>
 			<span *ngIf="totalAmount.EUR !== 0"><span class="light">|</span>{{ totalAmount.EUR | amount:3 }}€</span>
 			<span *ngIf="totalAmount.GBP !== 0"><span class="light">|</span>£{{ totalAmount.GBP | amount:3 }}</span>
 			<span *ngIf="totalAmount.USD !== 0"><span class="light">|</span>${{ totalAmount.USD | amount:3 }}</span>
 		</p>
-		<button (click)="openShowDepositDialog('spend')">Spend</button>
+
+		<div id="filters">
+			<button (click)="openFilters()">Filter</button>
+			<form [formGroup]="spendingForm" *ngIf="showFilters" (change)="onFilterChange()">
+				<fieldset>
+					<label for="year">Year:</label>
+					<select name="year" id="year-select" formControlName="years">
+						<option *ngFor="let y of years" [value]="y">
+							{{ y }}
+						</option>
+					</select>
+				</fieldset>
+				<fieldset>
+					<label for="month">Month:</label>
+					<select name="month" id="month-select" formControlName="months">
+						<option *ngFor="let m of months" [value]="m">
+							{{ m }}
+						</option>
+					</select>
+				</fieldset>
+			</form>
+		</div>
 	</div>
 
-	<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
-	</app-deposit-card>
+	<section *ngIf="isDepositsLoading" class="isLoading">
+		<div class="loading-spinner">
+			<app-loading-spinner></app-loading-spinner>
+		</div>
+	</section>
+
+	<section *ngIf="!isDepositsLoading">
+		<app-deposit-card *ngFor="let deposit of deposits" [deposit]="deposit">
+		</app-deposit-card>
+	</section>
 
 	<!-- <button>Last month</button> <button>This year</button> -->
+
+	<div class="fabs" role="group" aria-label="Floating action buttons">
+		<button class="round fab" (click)="openShowDepositDialog('spend')" title="Add new action" aria-label="Add new action">
+			+
+		</button>
+	</div>
 </main>

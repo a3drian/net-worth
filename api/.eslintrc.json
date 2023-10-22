@@ -117,7 +117,7 @@
 		// does not allow the use of "arguments.caller"
 		"no-caller": "error",
 		"no-console": [
-			"error",
+			"warn",
 			{
 				"allow": [
 					"log",

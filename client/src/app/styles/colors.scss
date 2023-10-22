@@ -1,5 +1,10 @@
 $invalid-clr: #ef767a;
 $valid-clr: #23f0c7;
+$focus-clr: #e59500;
+$focus-clr: #22aed1;
+$focus-clr: #f2af29;
+// pink doesn't work with the "$invalid-clr"
+$focus-clr: #ff66d8;
 $focus-clr: #ffe347;
 $main-purple: #6457a6;
 $background-clr: $main-purple;

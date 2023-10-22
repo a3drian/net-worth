@@ -23,7 +23,7 @@ export class AuthService {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
-	user = new BehaviorSubject<IUser | null>(null);
+	user$ = new BehaviorSubject<IUser | null>(null);
 
 	private USER_KEY = 'SPENDIT_USER';
 	private TOKEN_KEY = 'SPENDIT_TOKEN';
@@ -43,7 +43,7 @@ export class AuthService {
 
 					if (!user.accessToken) { return of(null); }
 
-					this.user.next(user);
+					this.user$.next(user);
 					const token = user.accessToken;
 					this.setSessionInfo(user, token);
 					return of(token);
@@ -68,7 +68,7 @@ export class AuthService {
 		const session = this.getSessionInfo();
 		if (!session) { return; }
 
-		session.subscribe((user: IUser | null) => this.user.next(user));
+		session.subscribe((user: IUser | null) => this.user$.next(user));
 	}
 
 	// autoLogout(): void {}
@@ -78,7 +78,7 @@ export class AuthService {
 	}
 
 	private removeUserData() {
-		this.user.next(null);
+		this.user$.next(null);
 		sessionStorage.removeItem(this.USER_KEY);
 		sessionStorage.removeItem(this.TOKEN_KEY);
 	}
