@@ -183,7 +183,7 @@ async function postDeposit(
 	console.log('');
 
 	const body = req.body;
-	console.log(CLASS_NAME, postDeposit.name, 'body:', body);
+	log(CLASS_NAME, postDeposit.name, 'body:', body);
 
 	const newDeposit = new Deposit(
 		{
@@ -223,7 +223,7 @@ async function putDeposit(
 	const id = req.params.id;
 	const body = req.body;
 
-	console.log(CLASS_NAME, putDeposit.name, 'body:', body);
+	log(CLASS_NAME, putDeposit.name, 'body:', body);
 
 	const editedDeposit = new Deposit(
 		{

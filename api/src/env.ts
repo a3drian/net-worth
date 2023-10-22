@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+const serviceAccount = require('../.service.account.json');
 // Shared:
 import { Constants } from './shared/Constants';
 import { log } from './shared/Logger';
@@ -22,6 +23,7 @@ export const env = Object.freeze(
 		PORT: process.env.PORT || 8008,	// for compatibility with Heroku
 
 		NODE_ENV: NODE_ENVIRONMENT,
+		SERVICE_ACCOUNT: serviceAccount,
 
 		MONGO_URL: CLUSTER_URI,
 		DB_NAME: 'NetWorthDb',

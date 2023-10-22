@@ -49,7 +49,6 @@ export function validSearchQuery(searchQuery: ISearchOption): boolean {
 
 export function validOldDeposit(id: string, deposit: Partial<IDeposit>): boolean {
 	if (validDeposit(deposit)) {
-		console.log('DEPOSIT:', deposit);
 		if (id === (String)(new ObjectId(deposit._id))) {
 			return true;
 		}
