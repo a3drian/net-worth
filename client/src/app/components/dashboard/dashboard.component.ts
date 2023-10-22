@@ -70,8 +70,8 @@ export class DashboardComponent implements OnInit {
 		this.selectedMonth = this.toMonthName(this.today.getMonth() + 1);
 		this.user = this.authService.user$.value;
 
-		const years = new FormControl(this.today.getFullYear(), [Validators.required]);
-		const months = new FormControl(this.toMonthName(this.today.getMonth() + 1), [Validators.required]);
+		const years = new FormControl<number>(this.today.getFullYear(), [Validators.required]);
+		const months = new FormControl<string>(this.toMonthName(this.today.getMonth() + 1), [Validators.required]);
 		this.spendingForm = this.formBuilder.group({ years: years, months: months });
 	}
 
