@@ -1,7 +1,7 @@
 @import '../../../styles/common.scss';
 
 .dialog-title {
-	align-items: end;
+	align-items: flex-end;
 	background-color: $background-clr;
 	color: $foreground-clr;
 	display: flex;

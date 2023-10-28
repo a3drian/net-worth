@@ -31,8 +31,8 @@ import { ShowDepositDialogComponent } from './components/dialogs/show-deposit-di
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 // Guards:
-import { AuthGuard } from './guards/auth.guard';
-import { LoginGuard } from './guards/login.guard';
+import { authGuard } from './guards/auth.guard';
+import { loginGuard } from './guards/login.guard';
 // Interceptors:
 import { TokenInterceptor } from './interceptors/token.interceptor';
 // Pipes:
@@ -65,11 +65,11 @@ import { environment } from '../environments/environment';
 			{ path: '', redirectTo: appRoutes.dashboard.path, pathMatch: 'full' },
 			{
 				path: appRoutes.dashboard.path, component: DashboardComponent,
-				canActivate: [AuthGuard]
+				canActivate: [authGuard]
 			},
 			{
 				path: appRoutes.login.path, component: LoginComponent,
-				canActivate: [LoginGuard]
+				canActivate: [loginGuard]
 			},
 			{ path: appRoutes.policy.path, component: PolicyComponent },
 			{ path: '**', component: NotFoundPageComponent }

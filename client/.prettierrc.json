@@ -1,0 +1,7 @@
+{
+  "singleQuote": true,
+	"trailingComma": "none",
+	"bracketSameLine": false,
+	"arrowParens": "always",
+	"htmlWhitespaceSensitivity": "strict"
+}

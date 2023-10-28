@@ -1,5 +1,6 @@
+/*
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 // rxjs:
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -12,7 +13,7 @@ import { log } from '../shared/Logger';
 @Injectable({
 	'providedIn': 'root'
 })
-export class LoginGuard implements CanActivate {
+export class loginGuard {
 
 	constructor(
 		private authService: AuthService,
@@ -27,3 +28,17 @@ export class LoginGuard implements CanActivate {
 		return true;
 	}
 }
+*/
+
+// /*
+// prettier-ignore
+import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from '@angular/router';
+
+export const loginGuard: CanActivateFn = (
+	_route: ActivatedRouteSnapshot,
+	_state: RouterStateSnapshot
+) => {
+	// do not allow "/login" if user is authenticated
+	return true;
+};
+// */
