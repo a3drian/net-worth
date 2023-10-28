@@ -107,5 +107,7 @@
       }
     }
   },
-  "defaultProject": "netWorth"
+  "cli": {
+    "analytics": false
+  }
 }

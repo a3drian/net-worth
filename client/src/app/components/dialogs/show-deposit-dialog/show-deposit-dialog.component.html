@@ -1,11 +1,11 @@
 <pre class="debug" *ngIf="isInDebugMode"><b>show-deposit-dialog</b> works!</pre>
 
 <div class="dialog-title">
-	<h3>{{ titleText }}</h3>
+	<h3 mat-dialog-title>{{ titleText }}</h3>
 	<button id="close-btn" aria-label="Close dialog" mat-dialog-close>X</button>
 </div>
 
-<mat-dialog-content>
+<div class="dialog-content" mat-dialog-content>
 
 	<form [formGroup]="depositForm" *ngIf="isFormReady">
 
@@ -66,15 +66,15 @@
 
 	</form>
 
-</mat-dialog-content>
+</div>
 
-<mat-dialog-actions *ngIf="inEditMode" align="center">
+<div class="dialog-actions" *ngIf="inEditMode" mat-dialog-actions>
 	<button [disabled]="!hasDepositChanged()" (click)="save()" mat-dialog-close>Update</button>
-</mat-dialog-actions>
+</div>
 
-<mat-dialog-actions *ngIf="!inEditMode" align="center">
+<div class="dialog-actions" *ngIf="!inEditMode" mat-dialog-actions>
 	<button [disabled]="!isFormValid()" (click)="add()" mat-dialog-close>Add</button>
-</mat-dialog-actions>
+</div>
 
 <!-- DEBUG MODE: -->
 <div class="debug-div" *ngIf="isInDebugMode">

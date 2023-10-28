@@ -1,15 +1,34 @@
 @import '../../../styles/common.scss';
 
 .dialog-title {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+	align-items: flex-end;
+	background-color: $background-clr;
 	color: $foreground-clr;
-	margin-block-end: 0.5rem;
+	display: flex;
+	justify-content: space-between;
+	// margin-block-end: 0.5rem;
+	padding-block-start: 5px;
+	padding-inline: 20px;
+
+	& h3 {
+		border-bottom: $border-sz solid $foreground-clr;
+		color: $foreground-clr;
+		font-size: 20px;
+		padding-block-end: 10px;
+		padding-inline: 0px;
+	}
 }
 
-.dialog-title h3 {
-	border-bottom: $border-sz solid $foreground-clr;
+.dialog-content,
+.dialog-actions {
+	background: $background-clr;
+	color: $foreground-clr;
+}
+
+.dialog-actions {
+	border-top: 2px solid $foreground-clr;
+	justify-content: center;
+	padding-block: 20px;
 }
 
 #close-btn {

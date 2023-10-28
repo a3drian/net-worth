@@ -155,13 +155,13 @@ export class ShowDepositDialogComponent implements OnInit {
 		initialDate: Date
 	): void {
 
-		const amount = new FormControl(initial.amount, [Validators.required, Validators.min(0), positiveNumberValidator()]);
-		const currency = new FormControl(initial.currency, [Validators.required]);
-		const details = new FormControl(initial.details, [Validators.required, Validators.maxLength(30)]);
-		const createdAt = new FormControl(initialDate.toISOString().split('T')[0], [Validators.required]);
-		const category = new FormControl(initial.category, [Validators.required]);
-		const refundable = new FormControl(initial.refundable);
-		const refunded = new FormControl(initial.refunded);
+		const amount = new FormControl<number>(initial.amount, [Validators.required, Validators.min(0), positiveNumberValidator()]);
+		const currency = new FormControl<string>(initial.currency, [Validators.required]);
+		const details = new FormControl<string>(initial.details, [Validators.required, Validators.maxLength(30)]);
+		const createdAt = new FormControl<string>(initialDate.toISOString().split('T')[0], [Validators.required]);
+		const category = new FormControl<string>(initial.category, [Validators.required]);
+		const refundable = new FormControl<boolean | undefined>(initial.refundable);
+		const refunded = new FormControl<boolean | undefined>(initial.refunded);
 
 		this.depositForm = this.formBuilder
 			.group(

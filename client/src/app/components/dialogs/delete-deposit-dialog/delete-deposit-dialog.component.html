@@ -1,15 +1,15 @@
 <pre class="debug" *ngIf="isInDebugMode"><b>delete-deposit-dialog</b> works!</pre>
 
 <div class="dialog-title">
-	<h3>Confirm deletion</h3>
+	<h3 mat-dialog-title>Confirm deletion</h3>
 	<button id="close-btn" aria-label="Close dialog" mat-dialog-close>X</button>
 </div>
 
-<mat-dialog-content>
+<div class="dialog-content" mat-dialog-content>
 	Are you sure you want to delete '{{ deposit.details }}' from {{ deposit.createdAt | date: 'MMMM d' }}?
-</mat-dialog-content>
+</div>
 
-<mat-dialog-actions align="center">
+<div class="dialog-actions" mat-dialog-actions>
 	<button mat-dialog-close (click)="getConfirmation(true)">Yes</button>
 	<button mat-dialog-close (click)="getConfirmation(false)">No</button>
-</mat-dialog-actions>
+</div>
