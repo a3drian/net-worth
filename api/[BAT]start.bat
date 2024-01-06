@@ -1,1 +1,1 @@
-start cmd.exe /k "_start"
+start cmd.exe /k "_s"
