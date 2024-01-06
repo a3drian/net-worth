@@ -138,16 +138,30 @@ button.fab {
 		0 16px 16px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 6%));
 
 	box-shadow: var(--shadow-4);
-	font-size: 4rem !important;
 
 	--size: 72px;
 	width: var(--size);
 	height: var(--size);
-	line-height: var(--size);
+
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	padding: 0px;
 
 	-webkit-tap-highlight-color: transparent;
 
 	&:active {
 		box-shadow: var(--shadow-2);
+	}
+
+	& > svg {
+		--svg-size: 48px;
+		inline-size: var(--svg-size);
+		block-size: var(--svg-size);
+		stroke-width: 2px;
+		stroke: currentColor;
+		fill: none;
+		stroke-linecap: round;
+		stroke-linejoin: round;
 	}
 }

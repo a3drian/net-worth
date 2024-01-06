@@ -63,8 +63,11 @@
 	<!-- <button>Last month</button> <button>This year</button> -->
 
 	<div class="fabs" role="group" aria-label="Floating action buttons">
-		<button class="round fab" (click)="openShowDepositDialog('spend')" title="Add new action" aria-label="Add new action">
-			+
+		<button class="round fab" (click)="openShowDepositDialog('spend')" title="Add new spending report" aria-label="Add new spending report">
+			<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+				<line x1="12" y1="4" x2="12" y2="20"></line>
+				<line x1="4" y1="12" x2="20" y2="12"></line>
+			</svg>
 		</button>
 	</div>
 </main>
