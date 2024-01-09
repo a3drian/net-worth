@@ -43,7 +43,7 @@ async function makeApp(): Promise<Application> {
 	app.use(env.HEALTH_CHECK_ROUTE, setHealthCheckRoute(Router()));
 	app.use(env.CLIENT_ROUTE, setClientRoute(Router()));
 
-	app.use(verifyJWT);
+	// app.use(verifyJWT);
 	app.use(env.SPEND_ROUTE, setSpendRoute(Router()));
 
 	// 404

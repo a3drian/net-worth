@@ -20,9 +20,9 @@ export class InformationService {
 	constructor(private authService: AuthService) {
 		const userAuthenticated = this.authService.isAuthenticated();
 		if (userAuthenticated) {
-			this.authService.autoLogin();
-			const user = this.authService.user$.value;
-			const email = user ? user.email : '';
+			// this.authService.autoLogin();
+			const user = null;
+			const email = 'adimacru@gmail.com';
 			this.owner$.next(email);
 			if (user) { this.user$.next(user); }
 		}

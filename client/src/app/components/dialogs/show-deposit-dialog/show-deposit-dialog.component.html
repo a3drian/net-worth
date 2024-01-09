@@ -1,3 +1,4 @@
+<!-- prettier-ignore -->
 <pre class="debug" *ngIf="isInDebugMode"><b>show-deposit-dialog</b> works!</pre>
 
 <div class="dialog-title">
@@ -6,18 +7,27 @@
 </div>
 
 <div class="dialog-content" mat-dialog-content>
-
 	<form [formGroup]="depositForm" *ngIf="isFormReady">
-
 		<fieldset>
 			<label for="amount">Amount and currency:</label>
 			<div id="amount-currency-container">
-				<input matInput id="amount" type="number" step="any" name="amount"
-					formControlName="amount" placeholder="{{ formPlaceholders.amount }}" required>
-				<select name="currency" id="currency-select" formControlName="currency" required>
-					<option *ngFor="let c of currencies" [value]="c">
-						{{ c }}
-					</option>
+				<input
+					matInput
+					id="amount"
+					type="number"
+					step="any"
+					name="amount"
+					formControlName="amount"
+					placeholder="{{ formPlaceholders.amount }}"
+					required
+				/>
+				<select
+					name="currency"
+					id="currency-select"
+					formControlName="currency"
+					required
+				>
+					<option *ngFor="let c of currencies" [value]="c">{{ c }}</option>
 				</select>
 			</div>
 			<p *ngIf="isInputValid('amount')">How much did you spend?</p>
@@ -26,24 +36,41 @@
 
 		<fieldset>
 			<label for="details">Details:</label>
-			<input matInput id="details" type="text" name="details"
-				formControlName="details" placeholder="{{ formPlaceholders.details }}" required>
+			<input
+				matInput
+				id="details"
+				type="text"
+				name="details"
+				formControlName="details"
+				placeholder="{{ formPlaceholders.details }}"
+				required
+			/>
 			<p *ngIf="isInputValid('details')">What did you spend it on?</p>
 			<p class="error" *ngIf="!isDetailsValid()">{{ detailsErrorMessage }}</p>
 		</fieldset>
 
 		<fieldset>
 			<label for="createdAt">Date:</label>
-			<input matInput id="date" type="date" name="createdAt" formControlName="createdAt" required>
+			<input
+				matInput
+				id="date"
+				type="date"
+				name="createdAt"
+				formControlName="createdAt"
+				required
+			/>
 			<p>When did you spend it?</p>
 		</fieldset>
 
 		<fieldset>
 			<label for="category">Category:</label>
-			<select name="category" id="category-select" formControlName="category" required>
-				<option *ngFor="let c of categories" [value]="c">
-					{{ c }}
-				</option>
+			<select
+				name="category"
+				id="category-select"
+				formControlName="category"
+				required
+			>
+				<option *ngFor="let c of categories" [value]="c">{{ c }}</option>
 			</select>
 			<p>Choose a category for easier filtering</p>
 		</fieldset>
@@ -51,36 +78,64 @@
 		<fieldset>
 			<div id="refundable-refunded-container">
 				<label class="refundable">
-					<input type="checkbox" formControlName="refundable">
+					<!-- TODO: it looks like plain "<input>" doesn't work on iOS -->
+					<!-- <input type="checkbox" formControlName="refundable" /> -->
+					<mat-checkbox formControlName="refundable"></mat-checkbox>
 					Reimbursable amount?
 				</label>
 
 				<div *ngIf="depositForm.value.refundable">
 					<label class="refundable">
-						<input type="checkbox" formControlName="refunded">
+						<!-- <input type="checkbox" formControlName="refunded" /> -->
+						<mat-checkbox formControlName="refunded"></mat-checkbox>
 						Amount reimbursed?
 					</label>
 				</div>
 			</div>
 		</fieldset>
 
+		<!-- DEBUG MODE: -->
+		<div class="debug-div" *ngIf="isInDebugMode">
+			<!-- <br/>
+				amount: {{ updatedDepositSave.amount | json }}
+				refundable: {{ updatedDepositSave.refundable | json }}
+				refunded: {{ updatedDepositSave.refunded | json }}
+				<br/>
+				refundable: {{ updatedDepositGet.refundable | json }}
+				refunded: {{ updatedDepositGet.refunded | json }}
+				<br />
+			-->
+			amount: {{ saveDepositSave.amount | json }}
+			{{ calledSaveDepositSave }}
+			<br />
+			<!-- {{ saveDepositSave | json }} -->
+			<br />
+			refundable: {{ saveDepositSave.refundable | json }}
+			refunded: {{ saveDepositSave.refunded | json }}
+			<!-- <br/>
+				refundable: {{ depositFromForm.refundable | json }}
+				refunded: {{ depositFromForm.refunded | json }} -->
+			<pre>Form value:<br>{{ depositForm.value | json }}</pre>
+			<pre>depositChanged: {{ depositChanged$.getValue() }}</pre>
+		</div>
 	</form>
-
 </div>
 
 <div class="dialog-actions" *ngIf="inEditMode" mat-dialog-actions>
-	<button [disabled]="!hasDepositChanged()" (click)="save()" mat-dialog-close>Update</button>
+	<button [disabled]="!hasDepositChanged()" (click)="save()">Update</button>
 </div>
 
 <div class="dialog-actions" *ngIf="!inEditMode" mat-dialog-actions>
-	<button [disabled]="!isFormValid()" (click)="add()" mat-dialog-close>Add</button>
+	<button [disabled]="!isFormValid()" (click)="add()" mat-dialog-close
+		>Add</button
+	>
 </div>
 
-<!-- DEBUG MODE: -->
+<!-- DEBUG MODE:
 <div class="debug-div" *ngIf="isInDebugMode">
 	<pre>Form status:{{ depositForm.status }}</pre>
 	<pre>amount: {{ isInputValid('amount') }}</pre>
 	<pre>details: {{ isInputValid('details') }}</pre>
 	<pre>Form value:<br>{{ depositForm.value | json }}</pre>
 	<pre>depositChanged: {{ depositChanged$.getValue() }}</pre>
-</div>
+</div> -->
