@@ -502,11 +502,8 @@ export class ShowDepositDialogComponent implements OnInit {
 		category: ''
 	};
 
-	calledSaveDepositSave = 0;
 	private saveDeposit(updatedDeposit: IDeposit): void {
 		console.log('private saveDeposit()');
-
-		this.calledSaveDepositSave++;
 		this.saveDepositSave = { ...updatedDeposit };
 		/*
 		if (!this.isFormValid()) {

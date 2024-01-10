@@ -87,6 +87,8 @@
 				<div *ngIf="depositForm.value.refundable">
 					<label class="refundable">
 						<!-- <input type="checkbox" formControlName="refunded" /> -->
+						<!-- <input type="checkbox" [(ngModel)]="depositForm.value.refunded" formControlName="refunded" /> -->
+						<!-- <input type="checkbox" [(ngModel)]="deposit.refunded" formControlName="refunded" /> -->
 						<mat-checkbox formControlName="refunded"></mat-checkbox>
 						Amount reimbursed?
 					</label>
@@ -106,8 +108,7 @@
 				<br />
 			-->
 			amount: {{ saveDepositSave.amount | json }}
-			{{ calledSaveDepositSave }}
-			<br />
+			<!-- <br /> -->
 			<!-- {{ saveDepositSave | json }} -->
 			<br />
 			refundable: {{ saveDepositSave.refundable | json }}
