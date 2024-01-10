@@ -79,6 +79,7 @@
 			<div id="refundable-refunded-container">
 				<label class="refundable">
 					<!-- TODO: it looks like plain "<input>" doesn't work on iOS -->
+					<!-- totusi, se pare ca la "Add" merge -->
 					<!-- <input type="checkbox" formControlName="refundable" /> -->
 					<mat-checkbox formControlName="refundable"></mat-checkbox>
 					Reimbursable amount?
@@ -127,9 +128,7 @@
 </div>
 
 <div class="dialog-actions" *ngIf="!inEditMode" mat-dialog-actions>
-	<button [disabled]="!isFormValid()" (click)="add()" mat-dialog-close
-		>Add</button
-	>
+	<button [disabled]="!isFormValid()" (click)="add()">Add</button>
 </div>
 
 <!-- DEBUG MODE:
