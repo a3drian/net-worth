@@ -30,7 +30,6 @@ import { positiveNumberValidator } from 'src/app/shared/validators/positiveNumbe
 import { Constants } from 'src/app/shared/Constants';
 import { CATEGORY } from 'src/app/shared/constants/Categories';
 import { CURRENCY } from 'src/app/shared/constants/Currencies';
-import { log } from 'src/app/shared/Logger';
 
 @Component({
 	selector: 'app-show-deposit-dialog',
@@ -88,7 +87,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	save(): void {
-		console.log('save()');
+		// console.log('save()');
 
 		const updatedDeposit: IDeposit = this.getFormContents(this.deposit);
 		this.updateTotalAmount(
@@ -233,22 +232,10 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	private initializeEmptyForm(): void {
 		this.initializeDepositForm(this.formDefaults, this.today);
-		log(
-			this.CLASS_NAME,
-			this.initializeEmptyForm.name,
-			'initialized empty form:',
-			this.depositForm.value
-		);
 	}
 
 	private initializeEditableForm(): void {
 		this.initializeDepositForm(this.deposit, new Date(this.deposit.createdAt));
-		log(
-			this.CLASS_NAME,
-			this.initializeEditableForm.name,
-			'initialized editable form:',
-			this.depositForm.value
-		);
 	}
 
 	private updateTotalAmount(
@@ -350,54 +337,56 @@ export class ShowDepositDialogComponent implements OnInit {
 			};
 		});
 
-		if (deposit) {
-			const modifiedControls = controls.filter((c) => c.dirty && c.touched);
+		console.log('this.depositForm.controls', this.depositForm.controls);
 
-			const differences = modifiedControls.map<DepositDifferences>(
-				(c: IControl) => {
-					const k: DepositProperties = c.key;
-					const oldValue = deposit[k];
-					const v: DepositValues = c.value;
-					if (!oldValue) {
-						return {
-							key: k as DepositProperties,
-							oldValue: '' as DepositValues,
-							newValue: v as DepositValues
-						};
-					}
-					return {
-						key: k as DepositProperties,
-						oldValue: oldValue as DepositValues,
-						newValue: v as DepositValues
-					};
-				}
-			);
-
-			// log(this.CLASS_NAME, this.getDifferences.name, 'controls:', controls);
-			// log(this.CLASS_NAME, this.getDifferences.name, 'differences:', differences);
-
-			return differences;
-		} else {
-			// TODO: better filtering
-			const modifiedControls = controls.filter((c) => c.valid);
-
-			const differences = modifiedControls.map<DepositDifferences>(
-				(c: IControl) => {
-					const k: DepositProperties = c.key;
-					const v: DepositValues = c.value;
-					return {
-						key: k as DepositProperties,
-						oldValue: '' as DepositValues,
-						newValue: v as DepositValues
-					};
-				}
-			);
-
-			// log(this.CLASS_NAME, this.getDifferences.name, 'controls:', controls);
-			// log(this.CLASS_NAME, this.getDifferences.name, 'differences:', differences);
-
-			return differences;
+		if(!deposit){
+			return [];
 		}
+
+		// "refundable"/"refunded" gets missed here
+		// when the "filter()" is over controls that are "valid", it works in any combination of "if"s
+		// when the "filter()" is over "dirty" and "touched", it fails
+		// TODO: why does it need all the controls (properties) ?
+		// if (deposit) {
+			const modifiedControls = controls.filter((c) => c.valid);
+			// const modifiedControls = controls.filter((c) => c.dirty && c.touched);
+			console.log('modified dirty Controls:', modifiedControls);
+
+			const differences = modifiedControls.map<DepositDifferences>(
+				(c: IControl) => {
+					const k: DepositProperties = c.key;
+					const v: DepositValues = c.value;
+					const oldValue = deposit[k];
+					console.log('control:', c);
+					return {
+						key: k as DepositProperties,
+						oldValue: oldValue ?? '' as DepositValues,
+						newValue: v as DepositValues
+					};
+				}
+			);
+
+			return differences;
+		// } else {
+			// // TODO: better filtering
+			// const modifiedControls = controls.filter((c) => c.valid);
+			// // const modifiedControls = controls.filter((c) => c.dirty && c.touched);
+			// console.log('modified valid Controls:', modifiedControls);
+
+			// const differences = modifiedControls.map<DepositDifferences>(
+			// 	(c: IControl) => {
+			// 		const k: DepositProperties = c.key;
+			// 		const v: DepositValues = c.value;
+			// 		return {
+			// 			key: k as DepositProperties,
+			// 			oldValue: '' as DepositValues,
+			// 			newValue: v as DepositValues
+			// 		};
+			// 	}
+			// );
+
+			// return differences;
+		// }
 	}
 
 	private getFormDifferences(deposit: IDeposit | null) {
@@ -406,13 +395,6 @@ export class ShowDepositDialogComponent implements OnInit {
 			this.depositChanged$.next(false);
 			return deposit;
 		}
-
-		log(
-			this.CLASS_NAME,
-			this.getFormDifferences.name,
-			'differences:',
-			differences
-		);
 
 		this.depositChanged$.next(true);
 
@@ -426,13 +408,6 @@ export class ShowDepositDialogComponent implements OnInit {
 		});
 
 		depositDifferences['owner'] = this.informationService.owner$.value;
-
-		log(
-			this.CLASS_NAME,
-			this.getFormDifferences.name,
-			'final differences:',
-			depositDifferences
-		);
 		return depositDifferences;
 	}
 
@@ -452,42 +427,23 @@ export class ShowDepositDialogComponent implements OnInit {
 	}
 
 	private getFormContents(deposit: IDeposit | null): IDeposit {
-		const depositDifferences = deposit
-			? this.getFormDifferences(deposit)
-			: this.getFormDifferences(null);
+		console.log('getFormContents()');
+		const depositDifferences = this.getFormDifferences(deposit);
+
+		console.log('getFormContents(), depositDifferences:', depositDifferences);
 		const depositFromForm: DepositDTO = depositDifferences as DepositDTO;
 
 		if (deposit) {
 			const updatedDeposit = this.getUpdatedDeposit(depositFromForm);
-
-			log(
-				this.CLASS_NAME,
-				this.getFormContents.name,
-				'updated depositFromForm:',
-				updatedDeposit
-			);
 			return updatedDeposit;
 		} else {
 			const newDeposit = depositFromForm as IDeposit;
-
-			log(
-				this.CLASS_NAME,
-				this.getFormContents.name,
-				'new depositFromForm:',
-				newDeposit
-			);
 			return newDeposit;
 		}
 	}
 
 	private formValueChanged() {
 		this.depositForm.valueChanges.subscribe((selectedValue) => {
-			log(
-				this.CLASS_NAME,
-				this.formValueChanged.name,
-				'selectedValue:',
-				selectedValue
-			);
 			this.depositChanged$.next(true);
 		});
 	}
@@ -503,7 +459,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	};
 
 	private saveDeposit(updatedDeposit: IDeposit): void {
-		console.log('private saveDeposit()');
+		// console.log('private saveDeposit()');
 		this.saveDepositSave = { ...updatedDeposit };
 		/*
 		if (!this.isFormValid()) {

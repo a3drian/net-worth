@@ -80,17 +80,17 @@
 				<label class="refundable">
 					<!-- TODO: it looks like plain "<input>" doesn't work on iOS -->
 					<!-- totusi, se pare ca la "Add" merge -->
-					<!-- <input type="checkbox" formControlName="refundable" /> -->
-					<mat-checkbox formControlName="refundable"></mat-checkbox>
+					<input type="checkbox" formControlName="refundable" />
+					<!-- <mat-checkbox formControlName="refundable"></mat-checkbox> -->
 					Reimbursable amount?
 				</label>
 
 				<div *ngIf="depositForm.value.refundable">
 					<label class="refundable">
-						<!-- <input type="checkbox" formControlName="refunded" /> -->
+						<input type="checkbox" formControlName="refunded" />
 						<!-- <input type="checkbox" [(ngModel)]="depositForm.value.refunded" formControlName="refunded" /> -->
 						<!-- <input type="checkbox" [(ngModel)]="deposit.refunded" formControlName="refunded" /> -->
-						<mat-checkbox formControlName="refunded"></mat-checkbox>
+						<!-- <mat-checkbox formControlName="refunded"></mat-checkbox> -->
 						Amount reimbursed?
 					</label>
 				</div>
