@@ -187,7 +187,6 @@ export class ShowDepositDialogComponent implements OnInit {
 		log(this.CLASS_NAME, this.initializeEditableForm.name, 'initialized editable form:', this.depositForm.value);
 	}
 
-
 	private updateTotalAmount(oldAmount: string, newAmount: string, oldCurrency: CURRENCY, newCurrency: CURRENCY): void {
 		if (!oldAmount || !newAmount) { return; }
 		const totalAmount = this.informationService.totalAmount$.getValue();
@@ -270,11 +269,15 @@ export class ShowDepositDialogComponent implements OnInit {
 			.entries(this.depositForm.controls)
 			.map<IControl>((c: [string, AbstractControl]) => {
 				return {
-					key: c[0] as DepositProperties, value: c[1].value as DepositValues,
-					dirty: c[1].dirty, touched: c[1].touched, valid: c[1].valid
+					key: c[0] as DepositProperties,
+					value: c[1].value as DepositValues,
+					dirty: c[1].dirty,
+					touched: c[1].touched,
+					valid: c[1].valid
 				};
 			});
 
+			// TODO: can be refactored more
 		if (deposit) {
 			const modifiedControls = controls.filter(c => c.dirty && c.touched);
 
@@ -282,18 +285,11 @@ export class ShowDepositDialogComponent implements OnInit {
 				.map<DepositDifferences>(
 					(c: IControl) => {
 						const k: DepositProperties = c.key;
-						const oldValue = deposit[k];
 						const v: DepositValues = c.value;
-						if (!oldValue) {
-							return {
-								key: k as DepositProperties,
-								oldValue: '' as DepositValues,
-								newValue: v as DepositValues
-							};
-						}
+						const oldValue = deposit[k];
 						return {
 							key: k as DepositProperties,
-							oldValue: oldValue as DepositValues,
+							oldValue: oldValue ?? '' as DepositValues,
 							newValue: v as DepositValues
 						};
 					});
@@ -368,7 +364,7 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	private getFormContents(deposit: IDeposit | null): IDeposit {
 
-		const depositDifferences = deposit ? this.getFormDifferences(deposit) : this.getFormDifferences(null);
+		const depositDifferences = this.getFormDifferences(deposit);
 		const depositFromForm: DepositDTO = depositDifferences as DepositDTO;
 
 		if (deposit) {
