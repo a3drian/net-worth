@@ -9,7 +9,8 @@ button {
 	transition: all 200ms ease;
 	transition-property: background-color, border;
 	user-select: none;
-	width: 80px;
+	width: 100%;
+	max-width: 100px;
 	height: 36px;
 }
 
