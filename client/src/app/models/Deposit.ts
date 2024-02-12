@@ -21,20 +21,6 @@ export class Deposit implements IDeposit {
 	}
 }
 
-// TODO: can you extract these automtically?
-export type DepositProperties =
-	'amount' | 'currency' | 'details' | 'createdAt' |
-	'category' | 'refundable';
-
-export type DepositValues =
-	boolean | Date | number | string;
-
-export interface DepositDifferences {
-	key: DepositProperties;
-	oldValue: DepositValues;
-	newValue: DepositValues;
-}
-
 export class DepositDTO {
 	id?: string;
 

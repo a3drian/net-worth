@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 // Interfaces:
-import { IControl } from 'src/app/interfaces/IControl';
 import { IDeposit } from 'net-worth-shared';
 // Models:
-import { DepositDifferences, DepositDTO, DepositProperties, DepositValues } from 'src/app/models/Deposit';
+import { DepositDTO } from 'src/app/models/Deposit';
 // rxjs:
 import { BehaviorSubject } from 'rxjs';
 // Services:
@@ -264,118 +264,23 @@ export class ShowDepositDialogComponent implements OnInit {
 		setTimeout(() => { this.informationService.totalAmount$.next(totalAmount); }, Constants.updateTimeout);
 	}
 
-	private getDifferences(deposit: IDeposit | null): DepositDifferences[] {
-		const controls: IControl[] = Object
-			.entries(this.depositForm.controls)
-			.map<IControl>((c: [string, AbstractControl]) => {
-				return {
-					key: c[0] as DepositProperties,
-					value: c[1].value as DepositValues,
-					dirty: c[1].dirty,
-					touched: c[1].touched,
-					valid: c[1].valid
-				};
-			});
-
-			// TODO: can be refactored more
-		if (deposit) {
-			const modifiedControls = controls.filter(c => c.dirty && c.touched);
-
-			const differences = modifiedControls
-				.map<DepositDifferences>(
-					(c: IControl) => {
-						const k: DepositProperties = c.key;
-						const v: DepositValues = c.value;
-						const oldValue = deposit[k];
-						return {
-							key: k as DepositProperties,
-							oldValue: oldValue ?? '' as DepositValues,
-							newValue: v as DepositValues
-						};
-					});
-
-			// log(this.CLASS_NAME, this.getDifferences.name, 'controls:', controls);
-			// log(this.CLASS_NAME, this.getDifferences.name, 'differences:', differences);
-
-			return differences;
-		} else {
-			// TODO: better filtering
-			const modifiedControls = controls.filter(c => c.valid);
-
-			const differences = modifiedControls
-				.map<DepositDifferences>(
-					(c: IControl) => {
-						const k: DepositProperties = c.key;
-						const v: DepositValues = c.value;
-						return {
-							key: k as DepositProperties,
-							oldValue: '' as DepositValues,
-							newValue: v as DepositValues
-						};
-					});
-
-			// log(this.CLASS_NAME, this.getDifferences.name, 'controls:', controls);
-			// log(this.CLASS_NAME, this.getDifferences.name, 'differences:', differences);
-
-			return differences;
-		}
-	}
-
-	private getFormDifferences(deposit: IDeposit | null) {
-		const differences = this.getDifferences(deposit);
-		if (differences.length === 0) {
-			this.depositChanged$.next(false);
-			return deposit;
-		}
-
-		log(this.CLASS_NAME, this.getFormDifferences.name, 'differences:', differences);
-
-		this.depositChanged$.next(true);
-
-		// TODO: always check if types match with "IDeposit" types
-		const depositDifferences: { [key: string]: DepositValues } = {};
-
-		differences.forEach((diff: DepositDifferences) => {
-			const key = diff.key;
-			const value = diff.newValue;
-			depositDifferences[key] = value;
-		});
-
-		depositDifferences['owner'] = this.informationService.owner$.value;
-
-		log(this.CLASS_NAME, this.getFormDifferences.name, 'final differences:', depositDifferences);
-		return depositDifferences;
-	}
-
-	private getUpdatedDeposit(deposit: DepositDTO): IDeposit {
-		const updatedDeposit = <IDeposit>{
-			_id: this.deposit._id,	// after "Save", DELETE request fails because "id" is "undefined"
-			owner: deposit.owner ?? this.deposit.owner,
-			amount: deposit.amount ?? this.deposit.amount,
-			currency: deposit.currency ?? this.deposit.currency,
-			details: deposit.details ?? this.deposit.details,
-			createdAt: deposit.createdAt ?? this.deposit.createdAt,
-			category: deposit.category ?? this.deposit.category,
-			refundable: deposit.refundable ?? this.deposit.refundable,
-			refunded: deposit.refunded ?? this.deposit.refunded
-		};
-		return updatedDeposit;
-	}
-
 	private getFormContents(deposit: IDeposit | null): IDeposit {
 
-		const depositDifferences = this.getFormDifferences(deposit);
-		const depositFromForm: DepositDTO = depositDifferences as DepositDTO;
+		const depositFromForm: DepositDTO = this.depositForm.value as DepositDTO;
 
 		if (deposit) {
 
-			const updatedDeposit = this.getUpdatedDeposit(depositFromForm);
+			const updatedDeposit = <IDeposit>{
+				...depositFromForm,
+				_id: this.deposit._id,	// after "Save", DELETE request fails because "id" is "undefined"
+			};
 
 			log(this.CLASS_NAME, this.getFormContents.name, 'updated depositFromForm:', updatedDeposit);
 			return updatedDeposit;
 		} else {
 
 			const newDeposit = depositFromForm as IDeposit;
+			newDeposit['owner'] = this.informationService.owner$.value;
 
 			log(this.CLASS_NAME, this.getFormContents.name, 'new depositFromForm:', newDeposit);
 			return newDeposit;

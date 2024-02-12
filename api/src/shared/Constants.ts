@@ -6,7 +6,7 @@ const HEALTH_CHECK_URL = '/health';
 export { Constants };
 
 class Constants {
-	static IN_DEBUG_MODE: boolean = true;
+	static IN_DEBUG_MODE: boolean = false;
 	static APIEndpoints =
 		{
 			SAVE_URL: SAVE_URL,
