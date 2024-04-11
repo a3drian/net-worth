@@ -68,7 +68,7 @@ export class DashboardComponent implements OnInit {
 		this.owner = this.informationService.owner();
 		this.selectedYear = Number(this.today.getFullYear().toString().substring(2));
 		this.selectedMonth = this.toMonthName(this.today.getMonth() + 1);
-		this.user = this.authService.user$.value;
+		this.user = this.authService.user();
 
 		const years = new FormControl<number>(this.today.getFullYear(), [Validators.required]);
 		const months = new FormControl<string>(this.toMonthName(this.today.getMonth() + 1), [Validators.required]);
