@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 })
 export class InformationService {
 
-	public totalAmount$ = new BehaviorSubject<Currency>({ LEI: 0, EUR: 0, GBP: 0, USD: 0 });
+	public totalAmount = signal<Currency>({ LEI: 0, EUR: 0, GBP: 0, USD: 0 });
 	public owner = signal('');
 	public user$ = new BehaviorSubject<IUser | null>(null);
 

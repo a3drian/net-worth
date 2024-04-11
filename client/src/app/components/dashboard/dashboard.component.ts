@@ -174,8 +174,7 @@ export class DashboardComponent implements OnInit {
 	}
 
 	private updateInformationService(): void {
-		this.informationService.totalAmount$.next(this.totalAmount);
-		this.informationService.totalAmount$.subscribe(totalAmount => this.totalAmount = totalAmount);
+		this.informationService.totalAmount.set(this.totalAmount);
 	}
 
 	private toMonthIndex(month: string) {
