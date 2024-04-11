@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 // Models:
 import { Currency } from '../models/Currency';
 // rxjs:
@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 export class InformationService {
 
 	public totalAmount$ = new BehaviorSubject<Currency>({ LEI: 0, EUR: 0, GBP: 0, USD: 0 });
-	public owner$ = new BehaviorSubject<string>('');
+	public owner = signal('');
 	public user$ = new BehaviorSubject<IUser | null>(null);
 
 	constructor(private authService: AuthService) {
@@ -23,7 +23,7 @@ export class InformationService {
 			this.authService.autoLogin();
 			const user = this.authService.user$.value;
 			const email = user ? user.email : '';
-			this.owner$.next(email);
+			this.owner.set(email);
 			if (user) { this.user$.next(user); }
 		}
 	}

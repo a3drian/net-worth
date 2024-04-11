@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/member-ordering */
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -280,7 +279,7 @@ export class ShowDepositDialogComponent implements OnInit {
 		} else {
 
 			const newDeposit = depositFromForm as IDeposit;
-			newDeposit['owner'] = this.informationService.owner$.value;
+			newDeposit['owner'] = this.informationService.owner();
 
 			log(this.CLASS_NAME, this.getFormContents.name, 'new depositFromForm:', newDeposit);
 			return newDeposit;

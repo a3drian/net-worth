@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit {
 		public showDepositDialog: MatDialog,
 		private authService: AuthService
 	) {
-		this.owner = this.informationService.owner$.value;
+		this.owner = this.informationService.owner();
 		this.selectedYear = Number(this.today.getFullYear().toString().substring(2));
 		this.selectedMonth = this.toMonthName(this.today.getMonth() + 1);
 		this.user = this.authService.user$.value;
