@@ -82,5 +82,5 @@
 	<pre>amount: {{ isInputValid('amount') }}</pre>
 	<pre>details: {{ isInputValid('details') }}</pre>
 	<pre>Form value:<br>{{ depositForm.value | json }}</pre>
-	<pre>depositChanged: {{ depositChanged$.getValue() }}</pre>
+	<pre>depositChanged: {{ depositChanged$() }}</pre>
 </div>
