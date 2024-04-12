@@ -188,7 +188,7 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	private updateTotalAmount(oldAmount: string, newAmount: string, oldCurrency: CURRENCY, newCurrency: CURRENCY): void {
 		if (!oldAmount || !newAmount) { return; }
-		const totalAmount = this.informationService.totalAmount();
+		const totalAmount = this.informationService.totalAmount$();
 
 		const oAmount = Number(oldAmount);
 		const nAmount = Number(newAmount);
@@ -260,7 +260,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			}
 		}
 
-		setTimeout(() => { this.informationService.totalAmount.set(totalAmount); }, Constants.updateTimeout);
+		setTimeout(() => { this.informationService.totalAmount$.set(totalAmount); }, Constants.updateTimeout);
 	}
 
 	private getFormContents(deposit: IDeposit | null): IDeposit {
@@ -279,7 +279,7 @@ export class ShowDepositDialogComponent implements OnInit {
 		} else {
 
 			const newDeposit = depositFromForm as IDeposit;
-			newDeposit['owner'] = this.informationService.owner();
+			newDeposit['owner'] = this.informationService.owner$();
 
 			log(this.CLASS_NAME, this.getFormContents.name, 'new depositFromForm:', newDeposit);
 			return newDeposit;

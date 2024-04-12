@@ -23,7 +23,7 @@ export class AuthService {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
 
-	user = signal<IUser | null>(null);
+	user$ = signal<IUser | null>(null);
 
 	private USER_KEY = 'SPENDIT_USER';
 	private TOKEN_KEY = 'SPENDIT_TOKEN';
@@ -43,7 +43,7 @@ export class AuthService {
 
 					if (!user.accessToken) { return of(null); }
 
-					this.user.set(user);
+					this.user$.set(user);
 					const token = user.accessToken;
 					this.setSessionInfo(user, token);
 					return of(token);
@@ -73,7 +73,7 @@ export class AuthService {
 		const session = this.getSessionInfo();
 		if (!session) { return; }
 
-		session.subscribe((user: IUser | null) => this.user.set(user));
+		session.subscribe((user: IUser | null) => this.user$.set(user));
 	}
 
 	// autoLogout(): void {}
@@ -83,7 +83,7 @@ export class AuthService {
 	}
 
 	private removeUserData() {
-		this.user.set(null);
+		this.user$.set(null);
 		sessionStorage.removeItem(this.USER_KEY);
 		sessionStorage.removeItem(this.TOKEN_KEY);
 	}
