@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 // Components:
@@ -18,6 +18,7 @@ import { InformationService } from 'src/app/services/information.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
 import { CURRENCY } from 'src/app/shared/constants/Currencies';
+import { getSpendingReport } from 'src/app/shared/helpers/spendings.helper';
 import { log } from 'src/app/shared/Logger';
 
 @Component({
@@ -37,6 +38,8 @@ export class DashboardComponent implements OnInit {
 	spendingForm: FormGroup = new FormGroup({});
 	years!: number[];
 	months!: string[];
+	years$ = signal<number[]>([]);
+	months$ = signal<number[]>([]);
 	showFilters = false;
 
 	selectedYear!: number;
@@ -79,8 +82,17 @@ export class DashboardComponent implements OnInit {
 		this.depositsService
 			.getSpending(this.owner)
 			.subscribe(
-				(spending: { years: number[], months: number[] }) => {
+				(spendings: { year: number, month: number }[]) => {
+
+
+					log('dashboard.ts', this.ngOnInit.name, 'Spendings:', spendings);
+
+					const ye = Array.from(new Set(spendings.map(s => s.year)));
+					const mo = Array.from(new Set(spendings.map(s => s.month)));
+
+					const spending = { years: ye, months: mo };
 					log('dashboard.ts', this.ngOnInit.name, 'Spending:', spending);
+
 					this.years = spending.years;
 					this.months = spending.months.map(m => m + 1).map(m => this.toMonthName(m));
 					this.isLoading = false;

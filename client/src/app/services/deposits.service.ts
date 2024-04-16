@@ -104,11 +104,11 @@ export class DepositsService {
 
 	getSpending(
 		email: string
-	): Observable<{ years: number[], months: number[] }> {
+	): Observable<{ year: number, month: number }[]> {
 		log(this.CLASS_NAME, this.getSpending.name, 'email:', email);
 
 		const request = this.http
-			.post<{ years: number[], months: number[] }>(
+			.post<{ year: number, month: number }[]>(
 				this.SPENDING_URL,
 				new SearchOption({ owner: email })
 			)
