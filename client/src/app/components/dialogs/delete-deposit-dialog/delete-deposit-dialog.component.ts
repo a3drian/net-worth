@@ -31,7 +31,7 @@ export class DeleteDepositDialogComponent implements OnInit {
 	}
 
 	private updateTotalAmount(): boolean {
-		const totalAmount = this.informationService.totalAmount$.getValue();
+		const totalAmount = this.informationService.totalAmount$();
 		switch (this.deposit.currency) {
 			case CURRENCY.EUR: {
 				totalAmount.EUR = totalAmount.EUR - this.deposit.amount;
@@ -49,7 +49,7 @@ export class DeleteDepositDialogComponent implements OnInit {
 				totalAmount.LEI = totalAmount.LEI - this.deposit.amount;
 			}
 		}
-		setTimeout(() => { this.informationService.totalAmount$.next(totalAmount); }, Constants.updateTimeout);
+		setTimeout(() => { this.informationService.totalAmount$.set(totalAmount); }, Constants.updateTimeout);
 		return true;
 	}
 }

@@ -65,10 +65,10 @@ export class DashboardComponent implements OnInit {
 		public showDepositDialog: MatDialog,
 		private authService: AuthService
 	) {
-		this.owner = this.informationService.owner$.value;
+		this.owner = this.informationService.owner$();
 		this.selectedYear = Number(this.today.getFullYear().toString().substring(2));
 		this.selectedMonth = this.toMonthName(this.today.getMonth() + 1);
-		this.user = this.authService.user$.value;
+		this.user = this.authService.user$();
 
 		const years = new FormControl<number>(this.today.getFullYear(), [Validators.required]);
 		const months = new FormControl<string>(this.toMonthName(this.today.getMonth() + 1), [Validators.required]);
@@ -174,8 +174,7 @@ export class DashboardComponent implements OnInit {
 	}
 
 	private updateInformationService(): void {
-		this.informationService.totalAmount$.next(this.totalAmount);
-		this.informationService.totalAmount$.subscribe(totalAmount => this.totalAmount = totalAmount);
+		this.informationService.totalAmount$.set(this.totalAmount);
 	}
 
 	private toMonthIndex(month: string) {

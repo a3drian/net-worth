@@ -1,13 +1,10 @@
-/* eslint-disable @typescript-eslint/member-ordering */
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 // Interfaces:
 import { IDeposit } from 'net-worth-shared';
 // Models:
 import { DepositDTO } from 'src/app/models/Deposit';
-// rxjs:
-import { BehaviorSubject } from 'rxjs';
 // Services:
 import { CategoriesService } from 'src/app/services/categories.service';
 import { CurrenciesService } from 'src/app/services/currencies.service';
@@ -53,7 +50,7 @@ export class ShowDepositDialogComponent implements OnInit {
 	amountErrorMessage: string = Constants.amountErrors.empty;
 	detailsErrorMessage: string = Constants.detailsErrors.empty;
 
-	depositChanged$ = new BehaviorSubject<boolean>(false);
+	depositChanged$ = signal(false);
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public deposit: IDeposit,
@@ -82,7 +79,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			this.deposit.currency as CURRENCY,
 			updatedDeposit.currency as CURRENCY
 		);
-		const changed = this.depositChanged$.getValue();
+		const changed = this.depositChanged$();
 		if (changed) { this.saveDeposit(updatedDeposit); }
 	}
 
@@ -127,7 +124,7 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	hasDepositChanged(): boolean {
 		if (this.isFormValid()) {
-			if (this.depositChanged$.getValue() === true) {
+			if (this.depositChanged$() === true) {
 				return true;
 			}
 		}
@@ -189,7 +186,7 @@ export class ShowDepositDialogComponent implements OnInit {
 
 	private updateTotalAmount(oldAmount: string, newAmount: string, oldCurrency: CURRENCY, newCurrency: CURRENCY): void {
 		if (!oldAmount || !newAmount) { return; }
-		const totalAmount = this.informationService.totalAmount$.getValue();
+		const totalAmount = this.informationService.totalAmount$();
 
 		const oAmount = Number(oldAmount);
 		const nAmount = Number(newAmount);
@@ -261,7 +258,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			}
 		}
 
-		setTimeout(() => { this.informationService.totalAmount$.next(totalAmount); }, Constants.updateTimeout);
+		setTimeout(() => { this.informationService.totalAmount$.set(totalAmount); }, Constants.updateTimeout);
 	}
 
 	private getFormContents(deposit: IDeposit | null): IDeposit {
@@ -280,7 +277,7 @@ export class ShowDepositDialogComponent implements OnInit {
 		} else {
 
 			const newDeposit = depositFromForm as IDeposit;
-			newDeposit['owner'] = this.informationService.owner$.value;
+			newDeposit['owner'] = this.informationService.owner$();
 
 			log(this.CLASS_NAME, this.getFormContents.name, 'new depositFromForm:', newDeposit);
 			return newDeposit;
@@ -293,7 +290,7 @@ export class ShowDepositDialogComponent implements OnInit {
 			.subscribe(
 				selectedValue => {
 					log(this.CLASS_NAME, this.formValueChanged.name, 'selectedValue:', selectedValue);
-					this.depositChanged$.next(true);
+					this.depositChanged$.set(true);
 				}
 			);
 	}
