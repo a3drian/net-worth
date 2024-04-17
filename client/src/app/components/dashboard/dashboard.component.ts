@@ -18,7 +18,7 @@ import { InformationService } from 'src/app/services/information.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
 import { CURRENCY } from 'src/app/shared/constants/Currencies';
-import { getSpendingReport } from 'src/app/shared/helpers/spendings.helper';
+import { getSpendingReport, toMonthIndex, toMonthName } from 'src/app/shared/helpers/spendings.helper';
 import { log } from 'src/app/shared/Logger';
 
 @Component({
@@ -69,11 +69,11 @@ export class DashboardComponent implements OnInit {
 	) {
 		this.owner = this.informationService.owner$();
 		this.selectedYear = Number(this.today.getFullYear().toString().substring(2));
-		this.selectedMonth = this.toMonthName(this.today.getMonth() + 1);
+		this.selectedMonth = toMonthName(this.today.getMonth() + 1);
 		this.user = this.authService.user$();
 
 		const years = new FormControl<number>(this.today.getFullYear(), [Validators.required]);
-		const months = new FormControl<string>(this.toMonthName(this.today.getMonth() + 1), [Validators.required]);
+		const months = new FormControl<string>(toMonthName(this.today.getMonth() + 1), [Validators.required]);
 		this.spendingForm = this.formBuilder.group({ years: years, months: months });
 	}
 
@@ -86,19 +86,10 @@ export class DashboardComponent implements OnInit {
 
 					log('dashboard.ts', this.ngOnInit.name, 'Spendings:', spendings);
 
-					const ye = Array.from(new Set(spendings.map(s => s.year)));
-					const mo = Array.from(new Set(spendings.map(s => s.month)));
-
-					const spending = { years: ye, months: mo };
-					log('dashboard.ts', this.ngOnInit.name, 'Spending:', spending);
-
-					this.years = spending.years;
-					this.months = spending.months.map(m => m + 1).map(m => this.toMonthName(m));
-
 					this.spendingReport$.set(getSpendingReport(spendings));
 					this.years = Array.from(this.spendingReport$().keys());
 					const monthIndexes = this.spendingReport$().get(this.years[this.spendingReport$().size - 1]) as number[];
-					const monthNames = monthIndexes.map(m => m + 1).map(m => this.toMonthName(m));
+					const monthNames = monthIndexes.map(m => m + 1).map(m => toMonthName(m));
 					this.months = monthNames;
 					this.isLoading = false;
 				}
@@ -157,7 +148,7 @@ export class DashboardComponent implements OnInit {
 		const yearValue = this.spendingForm.controls['years'].value;
 		const monthValue = this.spendingForm.controls['months'].value;
 		const year = Number(yearValue);
-		const month = this.toMonthIndex(monthValue);
+		const month = toMonthIndex(monthValue);
 
 		this.selectedYear = Number(yearValue.toString().substring(2));
 		this.selectedMonth = monthValue;
@@ -192,29 +183,5 @@ export class DashboardComponent implements OnInit {
 
 	private updateInformationService(): void {
 		this.informationService.totalAmount$.set(this.totalAmount);
-	}
-
-	private toMonthIndex(month: string) {
-		return (
-			['January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December'
-			].indexOf(month));
-	}
-
-	private toMonthName(month: number) {
-		const date = new Date();
-		date.setMonth(month - 1);
-
-		return date.toLocaleString('en-UK', { month: 'long' });
 	}
 }
