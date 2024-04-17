@@ -1,4 +1,6 @@
-export const getSpendingReport = (spendings: { year: number, month: number }[]) => {
+export const getSpendingReport = (
+	spendings: { year: number, month: number }[]
+): Map<number, number[]> => {
 	const spendingReport = new Map<number, number[]>();
 	spendings.forEach((item) => {
 		const { year, month } = item;

@@ -38,12 +38,11 @@ export class DashboardComponent implements OnInit {
 	spendingForm: FormGroup = new FormGroup({});
 	years!: number[];
 	months!: string[];
-	years$ = signal<number[]>([]);
-	months$ = signal<number[]>([]);
 	showFilters = false;
 
 	selectedYear!: number;
 	selectedMonth!: string;
+	spendingReport$ = signal< Map<number, number[]>>(new Map<number, number[]>);
 
 	deposits: IDeposit[] = [];
 	totalAmount: Currency = { LEI: 0, EUR: 0, GBP: 0, USD: 0 };
@@ -95,6 +94,12 @@ export class DashboardComponent implements OnInit {
 
 					this.years = spending.years;
 					this.months = spending.months.map(m => m + 1).map(m => this.toMonthName(m));
+
+					this.spendingReport$.set(getSpendingReport(spendings));
+					this.years = Array.from(this.spendingReport$().keys());
+					const monthIndexes = this.spendingReport$().get(this.years[this.spendingReport$().size - 1]) as number[];
+					const monthNames = monthIndexes.map(m => m + 1).map(m => this.toMonthName(m));
+					this.months = monthNames;
 					this.isLoading = false;
 				}
 			);
