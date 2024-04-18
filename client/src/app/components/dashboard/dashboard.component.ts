@@ -52,6 +52,9 @@ export class DashboardComponent implements OnInit {
 	owner: string = '';
 	user: IUser | null = null;
 	showDepositDialogSub: Subscription = new Subscription();
+	depositsServiceGetSpendingSub: Subscription = new Subscription();
+	depositsServicePostDepositSub: Subscription = new Subscription();
+	depositsServiceGetDepositsByOwnerYearMonthSub: Subscription = new Subscription();
 
 	refreshDeposits$ = new BehaviorSubject(false);
 	private get refreshDeposits(): boolean {
@@ -79,7 +82,7 @@ export class DashboardComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.depositsService
+		this.depositsServiceGetSpendingSub = this.depositsService
 			.getSpending(this.owner)
 			.subscribe(
 				(spendings: { year: number, month: number }[]) => {
@@ -99,7 +102,12 @@ export class DashboardComponent implements OnInit {
 		this.reloadDeposits(this.today.getFullYear(), this.today.getMonth());
 	}
 
-	ngOnDestroy() { if (this.showDepositDialogSub) { this.showDepositDialogSub.unsubscribe(); } }
+	ngOnDestroy() {
+		if (this.depositsServiceGetDepositsByOwnerYearMonthSub) { this.depositsServiceGetDepositsByOwnerYearMonthSub.unsubscribe(); }
+		if (this.depositsServicePostDepositSub) { this.depositsServicePostDepositSub.unsubscribe(); }
+		if (this.depositsServiceGetSpendingSub) { this.depositsServiceGetSpendingSub.unsubscribe(); }
+		if (this.showDepositDialogSub) { this.showDepositDialogSub.unsubscribe(); }
+	}
 
 	openDialog(): MatDialogRef<ShowDepositDialogComponent> {
 		return this.showDepositDialog
@@ -131,7 +139,7 @@ export class DashboardComponent implements OnInit {
 	saveDeposit(deposit: IDeposit): void {
 		log('dashboard.ts', this.saveDeposit.name, 'deposit:', deposit);
 
-		this.depositsService
+		this.depositsServicePostDepositSub = this.depositsService
 			.postDeposit(deposit)
 			.subscribe(() => this.refreshDeposits = true);
 	}
@@ -189,13 +197,13 @@ export class DashboardComponent implements OnInit {
 	}
 
 	private reloadDeposits(year: number, month: number){
-		// TODO: add destructor for all subscriptions
-		merge(this.refreshDeposits$)
-			.pipe(switchMap(() => {
-				this.isDepositsLoading = true;
-				return this.depositsService.getDepositsByOwnerYearMonth(this.owner, year, month);
-			}))
-			.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
+		this.depositsServiceGetDepositsByOwnerYearMonthSub =
+			merge(this.refreshDeposits$)
+				.pipe(switchMap(() => {
+					this.isDepositsLoading = true;
+					return this.depositsService.getDepositsByOwnerYearMonth(this.owner, year, month);
+				}))
+				.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
 	}
 
 	private loadDeposits(deposits: IDeposit[]): void {
