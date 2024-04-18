@@ -144,7 +144,7 @@ async function getSpending(
 
 		const spendings = deposits
 		.map((d) => ({ year: d.createdAt.getFullYear(), month: d.createdAt.getMonth()}))
-		.sort((d1, d2) => d1.year - d2.year);
+		.sort((d1, d2) => d1.year !== d2.year ? d1.year - d2.year : d1.month - d2.month);
 
 		log(CLASS_NAME, `${getSpending.name}^`, '');
 		log(CLASS_NAME, getSpending.name, 'spendings:', spendings);
