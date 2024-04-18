@@ -1,6 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 // Components:
 import { ShowDepositDialogComponent } from '../dialogs/show-deposit-dialog/show-deposit-dialog.component';
@@ -24,7 +24,8 @@ import { log } from 'src/app/shared/Logger';
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
-	styleUrls: ['./dashboard.component.scss']
+	styleUrls: ['./dashboard.component.scss'],
+	// changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit {
 
@@ -40,7 +41,7 @@ export class DashboardComponent implements OnInit {
 	months!: string[];
 	showFilters = false;
 
-	selectedYear!: number;
+	selectedYear!: string;
 	selectedMonth!: string;
 	spendingReport$ = signal< Map<number, number[]>>(new Map<number, number[]>);
 
@@ -68,7 +69,7 @@ export class DashboardComponent implements OnInit {
 		private authService: AuthService
 	) {
 		this.owner = this.informationService.owner$();
-		this.selectedYear = Number(this.today.getFullYear().toString().substring(2));
+		this.selectedYear = this.today.getFullYear().toString().substring(2);
 		this.selectedMonth = toMonthName(this.today.getMonth() + 1);
 		this.user = this.authService.user$();
 
@@ -95,12 +96,7 @@ export class DashboardComponent implements OnInit {
 				}
 			);
 
-		merge(this.refreshDeposits$)
-			.pipe(switchMap(() => {
-				this.isDepositsLoading = true;
-				return this.depositsService.getDepositsByOwnerYearMonth(this.owner, this.today.getFullYear(), this.today.getMonth());
-			}))
-			.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
+		this.reloadDeposits(this.today.getFullYear(), this.today.getMonth());
 	}
 
 	ngOnDestroy() { if (this.showDepositDialogSub) { this.showDepositDialogSub.unsubscribe(); } }
@@ -144,18 +140,56 @@ export class DashboardComponent implements OnInit {
 		this.showFilters = !this.showFilters;
 	}
 
-	onFilterChange(): void {
+	private get yearFormValue(): number {
 		const yearValue = this.spendingForm.controls['years'].value;
-		const monthValue = this.spendingForm.controls['months'].value;
 		const year = Number(yearValue);
+		return year;
+	}
+
+	private get monthFormValue(): number {
+		const monthValue = this.spendingForm.controls['months'].value;
 		const month = toMonthIndex(monthValue);
+		return month;
+	}
 
-		this.selectedYear = Number(yearValue.toString().substring(2));
-		this.selectedMonth = monthValue;
+	onYearsChange(): void {
+		const year = this.yearFormValue;
+		log('dashboard.ts', this.onYearsChange.name, 'year:', year);
 
-		log('dashboard.ts', this.saveDeposit.name, 'year', yearValue);
-		log('dashboard.ts', this.saveDeposit.name, 'month', monthValue);
+		// Update list of months available in "months" control, corresponding to the selected year
+		const monthIndexes = this.spendingReport$().get(year) as number[];
+		const monthNames = monthIndexes.map(m => m + 1).map(m => toMonthName(m));
+		this.months = monthNames;
 
+		// Update "months" control to the most recent month name
+		const mostRecentMonthName = monthNames[monthNames.length - 1];
+		this.spendingForm.controls['months'].setValue(mostRecentMonthName);
+
+		// Update "selectedMonth" to the most recent month index
+		const mostRecentMonth = monthIndexes[monthIndexes.length - 1];
+		this.onFilterChange(year, mostRecentMonth);
+
+		this.reloadDeposits(year, mostRecentMonth);
+	}
+
+	onMonthsChange(): void {
+		const month = this.monthFormValue;
+		console.log('dashboard.ts', this.onMonthsChange.name, 'month:', month);
+
+		this.onFilterChange(this.yearFormValue, month);
+		// this.reloadDeposits(year, month);
+	}
+
+	private onFilterChange(year: number, month: number): void {
+		this.selectedYear = year.toString().substring(2);
+		this.selectedMonth = toMonthName(month + 1);
+
+		log('dashboard.ts', this.onFilterChange.name, 'selectedYear', this.selectedYear);
+		log('dashboard.ts', this.onFilterChange.name, 'selectedMonth:', this.selectedMonth);
+	}
+
+	private reloadDeposits(year: number, month: number){
+		// TODO: add destructor for all subscriptions
 		merge(this.refreshDeposits$)
 			.pipe(switchMap(() => {
 				this.isDepositsLoading = true;

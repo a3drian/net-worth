@@ -28,10 +28,10 @@
 
 		<div id="filters">
 			<button (click)="openFilters()">Filter</button>
-			<form [formGroup]="spendingForm" *ngIf="showFilters" (change)="onFilterChange()">
+			<form [formGroup]="spendingForm" *ngIf="showFilters">
 				<fieldset>
 					<label for="year">Year:</label>
-					<select name="year" id="year-select" formControlName="years">
+					<select name="year" id="year-select" formControlName="years" (change)="onYearsChange()">
 						<option *ngFor="let y of years" [value]="y">
 							{{ y }}
 						</option>
@@ -39,7 +39,7 @@
 				</fieldset>
 				<fieldset>
 					<label for="month">Month:</label>
-					<select name="month" id="month-select" formControlName="months">
+					<select name="month" id="month-select" formControlName="months" (change)="onMonthsChange()">
 						<option *ngFor="let m of months" [value]="m">
 							{{ m }}
 						</option>
@@ -71,3 +71,9 @@
 		</button>
 	</div>
 </main>
+
+<!-- DEBUG MODE: -->
+<div class="debug-div" *ngIf="isInDebugMode">
+	<pre>Form status: {{ spendingForm.status }}</pre>
+	<pre>Form value:<br>{{ spendingForm.value | json }}</pre>
+</div>
