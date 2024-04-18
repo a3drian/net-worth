@@ -50,7 +50,7 @@
 			}
 		],
 		// when defining types or interfaces requires the order of the members to be fields, constructors, methods
-		"@typescript-eslint/member-ordering": "error",
+		"@typescript-eslint/member-ordering": "off",
 		"@typescript-eslint/no-empty-interface": "error",
 		// does not allow constructors for interfaces and "new()" for classes
 		"@typescript-eslint/no-misused-new": "error",

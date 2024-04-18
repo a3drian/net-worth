@@ -142,11 +142,19 @@ async function getSpending(
 
 		const deposits: IDeposit[] = await DepositModel.find({ owner: searchQuery.owner });
 
-		const spendings = deposits
-		.map((d) => ({ year: d.createdAt.getFullYear(), month: d.createdAt.getMonth()}))
-		.sort((d1, d2) => d1.year !== d2.year ? d1.year - d2.year : d1.month - d2.month);
+		// Get all spendings sorted by year and month
+		const allSpendings = deposits
+			.map((d) => ({ year: d.createdAt.getFullYear(), month: d.createdAt.getMonth()}))
+			.sort((d1, d2) => d1.year !== d2.year ? d1.year - d2.year : d1.month - d2.month);
+
+		// Convert to strings to remove duplicates using Set
+		const strings: Set<string> = new Set(allSpendings.map(s => JSON.stringify(s)));
+
+		// Convert back to objects
+		const spendings: { year: number, month: number }[] = Array.from(strings).map(s => JSON.parse(s));
 
 		log(CLASS_NAME, `${getSpending.name}^`, '');
+		log(CLASS_NAME, getSpending.name, 'allSpendings:', allSpendings);
 		log(CLASS_NAME, getSpending.name, 'spendings:', spendings);
 		log(CLASS_NAME, `${getSpending.name}^`, '');
 
