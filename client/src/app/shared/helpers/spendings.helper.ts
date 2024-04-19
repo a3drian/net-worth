@@ -42,13 +42,13 @@ export const toMonthName = (month: number): string => {
 	return date.toLocaleString('en-UK', { month: 'long' });
 };
 
-const getSpendingYears = (spendingReport: Map<number, number[]>) => Array.from(spendingReport.keys());
+export const getSpendingYears = (spendingReport: Map<number, number[]>) => Array.from(spendingReport.keys());
 
-const getSpendingMonths = (
+export const getSpendingMonths = (
 	spendingReport: Map<number, number[]>,
 	year: number
 ) => {
 	const monthIndexes = spendingReport.get(year) as number[];
 	const monthNames = monthIndexes.map((m) => m + 1).map((m) => toMonthName(m));
-	return monthNames;
+	return { monthIndexes, monthNames };
 };

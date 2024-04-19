@@ -18,7 +18,7 @@ import { InformationService } from 'src/app/services/information.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
 import { CURRENCY } from 'src/app/shared/constants/Currencies';
-import { getSpendingReport, toMonthIndex, toMonthName } from 'src/app/shared/helpers/spendings.helper';
+import { getSpendingMonths, getSpendingReport, getSpendingYears, toMonthIndex, toMonthName } from 'src/app/shared/helpers/spendings.helper';
 import { log } from 'src/app/shared/Logger';
 
 @Component({
@@ -101,15 +101,11 @@ export class DashboardComponent implements OnInit {
 			.getSpending(this.owner)
 			.subscribe(
 				(spendings: { year: number, month: number }[]) => {
-
-
 					log('dashboard.ts', this.ngOnInit.name, 'Spendings:', spendings);
 
 					this.spendingReport$.set(getSpendingReport(spendings));
-					this.years = Array.from(this.spendingReport$().keys());
-					const monthIndexes = this.spendingReport$().get(this.years[this.spendingReport$().size - 1]) as number[];
-					const monthNames = monthIndexes.map(m => m + 1).map(m => toMonthName(m));
-					this.months = monthNames;
+					this.years = getSpendingYears(this.spendingReport$());
+					this.months = getSpendingMonths(this.spendingReport$(), this.years[this.years.length - 1]).monthNames;
 					this.isLoading = false;
 				}
 			);
@@ -157,6 +153,8 @@ export class DashboardComponent implements OnInit {
 		this.depositsServicePostDepositSub = this.depositsService
 			.postDeposit(deposit)
 			.subscribe(() => this.refreshDeposits = true);
+
+		// TODO: update "this.spendingReport$" to include the added "year" and/or "month"
 	}
 
 	openFilters(): void {
@@ -168,8 +166,7 @@ export class DashboardComponent implements OnInit {
 		log('dashboard.ts', this.onYearsChange.name, 'year:', year);
 
 		// Update list of months available in "months" control, corresponding to the selected year
-		const monthIndexes = this.spendingReport$().get(year) as number[];
-		const monthNames = monthIndexes.map(m => m + 1).map(m => toMonthName(m));
+		const { monthIndexes, monthNames } = getSpendingMonths(this.spendingReport$(), year);
 		this.months = monthNames;
 
 		// Update "months" control to the most recent month name
@@ -185,7 +182,7 @@ export class DashboardComponent implements OnInit {
 
 	onMonthsChange(): void {
 		const month = this.monthFormValue;
-		console.log('dashboard.ts', this.onMonthsChange.name, 'month:', month);
+		log('dashboard.ts', this.onMonthsChange.name, 'month:', month);
 
 		this.onFilterChange(this.yearFormValue, month);
 

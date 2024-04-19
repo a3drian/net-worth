@@ -86,7 +86,7 @@ section.isLoading {
 
 section.isLoading {
 	// used a value of "80" to not shift the layout at all (but it does mean that the scrollbar is always visible)
-	height: 75vh;
+	height: 75svh;
 }
 
 @media screen and (min-width: 481px) {
