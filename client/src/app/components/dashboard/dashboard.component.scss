@@ -86,7 +86,8 @@ section.isLoading {
 
 section.isLoading {
 	// used a value of "80" to not shift the layout at all (but it does mean that the scrollbar is always visible)
-	height: 75svh;
+	// scrollbar is always visible because the list of deposits is long enough to require scrolling
+	height: 80vh;
 }
 
 @media screen and (min-width: 481px) {
