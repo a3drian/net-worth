@@ -1,7 +1,7 @@
 {
-	"name": "net-worth-api",
+	"name": "spendit-api",
 	"version": "1.0.0",
-	"description": "Database management API for NetWorth",
+	"description": "Database management API for Spendit",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/a3drian/spendit.git"
