@@ -30,14 +30,15 @@ jobs:
       working-directory: client
       run: npm install
 
-    # Build and deploy "api"
     - name: Build and deploy "api"
       working-directory: api
       run: npm run deploy
 
-    # Build and deploy "client"
-    - name: Build and deploy "client"
+    - name: Create `environment.prod.ts` file
       working-directory: client
+      run: echo "${{ secrets.CLIENT_ENV }}" > src/environments/environment.prod.ts
+
+    - name: Build and deploy "client"
       run: npm run deploy
 
   deploy:
