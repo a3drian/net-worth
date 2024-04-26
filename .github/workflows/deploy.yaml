@@ -24,7 +24,7 @@ jobs:
       working-directory: api
       run: npm install
       env:
-        PUBLISH_TOKEN: ${{secrets.PUBLISH_TOKEN}}
+        PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
 
     - name: Install "client" dependencies
       working-directory: client
