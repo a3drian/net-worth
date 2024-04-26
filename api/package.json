@@ -5,7 +5,7 @@
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/a3drian/spendit.git"
-},
+	},
 	"author": "a3drian",
 	"license": "ISC",
 	"private": true,
@@ -30,12 +30,12 @@
 		"start": "node src/index.js"
 	},
 	"dependencies": {
+		"@a3drian/spendit-shared": "^1.0.12",
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.5",
 		"express": "^4.18.1",
 		"firebase-admin": "^11.11.0",
-		"mongoose": "^6.3.4",
-		"net-worth-shared": "file:../net-worth-shared/bin/net-worth-shared.tgz"
+		"mongoose": "^6.3.4"
 	},
 	"devDependencies": {
 		"@types/cors": "^2.8.12",
