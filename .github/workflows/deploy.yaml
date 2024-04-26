@@ -23,6 +23,8 @@ jobs:
     - name: Install "api" dependencies
       working-directory: api
       run: npm install
+      env:
+        PUBLISH_TOKEN: ${{secrets.PUBLISH_TOKEN}}
 
     - name: Install "client" dependencies
       working-directory: client
