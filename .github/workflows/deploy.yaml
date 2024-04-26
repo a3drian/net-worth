@@ -34,7 +34,9 @@ jobs:
 
     - name: Create `environment.prod.ts` file
       working-directory: client
-      run: echo "${{ secrets.CLIENT_ENV }}" > src/environments/environment.prod.ts
+      run: |
+        echo "${{ secrets.CLIENT_ENV }}" > src/environments/environment.ts
+        echo "${{ secrets.CLIENT_ENV }}" > src/environments/environment.prod.ts
 
     - name: Build and deploy "client"
       working-directory: client
