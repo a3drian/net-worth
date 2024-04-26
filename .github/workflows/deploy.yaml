@@ -32,10 +32,10 @@ jobs:
       working-directory: api
       run: npm run deploy
 
-    - name: Create `environment.prod.ts` file
+    - name: Create `environment` files
       working-directory: client
       run: |
-        echo "${{ secrets.CLIENT_ENV }}" > src/environments/environment.ts
+        echo "" > src/environments/environment.ts
         echo "${{ secrets.CLIENT_ENV }}" > src/environments/environment.prod.ts
 
     - name: Build and deploy "client"
@@ -53,3 +53,5 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
+          healthcheck: "https://${{secrets.HEROKU_APP_NAME}}.herokuapp.com/health"
+          appdir: "Deploy"
