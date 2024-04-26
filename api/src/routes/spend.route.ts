@@ -30,7 +30,6 @@ async function getDepositById(
 	res: Response,
 	next: NextFunction
 ): Promise<IDeposit | void | any> {
-	console.log('');
 
 	const id = req.params.id;
 
@@ -54,7 +53,7 @@ async function getDepositsByOwner(
 	res: Response,
 	next: NextFunction
 ): Promise<IDeposit[] | void | any> {
-	console.log('');
+	log(CLASS_NAME, getDepositsByOwner.name, '');
 
 	const body = req.body;
 	log(CLASS_NAME, getDepositsByOwner.name, 'body:', body);
@@ -85,15 +84,15 @@ async function getSpending(
 	req: Request,
 	res: Response,
 	next: NextFunction
-): Promise<{ years: number[], months: number[] } | void | any> {
-	console.log('');
+): Promise<{ year: number, month: number }[] | void | any> {
+	log(CLASS_NAME, getSpending.name, '');
 
 	const body = req.body;
 	log(CLASS_NAME, getSpending.name, 'body:', body);
 
 	const searchQuery = new SearchQuery({ owner: body.owner });
 
-	let response: Error | { years: number[], months: number[] };
+	let response: Error | { year: number, month: number }[];
 	try {
 		response = await depositService.getSpending(searchQuery);
 	} catch (ex) {
@@ -113,7 +112,7 @@ async function getDepositsByOwnerCurrentMonth(
 	res: Response,
 	next: NextFunction
 ): Promise<IDeposit[] | void | any> {
-	console.log('');
+	log(CLASS_NAME, getDepositsByOwnerCurrentMonth.name, '');
 
 	const body = req.body;
 	log(CLASS_NAME, getDepositsByOwnerCurrentMonth.name, 'body:', body);
@@ -146,7 +145,7 @@ async function getDepositsByOwnerYearMonth(
 	res: Response,
 	next: NextFunction
 ): Promise<IDeposit[] | void | any> {
-	console.log('');
+	log(CLASS_NAME, getDepositsByOwnerYearMonth.name, '');
 
 	const body = req.body;
 	log(CLASS_NAME, getDepositsByOwnerYearMonth.name, 'body:', body);
@@ -159,6 +158,8 @@ async function getDepositsByOwnerYearMonth(
 			sort: body.sort ?? SORT_OPTION.DESC
 		}
 	);
+
+	log(CLASS_NAME, getDepositsByOwnerYearMonth.name, 'searchQuery:', searchQuery);
 
 	let response: Error | IDeposit[];
 	try {
@@ -180,7 +181,7 @@ async function postDeposit(
 	res: Response,
 	next: NextFunction
 ): Promise<IDeposit | void | any> {
-	console.log('');
+	log(CLASS_NAME, postDeposit.name, '');
 
 	const body = req.body;
 	log(CLASS_NAME, postDeposit.name, 'body:', body);
@@ -218,7 +219,7 @@ async function putDeposit(
 	res: Response,
 	next: NextFunction
 ): Promise<IDeposit | void | any> {
-	console.log('');
+	log(CLASS_NAME, putDeposit.name, '');
 
 	const id = req.params.id;
 	const body = req.body;
@@ -258,7 +259,6 @@ async function deleteDeposit(
 	res: Response,
 	next: NextFunction
 ): Promise<void | any> {
-	console.log('');
 
 	const id = req.params.id;
 

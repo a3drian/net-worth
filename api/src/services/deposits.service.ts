@@ -132,7 +132,7 @@ async function getDepositsByOwnerYearMonth(
 
 async function getSpending(
 	searchQuery: SearchQuery
-): Promise<Error | { years: number[], months: number[] }> {
+): Promise<Error | { year: number, month: number }[]> {
 
 	log(CLASS_NAME, getSpending.name, '');
 
@@ -142,24 +142,23 @@ async function getSpending(
 
 		const deposits: IDeposit[] = await DepositModel.find({ owner: searchQuery.owner });
 
-		const years: number[] = [];
-		const months: number[] = [];
+		// Get all spendings sorted by year and month
+		const allSpendings = deposits
+			.map((d) => ({ year: d.createdAt.getFullYear(), month: d.createdAt.getMonth()}))
+			.sort((d1, d2) => d1.year !== d2.year ? d1.year - d2.year : d1.month - d2.month);
 
-		deposits.forEach(d => {
-			const year = d.createdAt.getFullYear();
-			const month = d.createdAt.getMonth();
-			if (years.indexOf(year) === -1) { years.push(year); }
-			if (months.indexOf(month) === -1) { months.push(month); }
-		});
+		// Convert to strings to remove duplicates using Set
+		const strings: Set<string> = new Set(allSpendings.map(s => JSON.stringify(s)));
 
-		log(CLASS_NAME, getSpending.name, 'spending (years):', years);
-		log(CLASS_NAME, getSpending.name, 'spending (months):', months);
+		// Convert back to objects
+		const spendings: { year: number, month: number }[] = Array.from(strings).map(s => JSON.parse(s));
+
+		log(CLASS_NAME, `${getSpending.name}^`, '');
+		log(CLASS_NAME, getSpending.name, 'allSpendings:', allSpendings);
+		log(CLASS_NAME, getSpending.name, 'spendings:', spendings);
 		log(CLASS_NAME, `${getSpending.name}^`, '');
 
-		return {
-			years: years,
-			months: months
-		};
+		return spendings;
 
 	} catch (ex: any) { return throwError(getSpending.name, `exception caught: ${ex.message}`, STATUS_CODES.SERVER_ERROR); }
 }

@@ -19,19 +19,22 @@
 
 	<div id="report">
 		<p *ngIf="!anyMoneySpent">Nothing spent in <span>{{ selectedMonth }} '{{ selectedYear }}</span> yet.</p>
-		<p *ngIf="anyMoneySpent">Spending report for <span>{{ selectedMonth }} '{{ selectedYear }}</span> –
-			<span *ngIf="totalAmount.LEI !== 0">{{ totalAmount.LEI | amount:3 }} lei</span>
-			<span *ngIf="totalAmount.EUR !== 0"><span class="light">|</span>{{ totalAmount.EUR | amount:3 }}€</span>
-			<span *ngIf="totalAmount.GBP !== 0"><span class="light">|</span>£{{ totalAmount.GBP | amount:3 }}</span>
-			<span *ngIf="totalAmount.USD !== 0"><span class="light">|</span>${{ totalAmount.USD | amount:3 }}</span>
+		<p *ngIf="anyMoneySpent">Spending report for <span>{{ selectedMonth }} '{{ selectedYear }}</span>
+			<span *ngIf="!isDepositsLoading">
+				-
+				<span *ngIf="totalAmount.LEI !== 0">{{ totalAmount.LEI | amount:3 }} lei</span>
+				<span *ngIf="totalAmount.EUR !== 0"><span class="light">|</span>{{ totalAmount.EUR | amount:3 }}€</span>
+				<span *ngIf="totalAmount.GBP !== 0"><span class="light">|</span>£{{ totalAmount.GBP | amount:3 }}</span>
+				<span *ngIf="totalAmount.USD !== 0"><span class="light">|</span>${{ totalAmount.USD | amount:3 }}</span>
+			</span>
 		</p>
 
 		<div id="filters">
 			<button (click)="openFilters()">Filter</button>
-			<form [formGroup]="spendingForm" *ngIf="showFilters" (change)="onFilterChange()">
+			<form [formGroup]="spendingForm" *ngIf="showFilters">
 				<fieldset>
 					<label for="year">Year:</label>
-					<select name="year" id="year-select" formControlName="years">
+					<select name="year" id="year-select" formControlName="years" (change)="onYearsChange()">
 						<option *ngFor="let y of years" [value]="y">
 							{{ y }}
 						</option>
@@ -39,7 +42,7 @@
 				</fieldset>
 				<fieldset>
 					<label for="month">Month:</label>
-					<select name="month" id="month-select" formControlName="months">
+					<select name="month" id="month-select" formControlName="months" (change)="onMonthsChange()">
 						<option *ngFor="let m of months" [value]="m">
 							{{ m }}
 						</option>
@@ -71,3 +74,9 @@
 		</button>
 	</div>
 </main>
+
+<!-- DEBUG MODE: -->
+<div class="debug-div" *ngIf="isInDebugMode">
+	<pre>Form status: {{ spendingForm.status }}</pre>
+	<pre>Form value:<br>{{ spendingForm.value | json }}</pre>
+</div>

@@ -1,6 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 // Components:
 import { ShowDepositDialogComponent } from '../dialogs/show-deposit-dialog/show-deposit-dialog.component';
@@ -18,28 +18,31 @@ import { InformationService } from 'src/app/services/information.service';
 // Shared:
 import { Constants } from 'src/app/shared/Constants';
 import { CURRENCY } from 'src/app/shared/constants/Currencies';
+import { getSpendingMonths, getSpendingReport, getSpendingYears, toMonthIndex, toMonthName } from 'src/app/shared/helpers/spendings.helper';
 import { log } from 'src/app/shared/Logger';
 
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
-	styleUrls: ['./dashboard.component.scss']
+	styleUrls: ['./dashboard.component.scss'],
+	// changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit {
 
 	isInDebugMode: boolean = Constants.IN_DEBUG_MODE;
+
 	isLoading: boolean = true;
 	isDepositsLoading: boolean = false;
 
 	errorResponse: HttpErrorResponse | null = null;
 	today: Date = new Date();
 
-	spendingForm: FormGroup = new FormGroup({});
 	years!: number[];
 	months!: string[];
 	showFilters = false;
+	spendingReport$ = signal< Map<number, number[]>>(new Map<number, number[]>);
 
-	selectedYear!: number;
+	selectedYear!: string;
 	selectedMonth!: string;
 
 	deposits: IDeposit[] = [];
@@ -48,7 +51,25 @@ export class DashboardComponent implements OnInit {
 
 	owner: string = '';
 	user: IUser | null = null;
+
 	showDepositDialogSub: Subscription = new Subscription();
+	depositsServiceGetSpendingSub: Subscription = new Subscription();
+	depositsServicePostDepositSub: Subscription = new Subscription();
+	depositsServiceGetDepositsByOwnerYearMonthSub: Subscription = new Subscription();
+
+	spendingForm: FormGroup = new FormGroup({});
+
+	private get yearFormValue(): number {
+		const yearValue = this.spendingForm.controls['years'].value;
+		const year = Number(yearValue);
+		return year;
+	}
+
+	private get monthFormValue(): number {
+		const monthValue = this.spendingForm.controls['months'].value;
+		const month = toMonthIndex(monthValue);
+		return month;
+	}
 
 	refreshDeposits$ = new BehaviorSubject(false);
 	private get refreshDeposits(): boolean {
@@ -66,36 +87,38 @@ export class DashboardComponent implements OnInit {
 		private authService: AuthService
 	) {
 		this.owner = this.informationService.owner$();
-		this.selectedYear = Number(this.today.getFullYear().toString().substring(2));
-		this.selectedMonth = this.toMonthName(this.today.getMonth() + 1);
+		this.selectedYear = this.today.getFullYear().toString().substring(2);
+		this.selectedMonth = toMonthName(this.today.getMonth() + 1);
 		this.user = this.authService.user$();
 
 		const years = new FormControl<number>(this.today.getFullYear(), [Validators.required]);
-		const months = new FormControl<string>(this.toMonthName(this.today.getMonth() + 1), [Validators.required]);
+		const months = new FormControl<string>(toMonthName(this.today.getMonth() + 1), [Validators.required]);
 		this.spendingForm = this.formBuilder.group({ years: years, months: months });
 	}
 
 	ngOnInit(): void {
-		this.depositsService
+		this.depositsServiceGetSpendingSub = this.depositsService
 			.getSpending(this.owner)
 			.subscribe(
-				(spending: { years: number[], months: number[] }) => {
-					log('dashboard.ts', this.ngOnInit.name, 'Spending:', spending);
-					this.years = spending.years;
-					this.months = spending.months.map(m => m + 1).map(m => this.toMonthName(m));
+				(spendings: { year: number, month: number }[]) => {
+					log('dashboard.ts', this.ngOnInit.name, 'Spendings:', spendings);
+
+					this.spendingReport$.set(getSpendingReport(spendings));
+					this.years = getSpendingYears(this.spendingReport$());
+					this.months = getSpendingMonths(this.spendingReport$(), this.years[this.years.length - 1]).monthNames;
 					this.isLoading = false;
 				}
 			);
 
-		merge(this.refreshDeposits$)
-			.pipe(switchMap(() => {
-				this.isDepositsLoading = true;
-				return this.depositsService.getDepositsByOwnerYearMonth(this.owner, this.today.getFullYear(), this.today.getMonth());
-			}))
-			.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
+		this.reloadDeposits(this.today.getFullYear(), this.today.getMonth());
 	}
 
-	ngOnDestroy() { if (this.showDepositDialogSub) { this.showDepositDialogSub.unsubscribe(); } }
+	ngOnDestroy() {
+		if (this.depositsServiceGetDepositsByOwnerYearMonthSub) { this.depositsServiceGetDepositsByOwnerYearMonthSub.unsubscribe(); }
+		if (this.depositsServicePostDepositSub) { this.depositsServicePostDepositSub.unsubscribe(); }
+		if (this.depositsServiceGetSpendingSub) { this.depositsServiceGetSpendingSub.unsubscribe(); }
+		if (this.showDepositDialogSub) { this.showDepositDialogSub.unsubscribe(); }
+	}
 
 	openDialog(): MatDialogRef<ShowDepositDialogComponent> {
 		return this.showDepositDialog
@@ -127,33 +150,61 @@ export class DashboardComponent implements OnInit {
 	saveDeposit(deposit: IDeposit): void {
 		log('dashboard.ts', this.saveDeposit.name, 'deposit:', deposit);
 
-		this.depositsService
+		this.depositsServicePostDepositSub = this.depositsService
 			.postDeposit(deposit)
 			.subscribe(() => this.refreshDeposits = true);
+
+		// TODO: update "this.spendingReport$" to include the added "year" and/or "month"
 	}
 
 	openFilters(): void {
 		this.showFilters = !this.showFilters;
 	}
 
-	onFilterChange(): void {
-		const yearValue = this.spendingForm.controls['years'].value;
-		const monthValue = this.spendingForm.controls['months'].value;
-		const year = Number(yearValue);
-		const month = this.toMonthIndex(monthValue);
+	onYearsChange(): void {
+		const year = this.yearFormValue;
+		log('dashboard.ts', this.onYearsChange.name, 'year:', year);
 
-		this.selectedYear = Number(yearValue.toString().substring(2));
-		this.selectedMonth = monthValue;
+		// Update list of months available in "months" control, corresponding to the selected year
+		const { monthIndexes, monthNames } = getSpendingMonths(this.spendingReport$(), year);
+		this.months = monthNames;
 
-		log('dashboard.ts', this.saveDeposit.name, 'year', yearValue);
-		log('dashboard.ts', this.saveDeposit.name, 'month', monthValue);
+		// Update "months" control to the most recent month name
+		const mostRecentMonthName = monthNames[monthNames.length - 1];
+		this.spendingForm.controls['months'].setValue(mostRecentMonthName);
 
-		merge(this.refreshDeposits$)
-			.pipe(switchMap(() => {
-				this.isDepositsLoading = true;
-				return this.depositsService.getDepositsByOwnerYearMonth(this.owner, year, month);
-			}))
-			.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
+		// Update "selectedMonth" to the most recent month index
+		const mostRecentMonth = monthIndexes[monthIndexes.length - 1];
+		this.onFilterChange(year, mostRecentMonth);
+
+		this.reloadDeposits(year, mostRecentMonth);
+	}
+
+	onMonthsChange(): void {
+		const month = this.monthFormValue;
+		log('dashboard.ts', this.onMonthsChange.name, 'month:', month);
+
+		this.onFilterChange(this.yearFormValue, month);
+
+		this.reloadDeposits(this.yearFormValue, month);
+	}
+
+	private onFilterChange(year: number, month: number): void {
+		this.selectedYear = year.toString().substring(2);
+		this.selectedMonth = toMonthName(month + 1);
+
+		log('dashboard.ts', this.onFilterChange.name, 'selectedYear', this.selectedYear);
+		log('dashboard.ts', this.onFilterChange.name, 'selectedMonth:', this.selectedMonth);
+	}
+
+	private reloadDeposits(year: number, month: number): void {
+		this.depositsServiceGetDepositsByOwnerYearMonthSub =
+			merge(this.refreshDeposits$)
+				.pipe(switchMap(() => {
+					this.isDepositsLoading = true;
+					return this.depositsService.getDepositsByOwnerYearMonth(this.owner, year, month);
+				}))
+				.subscribe((deposits: IDeposit[]) => this.loadDeposits(deposits));
 	}
 
 	private loadDeposits(deposits: IDeposit[]): void {
@@ -175,29 +226,5 @@ export class DashboardComponent implements OnInit {
 
 	private updateInformationService(): void {
 		this.informationService.totalAmount$.set(this.totalAmount);
-	}
-
-	private toMonthIndex(month: string) {
-		return (
-			['January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December'
-			].indexOf(month));
-	}
-
-	private toMonthName(month: number) {
-		const date = new Date();
-		date.setMonth(month - 1);
-
-		return date.toLocaleString('en-UK', { month: 'long' });
 	}
 }
