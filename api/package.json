@@ -26,7 +26,7 @@
 		"ts:node:dev": "ts-node-dev --watch -- src/index",
 		"ts:node:debug": "ts-node-dev --inspect --watch -- src/index",
 		"type:check": "tsc --noEmit --project .",
-		"deploy": "npm run build",
+		"deploy": "npm run build && node build",
 		"start": "node src/index.js"
 	},
 	"dependencies": {
