@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - add-deploy
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 jobs:
   build:
@@ -39,6 +37,7 @@ jobs:
       run: echo "${{ secrets.CLIENT_ENV }}" > src/environments/environment.prod.ts
 
     - name: Build and deploy "client"
+      working-directory: client
       run: npm run deploy
 
   deploy:
