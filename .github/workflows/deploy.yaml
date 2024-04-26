@@ -1,0 +1,49 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Install "api" dependencies
+      working-directory: api
+      run: npm install
+
+    - name: Install "client" dependencies
+      working-directory: client
+      run: npm install
+
+    # Build and deploy "api"
+    - name: Build and deploy "api"
+      working-directory: api
+      run: npm run deploy
+
+    # Build and deploy "client"
+    - name: Build and deploy "client"
+      working-directory: client
+      run: npm run deploy
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: akhileshns/heroku-deploy@v3.13.15
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
