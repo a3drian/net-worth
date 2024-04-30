@@ -32,6 +32,11 @@ jobs:
       working-directory: api
       run: npm run deploy
 
+    - name: Create `.npmrc` file
+      working-directory: client
+      run: |
+        echo "${{ secrets.NPMRC_KEY }}" > .npmrc
+
     - name: Create `environment` files
       working-directory: client
       run: |
