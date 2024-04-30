@@ -52,10 +52,6 @@ jobs:
     - name: Change directory to "Deploy"
       run: cd Deploy
 
-    - name: Create `.npmrc` file
-      working-directory: Deploy
-      run: echo "${{ secrets.NPMRC_KEY }}" > .npmrc
-
     - name: Check contents of "Deploy" directory
       run: ls Deploy
 

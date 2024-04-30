@@ -27,4 +27,11 @@ const { copyFileSync, writeFileSync } = require('fs');
 
 	copyFileSync(apiPackageLock, distPackageLockPath);
 	console.log(`FILE: ${distPackageLockPath}`);
+
+	// add .npmrc
+	const npmrc = './.npmrc';
+	const distNpmrcPath = '../Deploy/.npmrc';
+
+	copyFileSync(npmrc, distNpmrcPath);
+	console.log(`FILE: ${distNpmrcPath}`);
 })();
