@@ -24,13 +24,13 @@ jobs:
       env:
         PACKAGES_TOKEN: ${{secrets.PACKAGES_TOKEN}}
 
-    - name: Install "client" dependencies
-      working-directory: client
-      run: npm install
-
     - name: Build and deploy "api"
       working-directory: api
       run: npm run deploy
+
+    - name: Install "client" dependencies
+      working-directory: client
+      run: npm install
 
     - name: Create `environment` files
       working-directory: client
