@@ -6,7 +6,7 @@ on:
       - add-deploy
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
@@ -51,9 +51,6 @@ jobs:
 
     - name: Change directory to "Deploy"
       run: cd Deploy
-
-    - name: Check contents of "Deploy" directory
-      run: ls Deploy
 
     - name: Deploy to Heroku
       uses: akhileshns/heroku-deploy@v3.13.15
