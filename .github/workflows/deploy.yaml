@@ -48,21 +48,15 @@ jobs:
         echo "Deploy directory exists."
       continue-on-error: false
 
-    - name: Check contents of "Deploy" directory
-      run: ls Deploy
-
-
     - name: Change directory to "Deploy"
       run: cd Deploy
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
+    - name: Check contents of "Deploy" directory
+      run: ls Deploy
 
-    steps:
-      - uses: actions/checkout@v4
-      - uses: akhileshns/heroku-deploy@v3.13.15
-        with:
+    - name: Deploy to Heroku
+      uses: akhileshns/heroku-deploy@v3.13.15
+      with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
